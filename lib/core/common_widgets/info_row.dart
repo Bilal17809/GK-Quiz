@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class KeyValueText extends StatelessWidget {
@@ -22,13 +22,10 @@ class KeyValueText extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            title,
-          ),
+          Text(title),
           OutlinedButton(
             style: OutlinedButton.styleFrom(
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-
             ),
             onPressed: () {},
             child: Row(
@@ -36,9 +33,9 @@ class KeyValueText extends StatelessWidget {
               children: [
                 Text(
                   value,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: textColor,
-                  ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: textColor),
                 ),
                 Icon(icon, color: textColor),
               ],

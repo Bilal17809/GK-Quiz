@@ -1,10 +1,6 @@
-import 'package:ad_english_dictionary/presentations/ai_translator/bloc/translator_cubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:template/presentations/home/view/home_screen.dart';
 import '/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
-import 'core/routes/routes.dart';
-import 'core/routes/routes_name.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,16 +11,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => LanguageCubit()),
-      ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: AppTheme.themeData,
-        initialRoute: RoutesName.splashPage,
-        onGenerateRoute: Routes.generateRoute,
-      ),
+    return MaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.themeData,
+      // initialRoute: RoutesName.splashPage,
+      // onGenerateRoute: Routes.generateRoute,
+      home: HomeScreen(),
     );
   }
 }
