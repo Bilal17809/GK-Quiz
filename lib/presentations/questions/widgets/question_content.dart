@@ -31,26 +31,24 @@ class QuestionsContent extends StatelessWidget {
     if (questions.isEmpty) {
       return const Center(child: Text('No questions found'));
     }
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(kBodyHp),
-        child: PageView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          controller: pageController,
-          itemCount: questions.length,
-          onPageChanged: onPageChanged,
-          itemBuilder: (context, index) {
-            return QuestionCard(
-              question: questions[index],
-              currentIndex: currentIndex,
-              totalQuestions: questions.length,
-              pageController: pageController,
-              selectedOption: selectedAnswers[index],
-              showAnswer: showAnswers[index] ?? false,
-              onOptionSelected: (option) => onAnswerSelected(index, option),
-            );
-          },
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(kBodyHp),
+      child: PageView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        controller: pageController,
+        itemCount: questions.length,
+        onPageChanged: onPageChanged,
+        itemBuilder: (context, index) {
+          return QuestionCard(
+            question: questions[index],
+            currentIndex: currentIndex,
+            totalQuestions: questions.length,
+            pageController: pageController,
+            selectedOption: selectedAnswers[index],
+            showAnswer: showAnswers[index] ?? false,
+            onOptionSelected: (option) => onAnswerSelected(index, option),
+          );
+        },
       ),
     );
   }

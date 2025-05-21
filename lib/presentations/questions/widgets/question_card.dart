@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:template/core/common_widgets/common_rounded_elongated_button.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/theme/app_colors.dart';
@@ -48,6 +49,29 @@ class _QuestionCardState extends State<QuestionCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            Container(
+              decoration: roundedDecoration.copyWith(color: kWhite),
+              padding: EdgeInsets.all(12),
+              child: StepProgressIndicator(
+                totalSteps: 100,
+                currentStep: widget.currentIndex,
+                size: 12,
+                padding: 0,
+
+                roundedEdges: Radius.circular(10),
+                selectedGradientColor: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [kCoral.withValues(alpha: 0.2), kOrange],
+                ),
+                unselectedGradientColor: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [kWhite, greyColor.withAlpha(1)],
+                ),
+              ),
+            ),
+            SizedBox(height: 12),
             Text(
               widget.question.topic,
               style: context.textTheme.headlineMedium?.copyWith(
@@ -202,7 +226,7 @@ class OptionItem extends StatelessWidget {
   }
 
   Color _getLetterContainerColor() {
-    if (!showAnswer) return greyColor.withValues(alpha: 0.5);
+    if (!showAnswer) return greyColor.withOpacity(0.1);
 
     final isCorrect = correctAnswer == letter;
     final isSelected = selectedOption == letter;
@@ -213,7 +237,7 @@ class OptionItem extends StatelessWidget {
       return kRed;
     }
 
-    return greyColor.withValues(alpha: 0.5);
+    return greyColor.withOpacity(0.1);
   }
 
   @override
