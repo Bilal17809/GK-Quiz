@@ -12,7 +12,7 @@ class DBService {
     final path = join(dbPath, 'gkquiz.db');
 
     if (!await databaseExists(path)) {
-      ByteData data = await rootBundle.load('gkquiz.db');
+      ByteData data = await rootBundle.load('assets/gkquiz.db');
       await File(path).writeAsBytes(
         data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes),
         flush: true,
@@ -25,14 +25,14 @@ class DBService {
 
   static Future<List<QuestionsData>> getAllQuestions() async {
     final db = await database;
-    final maps = await db.query('questions');
+    final maps = await db.query('question_table');
     return maps.map((e) => QuestionsData.fromMap(e)).toList();
   }
 
   static Future<List<QuestionsData>> getQuestionsByTopic(String topic) async {
     final db = await database;
     final maps = await db.query(
-      'questions',
+      'question_table',
       where: 'topic = ?',
       whereArgs: [topic],
     );
