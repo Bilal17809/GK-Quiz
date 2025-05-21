@@ -3,7 +3,7 @@ import 'package:template/core/common_widgets/common_widgets.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/extension/extension.dart';
-import '../controller/grid_data.dart';
+import '../../../core/models/grid_data.dart';
 
 class LessonsScreen extends StatelessWidget {
   const LessonsScreen({super.key});
@@ -31,7 +31,7 @@ class LessonsScreen extends StatelessWidget {
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/back.png', color: kWhite),
+              child: Image.asset('assets/images/back.png', color: kWhite),
             ),
           ),
         ),
@@ -45,7 +45,7 @@ class LessonsScreen extends StatelessWidget {
             crossAxisSpacing: 10,
             childAspectRatio: 1,
           ),
-          itemCount: 37,
+          itemCount: gridTexts.length,
           itemBuilder: (context, index) {
             final color = gridColors[index % gridColors.length].withValues(
               alpha: 0.75,

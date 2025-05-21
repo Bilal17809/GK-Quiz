@@ -18,7 +18,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                 onTap: () {
                   Scaffold.of(context).closeDrawer();
                 },
-                child: Image.asset('assets/menu.png', color: kRed),
+                child: Image.asset('assets/images/menu.png', color: kRed),
               );
             },
           ),
@@ -38,7 +38,11 @@ class NavigationDrawerWidget extends StatelessWidget {
             padding: const EdgeInsets.only(right: 6),
             child: IconButton(
               onPressed: () {},
-              icon: Image.asset('assets/bell.png', width: 26, height: 26),
+              icon: Image.asset(
+                'assets/images/bell.png',
+                width: 26,
+                height: 26,
+              ),
             ),
           ),
         ],

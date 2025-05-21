@@ -20,14 +20,20 @@ class IconTextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final mobileHeight = MediaQuery.of(context).size.height;
+    final mobileWidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: width,
       height: height,
       child: TextButton(
         onPressed: onPressed,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [icon, const SizedBox(width: 8), Text(text)],
+        child: SizedBox(
+          width: mobileWidth * 1,
+          height: mobileHeight * 0.065,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [icon, const SizedBox(width: 8), Text(text)],
+          ),
         ),
       ),
     );
