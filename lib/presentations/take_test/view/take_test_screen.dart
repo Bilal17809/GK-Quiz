@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:template/core/common_widgets/custom_text_button.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/constant/constant.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
-import 'package:template/extension/extension.dart';
-import 'package:template/presentations/take_a_test_list/view/take_a_test_list.dart';
 
 class TakeTestScreen extends StatefulWidget {
   const TakeTestScreen({super.key});
@@ -33,7 +33,7 @@ class _TakeTestScreenState extends State<TakeTestScreen> {
           child: RoundedButton(
             backgroundColor: kRed,
             onTap: () {
-              Navigator.pop(context);
+              Get.back();
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -52,12 +52,7 @@ class _TakeTestScreenState extends State<TakeTestScreen> {
                   SizedBox(height: 12),
                   IconTextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const TakeATestList(),
-                        ),
-                      );
+                      Get.toNamed(RoutesName.takeATestScreen);
                     },
                     text: 'Take a Test',
                     icon: Container(

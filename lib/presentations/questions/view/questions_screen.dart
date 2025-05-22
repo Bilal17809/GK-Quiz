@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/extension/extension.dart';
 import 'package:template/presentations/questions/controller/questions_controller.dart';
 import 'package:template/core/db_service/question_db_service.dart';
 import 'package:template/presentations/questions/widgets/question_content.dart';
 
 class QuestionsScreen extends StatefulWidget {
-  final String topic;
-  const QuestionsScreen({super.key, required this.topic});
+  const QuestionsScreen({super.key});
   @override
   State<QuestionsScreen> createState() => _QuestionsScreenState();
 }
@@ -21,6 +20,8 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
   bool _isLoading = true;
   final PageController _pageController = PageController();
   int _currentIndex = 0;
+
+  String get topic => Get.arguments['topic'];
 
   // Maps to store the state for each question
   final Map<int, String> _selectedAnswers = {};
@@ -35,7 +36,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
 
   Future<void> _loadQuestions() async {
     try {
-      final questions = await _controller.getQuestionsByTopic(widget.topic);
+      final questions = await _controller.getQuestionsByTopic(topic);
       setState(() {
         _questions = questions;
         _isLoading = false;
@@ -77,7 +78,7 @@ class _QuestionsScreenState extends State<QuestionsScreen> {
           child: RoundedButton(
             backgroundColor: kRed,
             onTap: () {
-              Navigator.pop(context);
+              Get.back();
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

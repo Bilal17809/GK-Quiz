@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:template/core/common_widgets/common_widgets.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/extension/extension.dart';
 import '../../../core/models/grid_data.dart';
 
 class LessonsScreen extends StatelessWidget {
@@ -27,7 +27,7 @@ class LessonsScreen extends StatelessWidget {
           child: RoundedButton(
             backgroundColor: kRed,
             onTap: () {
-              Navigator.pop(context);
+              Get.back();
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),

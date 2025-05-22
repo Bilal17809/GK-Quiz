@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:template/core/common_widgets/round_image.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/extension/extension.dart';
 import 'package:template/core/models/grid_data.dart';
-import 'package:template/presentations/questions/view/questions_screen.dart';
 
 class PracticeScreen extends StatelessWidget {
   const PracticeScreen({super.key});
@@ -28,7 +28,7 @@ class PracticeScreen extends StatelessWidget {
           child: RoundedButton(
             backgroundColor: kRed,
             onTap: () {
-              Navigator.pop(context);
+              Get.back();
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -55,12 +55,9 @@ class PracticeScreen extends StatelessWidget {
             final text = gridTexts[index % gridTexts.length];
             return InkWell(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder:
-                        (context) => QuestionsScreen(topic: gridTexts[index]),
-                  ),
+                Get.toNamed(
+                  RoutesName.questionsScreen,
+                  arguments: {'topic': gridTexts[index]},
                 );
               },
               child: Container(
