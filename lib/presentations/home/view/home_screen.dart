@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:template/core/common_widgets/custom_text_button.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/constant/constant.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
-import 'package:template/extension/extension.dart';
-import 'package:template/presentations/lessons/view/lessons_screen.dart';
 import 'package:template/presentations/navigation_drawer/view/navigation_drawer.dart';
-import 'package:template/presentations/practice/view/practice_screen.dart';
-import 'package:template/presentations/take_test/view/take_test_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -71,12 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 12),
                   IconTextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => LessonsScreen(),
-                        ),
-                      );
+                      Get.toNamed(RoutesName.lessonsScreen);
                     },
                     text: 'Lesson to Study',
                     icon: Container(
@@ -100,12 +93,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(height: 12),
                   IconTextButton(
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PracticeScreen(),
-                        ),
-                      );
+                      Get.toNamed(RoutesName.practiceScreen);
                     },
                     text: 'Practice',
                     icon: Container(
@@ -132,12 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       IconTextButton(
                         width: MediaQuery.of(context).size.width / 2 - 25,
                         onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TakeTestScreen(),
-                            ),
-                          );
+                          Get.toNamed(RoutesName.testScreen);
                         },
                         text: 'Take a\nTest',
                         icon: Container(

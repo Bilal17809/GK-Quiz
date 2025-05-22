@@ -22,3 +22,34 @@
 //     }
 //   }
 // }
+
+import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:template/core/routes/routes_name.dart';
+import 'package:template/presentations/home/view/home_screen.dart';
+import 'package:template/presentations/lessons/view/lessons_screen.dart';
+import 'package:template/presentations/practice/view/practice_screen.dart';
+import 'package:template/presentations/questions/view/questions_screen.dart';
+import 'package:template/presentations/splash/view/splash_screen.dart';
+import 'package:template/presentations/take_a_test_list/view/take_a_test_list.dart';
+import 'package:template/presentations/take_test/view/take_test_screen.dart';
+
+class Routes {
+  static final routes = [
+    GetPage(name: RoutesName.homeScreen, page: () => const HomeScreen()),
+    GetPage(name: RoutesName.splashScreen, page: () => const SplashScreen()),
+    GetPage(name: RoutesName.lessonsScreen, page: () => const LessonsScreen()),
+    GetPage(
+      name: RoutesName.practiceScreen,
+      page: () => const PracticeScreen(),
+    ),
+    GetPage(
+      name: RoutesName.questionsScreen,
+      page: () => const QuestionsScreen(),
+    ),
+    GetPage(name: RoutesName.testScreen, page: () => const TakeTestScreen()),
+    GetPage(
+      name: RoutesName.takeATestScreen,
+      page: () => const TakeATestList(),
+    ),
+  ];
+}

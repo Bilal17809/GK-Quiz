@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
-import 'package:template/extension/extension.dart';
 import 'package:template/core/models/grid_data.dart';
 
 class TakeATestList extends StatefulWidget {
@@ -36,7 +36,7 @@ class _TakeATestListState extends State<TakeATestList> {
           child: RoundedButton(
             backgroundColor: kRed,
             onTap: () {
-              Navigator.pop(context);
+              Get.back();
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
