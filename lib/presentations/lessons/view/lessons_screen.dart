@@ -17,9 +17,9 @@ class LessonsScreen extends StatelessWidget {
           children: [
             Text(
               'GK Quiz',
-              style: context.textTheme.titleMedium?.copyWith(color: kRed),
+              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Lesson to Study', style: context.textTheme.bodyLarge),
+            Text('Lesson to Study', style: Get.textTheme.bodyLarge),
           ],
         ),
         leading: Padding(
@@ -75,7 +75,7 @@ class LessonsScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     text,
-                    style: context.textTheme.titleSmall!.copyWith(
+                    style: Get.textTheme.titleSmall!.copyWith(
                       color: textWhiteColor,
                     ),
                   ),

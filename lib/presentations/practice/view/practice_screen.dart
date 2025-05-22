@@ -18,9 +18,9 @@ class PracticeScreen extends StatelessWidget {
           children: [
             Text(
               'GK Quiz',
-              style: context.textTheme.titleMedium?.copyWith(color: kRed),
+              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Practice', style: context.textTheme.bodyLarge),
+            Text('Practice', style: Get.textTheme.bodyLarge),
           ],
         ),
         leading: Padding(
@@ -77,7 +77,7 @@ class PracticeScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'Ques: 248',
-                                style: context.textTheme.bodyMedium?.copyWith(
+                                style: Get.textTheme.bodyMedium?.copyWith(
                                   color: kWhite,
                                 ),
                               ),
@@ -104,7 +104,7 @@ class PracticeScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         Text(
                           text,
-                          style: context.textTheme.titleSmall!.copyWith(
+                          style: Get.textTheme.titleSmall!.copyWith(
                             color: textWhiteColor,
                           ),
                         ),
@@ -122,13 +122,13 @@ class PracticeScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Correct: 0',
-                            style: context.textTheme.bodySmall?.copyWith(
+                            style: Get.textTheme.bodySmall?.copyWith(
                               color: kWhite,
                             ),
                           ),
                           Text(
                             'Wrong: 0',
-                            style: context.textTheme.bodySmall?.copyWith(
+                            style: Get.textTheme.bodySmall?.copyWith(
                               color: kWhite,
                             ),
                           ),
@@ -148,13 +148,13 @@ class PracticeScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Skipped: 1',
-                            style: context.textTheme.bodySmall?.copyWith(
+                            style: Get.textTheme.bodySmall?.copyWith(
                               color: kWhite,
                             ),
                           ),
                           Text(
                             'Not Attempt: 247',
-                            style: context.textTheme.bodySmall?.copyWith(
+                            style: Get.textTheme.bodySmall?.copyWith(
                               color: kWhite,
                             ),
                           ),

@@ -7,13 +7,9 @@ import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/presentations/navigation_drawer/view/navigation_drawer.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
 
-class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final mobileHeight = MediaQuery.of(context).size.height;
@@ -40,9 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Text(
               'GK Quiz',
-              style: context.textTheme.titleMedium?.copyWith(color: kRed),
+              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Enrich your knowledge', style: context.textTheme.bodyLarge),
+            Text('Enrich your knowledge', style: Get.textTheme.bodyLarge),
           ],
         ),
         actions: [
@@ -66,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Column(
                 children: [
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   IconTextButton(
                     onPressed: () {
                       Get.toNamed(RoutesName.lessonsScreen);
@@ -75,7 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: Container(
                       decoration: BoxDecoration(
                         color: kBlue,
-
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Padding(
@@ -88,9 +83,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    style: context.textTheme.headlineSmall,
+                    style: Get.textTheme.headlineSmall,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   IconTextButton(
                     onPressed: () {
                       Get.toNamed(RoutesName.practiceScreen);
@@ -111,14 +106,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                    style: context.textTheme.headlineSmall,
+                    style: Get.textTheme.headlineSmall,
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconTextButton(
-                        width: MediaQuery.of(context).size.width / 2 - 25,
+                        width: mobileWidth / 2 - 25,
                         onPressed: () {
                           Get.toNamed(RoutesName.testScreen);
                         },
@@ -138,11 +133,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        style: context.textTheme.titleMedium,
+                        style: Get.textTheme.titleMedium,
                       ),
-                      SizedBox(width: 12),
+                      const SizedBox(width: 12),
                       IconTextButton(
-                        width: MediaQuery.of(context).size.width / 2 - 25,
+                        width: mobileWidth / 2 - 25,
                         onPressed: () {},
                         text: 'Country\nQuiz',
                         icon: Container(
@@ -160,13 +155,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         ),
-                        style: context.textTheme.titleMedium,
+                        style: Get.textTheme.titleMedium,
                       ),
                     ],
                   ),
-                  SizedBox(height: 12),
+                  const SizedBox(height: 12),
                   SizedBox(
-                    width: mobileWidth * 1,
+                    width: mobileWidth,
                     height: mobileHeight * 0.12,
                     child: Card(
                       color: kWhite,
@@ -179,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         children: [
                           Expanded(
                             child: InkWell(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topLeft: Radius.circular(8),
                                 bottomLeft: Radius.circular(8),
                               ),
@@ -205,20 +200,19 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Text(
                                       'Share App',
-                                      style: context.textTheme.titleSmall,
+                                      style: Get.textTheme.titleSmall,
                                     ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
-
                           Expanded(
                             child: InkWell(
-                              borderRadius: BorderRadius.only(
+                              borderRadius: const BorderRadius.only(
                                 topRight: Radius.circular(8),
                                 bottomRight: Radius.circular(8),
                               ),
@@ -244,10 +238,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(height: 8),
+                                    const SizedBox(height: 8),
                                     Text(
                                       'Remove Ads',
-                                      style: context.textTheme.titleSmall,
+                                      style: Get.textTheme.titleSmall,
                                     ),
                                   ],
                                 ),

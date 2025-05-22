@@ -1,7 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:template/core/theme/app_styles.dart';
 
-class CommonRoundedElongatedButton extends StatelessWidget {
+class ElongatedButton extends StatelessWidget {
   final double height;
   final double width;
   final Color color;
@@ -9,7 +9,7 @@ class CommonRoundedElongatedButton extends StatelessWidget {
   final Widget child;
   final VoidCallback? onTap;
 
-  const CommonRoundedElongatedButton({
+  const ElongatedButton({
     super.key,
     required this.height,
     required this.width,

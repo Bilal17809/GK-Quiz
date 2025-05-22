@@ -42,10 +42,7 @@ class Routes {
       name: RoutesName.practiceScreen,
       page: () => const PracticeScreen(),
     ),
-    GetPage(
-      name: RoutesName.questionsScreen,
-      page: () => const QuestionsScreen(),
-    ),
+    GetPage(name: RoutesName.questionsScreen, page: () => QuestionsScreen()),
     GetPage(name: RoutesName.testScreen, page: () => const TakeTestScreen()),
     GetPage(
       name: RoutesName.takeATestScreen,
