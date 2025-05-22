@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/route_manager.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/theme/app_colors.dart';
-import 'package:template/extension/extension.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({super.key});
@@ -28,9 +28,9 @@ class NavigationDrawerWidget extends StatelessWidget {
           children: [
             Text(
               'GK Quiz',
-              style: context.textTheme.titleMedium?.copyWith(color: kRed),
+              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Enrich your knowledge', style: context.textTheme.bodyLarge),
+            Text('Enrich your knowledge', style: Get.textTheme.bodyLarge),
           ],
         ),
         actions: [
@@ -48,73 +48,84 @@ class NavigationDrawerWidget extends StatelessWidget {
         ],
       ),
       backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(color: Colors.blue),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'GK Quiz',
-                      style: context.textTheme.headlineLarge?.copyWith(
-                        color: kWhite,
-                      ),
-                    ),
-                  ],
+      body: SafeArea(child: DrawerContent()),
+    );
+  }
+}
+
+class DrawerContent extends StatelessWidget {
+  const DrawerContent({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            decoration: const BoxDecoration(color: skyColor),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'GK Quiz',
+                  style: Get.textTheme.headlineLarge?.copyWith(color: kWhite),
                 ),
-              ),
-              _buildDrawerTile(
-                icon: Icons.favorite_rounded,
-                title: 'Bookmarks',
-                onTap: () {},
-              ),
-              _buildDrawerTile(
-                icon: Icons.notifications_rounded,
-                title: 'Notifications',
-                onTap: () {},
-              ),
-              _buildDrawerTile(
-                icon: Icons.settings_rounded,
-                title: 'Settings',
-                onTap: () {},
-              ),
-              _buildDrawerTile(
-                icon: Icons.star_rounded,
-                title: 'Rate Us',
-                onTap: () {},
-              ),
-              _buildDrawerTile(
-                icon: Icons.message_rounded,
-                title: 'Feedback',
-                onTap: () {},
-              ),
-              _buildDrawerTile(
-                icon: Icons.privacy_tip_rounded,
-                title: 'Privacy Policy',
-                onTap: () {},
-              ),
-              _buildDrawerTile(
-                icon: Icons.share_rounded,
-                title: 'Share App',
-                onTap: () {},
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
+          DrawerTile(
+            icon: Icons.favorite_rounded,
+            title: 'Bookmarks',
+            onTap: () {},
+          ),
+          DrawerTile(
+            icon: Icons.notifications_rounded,
+            title: 'Notifications',
+            onTap: () {},
+          ),
+          DrawerTile(
+            icon: Icons.settings_rounded,
+            title: 'Settings',
+            onTap: () {},
+          ),
+          DrawerTile(icon: Icons.star_rounded, title: 'Rate Us', onTap: () {}),
+          DrawerTile(
+            icon: Icons.message_rounded,
+            title: 'Feedback',
+            onTap: () {},
+          ),
+          DrawerTile(
+            icon: Icons.privacy_tip_rounded,
+            title: 'Privacy Policy',
+            onTap: () {},
+          ),
+          DrawerTile(
+            icon: Icons.share_rounded,
+            title: 'Share App',
+            onTap: () {},
+          ),
+        ],
       ),
     );
   }
+}
 
-  Widget _buildDrawerTile({
-    required IconData icon,
-    required String title,
-    required VoidCallback onTap,
-  }) {
+class DrawerTile extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final VoidCallback onTap;
+
+  const DrawerTile({
+    super.key,
+    required this.icon,
+    required this.title,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
   }
 }

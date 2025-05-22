@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart'; // Import GetX
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/presentations/questions/widgets/question_card.dart';
 
 class QuestionsContent extends StatelessWidget {
   final bool isLoading;
-  final List<QuestionsData> questions;
+  final List<QuestionsModel> questions;
   final PageController pageController;
   final int currentIndex;
   final Function(int) onPageChanged;
-  final Map<int, String> selectedAnswers;
-  final Map<int, bool> showAnswers;
+  final RxMap<int, String> selectedAnswers;
+  final RxMap<int, bool> showAnswers;
   final Function(int, String) onAnswerSelected;
 
   const QuestionsContent({
@@ -27,10 +28,14 @@ class QuestionsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) return const Center(child: CircularProgressIndicator());
+    if (isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     if (questions.isEmpty) {
       return const Center(child: Text('No questions found'));
     }
+
     return Padding(
       padding: const EdgeInsets.all(kBodyHp),
       child: PageView.builder(
@@ -41,12 +46,11 @@ class QuestionsContent extends StatelessWidget {
         itemBuilder: (context, index) {
           return QuestionCard(
             question: questions[index],
-            currentIndex: currentIndex,
+            currentIndex: index,
             totalQuestions: questions.length,
-            pageController: pageController,
-            selectedOption: selectedAnswers[index],
-            showAnswer: showAnswers[index] ?? false,
-            onOptionSelected: (option) => onAnswerSelected(index, option),
+            selectedAnswers: selectedAnswers,
+            showAnswers: showAnswers,
+            onOptionSelected: onAnswerSelected,
           );
         },
       ),

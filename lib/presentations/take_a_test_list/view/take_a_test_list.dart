@@ -5,14 +5,9 @@ import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/models/grid_data.dart';
 
-class TakeATestList extends StatefulWidget {
+class TakeATestList extends StatelessWidget {
   const TakeATestList({super.key});
 
-  @override
-  State<TakeATestList> createState() => _TakeATestListState();
-}
-
-class _TakeATestListState extends State<TakeATestList> {
   @override
   Widget build(BuildContext context) {
     final mobileHeight = MediaQuery.of(context).size.height;
@@ -26,9 +21,9 @@ class _TakeATestListState extends State<TakeATestList> {
           children: [
             Text(
               'GK Quiz',
-              style: context.textTheme.titleMedium?.copyWith(color: kRed),
+              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Take a Test', style: context.textTheme.bodyLarge),
+            Text('Take a Test', style: Get.textTheme.bodyLarge),
           ],
         ),
         leading: Padding(
@@ -81,11 +76,11 @@ class _TakeATestListState extends State<TakeATestList> {
                         child: ListTile(
                           title: Text(
                             gridTexts[index],
-                            style: context.textTheme.titleMedium,
+                            style: Get.textTheme.titleMedium,
                           ),
                           subtitle: Text(
                             'Total Questions: 248',
-                            style: context.textTheme.bodySmall,
+                            style: Get.textTheme.bodySmall,
                           ),
                           trailing: Icon(Icons.check_box),
                         ),

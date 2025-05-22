@@ -23,19 +23,19 @@ class DBService {
     return _db;
   }
 
-  static Future<List<QuestionsData>> getAllQuestions() async {
+  static Future<List<QuestionsModel>> getAllQuestions() async {
     final db = await database;
     final maps = await db.query('question_table');
-    return maps.map((e) => QuestionsData.fromMap(e)).toList();
+    return maps.map((e) => QuestionsModel.fromMap(e)).toList();
   }
 
-  static Future<List<QuestionsData>> getQuestionsByTopic(String topic) async {
+  static Future<List<QuestionsModel>> getQuestionsByTopic(String topic) async {
     final db = await database;
     final maps = await db.query(
       'question_table',
       where: 'topic = ?',
       whereArgs: [topic],
     );
-    return maps.map((e) => QuestionsData.fromMap(e)).toList();
+    return maps.map((e) => QuestionsModel.fromMap(e)).toList();
   }
 }

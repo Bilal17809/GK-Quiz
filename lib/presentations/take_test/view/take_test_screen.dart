@@ -6,14 +6,9 @@ import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 
-class TakeTestScreen extends StatefulWidget {
+class TakeTestScreen extends StatelessWidget {
   const TakeTestScreen({super.key});
 
-  @override
-  State<TakeTestScreen> createState() => _TakeTestScreenState();
-}
-
-class _TakeTestScreenState extends State<TakeTestScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,9 +18,9 @@ class _TakeTestScreenState extends State<TakeTestScreen> {
           children: [
             Text(
               'GK Quiz',
-              style: context.textTheme.titleMedium?.copyWith(color: kRed),
+              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Take a Test', style: context.textTheme.bodyLarge),
+            Text('Take a Test', style: Get.textTheme.bodyLarge),
           ],
         ),
         leading: Padding(
@@ -71,7 +66,7 @@ class _TakeTestScreenState extends State<TakeTestScreen> {
                         ),
                       ),
                     ),
-                    style: context.textTheme.headlineSmall,
+                    style: Get.textTheme.headlineSmall,
                   ),
                   SizedBox(height: 12),
                   IconTextButton(
@@ -92,7 +87,7 @@ class _TakeTestScreenState extends State<TakeTestScreen> {
                         ),
                       ),
                     ),
-                    style: context.textTheme.headlineSmall,
+                    style: Get.textTheme.headlineSmall,
                   ),
                   SizedBox(height: 12),
                   IconTextButton(
@@ -114,7 +109,7 @@ class _TakeTestScreenState extends State<TakeTestScreen> {
                         ),
                       ),
                     ),
-                    style: context.textTheme.headlineSmall,
+                    style: Get.textTheme.headlineSmall,
                   ),
                   SizedBox(height: 12),
                   IconTextButton(
@@ -136,7 +131,7 @@ class _TakeTestScreenState extends State<TakeTestScreen> {
                         ),
                       ),
                     ),
-                    style: context.textTheme.headlineSmall,
+                    style: Get.textTheme.headlineSmall,
                   ),
                 ],
               ),

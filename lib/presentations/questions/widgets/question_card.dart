@@ -1,40 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:template/core/common_widgets/common_rounded_elongated_button.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/extension/extension.dart';
+import 'package:template/presentations/questions/controller/questions_controller.dart';
+import 'package:template/presentations/questions/widgets/bottom_buttons.dart';
 
-class QuestionCard extends StatefulWidget {
-  final QuestionsData question;
+class QuestionCard extends StatelessWidget {
+  final QuestionsModel question;
   final int currentIndex;
   final int totalQuestions;
-  final PageController pageController;
-  final String? selectedOption;
-  final bool showAnswer;
-  final Function(String) onOptionSelected;
+  final RxMap<int, String> selectedAnswers;
+  final RxMap<int, bool> showAnswers;
+  final Function(int, String) onOptionSelected;
 
   const QuestionCard({
     super.key,
     required this.question,
     required this.currentIndex,
     required this.totalQuestions,
-    required this.pageController,
-    this.selectedOption,
-    this.showAnswer = false,
+    required this.selectedAnswers,
+    required this.showAnswers,
     required this.onOptionSelected,
   });
-
-  @override
-  State<QuestionCard> createState() => _QuestionCardState();
-}
-
-class _QuestionCardState extends State<QuestionCard> {
-  void _handleOptionSelect(String letter) {
-    if (widget.showAnswer) return; // Prevent selecting after answer is shown
-    widget.onOptionSelected(letter);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,14 +40,13 @@ class _QuestionCardState extends State<QuestionCard> {
           children: [
             Container(
               decoration: roundedDecoration.copyWith(color: kWhite),
-              padding: EdgeInsets.all(12),
+              padding: const EdgeInsets.all(12),
               child: StepProgressIndicator(
                 totalSteps: 100,
-                currentStep: widget.currentIndex,
+                currentStep: currentIndex,
                 size: 12,
                 padding: 0,
-
-                roundedEdges: Radius.circular(10),
+                roundedEdges: const Radius.circular(10),
                 selectedGradientColor: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -71,61 +59,42 @@ class _QuestionCardState extends State<QuestionCard> {
                 ),
               ),
             ),
-            SizedBox(height: 12),
+            const SizedBox(height: 12),
             Text(
-              widget.question.topic,
-              style: context.textTheme.headlineMedium?.copyWith(
+              question.topicName,
+              style: Get.textTheme.headlineMedium?.copyWith(
                 color: kRed,
                 fontSize: 24,
               ),
             ),
             const SizedBox(height: 12),
-            QuestionHeader(totalQuestions: widget.totalQuestions),
+            QuestionHeader(totalQuestions: totalQuestions),
             const SizedBox(height: 12),
-            QuestionText(question: widget.question.question),
-            const SizedBox(height: 24),
-            OptionItem(
-              letter: 'A',
-              option: widget.question.option1,
-              showAnswer: widget.showAnswer,
-              correctAnswer: widget.question.answer,
-              selectedOption: widget.selectedOption,
-              onOptionSelected: _handleOptionSelect,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(question.question, style: Get.textTheme.titleMedium),
+              ],
             ),
             const SizedBox(height: 24),
-            OptionItem(
-              letter: 'B',
-              option: widget.question.option2,
-              showAnswer: widget.showAnswer,
-              correctAnswer: widget.question.answer,
-              selectedOption: widget.selectedOption,
-              onOptionSelected: _handleOptionSelect,
-            ),
-            const SizedBox(height: 24),
-            OptionItem(
-              letter: 'C',
-              option: widget.question.option3,
-              showAnswer: widget.showAnswer,
-              correctAnswer: widget.question.answer,
-              selectedOption: widget.selectedOption,
-              onOptionSelected: _handleOptionSelect,
-            ),
-            const SizedBox(height: 24),
-            OptionItem(
-              letter: 'D',
-              option: widget.question.option4,
-              showAnswer: widget.showAnswer,
-              correctAnswer: widget.question.answer,
-              selectedOption: widget.selectedOption,
-              onOptionSelected: _handleOptionSelect,
+
+            Obx(
+              () => QuestionOptions(
+                question: question,
+                showAnswer: showAnswers[currentIndex] ?? false,
+                selectedOption: selectedAnswers[currentIndex],
+                onOptionSelected:
+                    (option) => onOptionSelected(currentIndex, option),
+                // heightMargin: 20,
+                // widthMargin: mobileWidth * 1,
+              ),
             ),
             const Spacer(),
             BottomButtons(
               height: mobileHeight,
               width: mobileWidth,
-              pageController: widget.pageController,
-              currentIndex: widget.currentIndex,
-              totalQuestions: widget.totalQuestions,
+              currentIndex: currentIndex,
+              totalQuestions: totalQuestions,
             ),
             const SizedBox(height: 20),
           ],
@@ -147,7 +116,7 @@ class QuestionHeader extends StatelessWidget {
       children: [
         Text(
           'Total Questions: $totalQuestions',
-          style: context.textTheme.bodyMedium,
+          style: Get.textTheme.bodyMedium,
         ),
         Container(
           margin: const EdgeInsets.only(left: 24),
@@ -176,17 +145,60 @@ class QuestionHeader extends StatelessWidget {
   }
 }
 
-class QuestionText extends StatelessWidget {
-  final String question;
+class QuestionOptions extends StatelessWidget {
+  final QuestionsModel question;
+  final bool showAnswer;
+  final String? selectedOption;
+  final Function(String) onOptionSelected;
 
-  const QuestionText({super.key, required this.question});
+  const QuestionOptions({
+    super.key,
+    required this.question,
+    required this.showAnswer,
+    this.selectedOption,
+    required this.onOptionSelected,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(question, style: Theme.of(context).textTheme.titleMedium),
+        OptionItem(
+          letter: 'A',
+          option: question.option1,
+          showAnswer: showAnswer,
+          correctAnswer: question.answer,
+          selectedOption: selectedOption,
+          onOptionSelected: onOptionSelected,
+        ),
+
+        const SizedBox(height: 24),
+        OptionItem(
+          letter: 'B',
+          option: question.option2,
+          showAnswer: showAnswer,
+          correctAnswer: question.answer,
+          selectedOption: selectedOption,
+          onOptionSelected: onOptionSelected,
+        ),
+        const SizedBox(height: 24),
+        OptionItem(
+          letter: 'C',
+          option: question.option3,
+          showAnswer: showAnswer,
+          correctAnswer: question.answer,
+          selectedOption: selectedOption,
+          onOptionSelected: onOptionSelected,
+        ),
+        const SizedBox(height: 24),
+        OptionItem(
+          letter: 'D',
+          option: question.option4,
+          showAnswer: showAnswer,
+          correctAnswer: question.answer,
+          selectedOption: selectedOption,
+          onOptionSelected: onOptionSelected,
+        ),
       ],
     );
   }
@@ -209,49 +221,22 @@ class OptionItem extends StatelessWidget {
     this.selectedOption,
     required this.onOptionSelected,
   });
-
-  Color _getOptionColor() {
-    if (!showAnswer) return Colors.transparent;
-
-    final isCorrect = correctAnswer == letter;
-    final isSelected = selectedOption == letter;
-
-    if (isCorrect) {
-      return kDarkGreen1.withValues(alpha: 0.25);
-    } else if (isSelected) {
-      return kRed.withValues(alpha: 0.25);
-    }
-
-    return Colors.transparent;
-  }
-
-  Color _getLetterContainerColor() {
-    if (!showAnswer) return greyColor.withOpacity(0.1);
-
-    final isCorrect = correctAnswer == letter;
-    final isSelected = selectedOption == letter;
-
-    if (isCorrect) {
-      return kDarkGreen1;
-    } else if (isSelected) {
-      return kRed;
-    }
-
-    return greyColor.withOpacity(0.1);
-  }
-
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<QuestionsController>();
+
     return InkWell(
-      onTap: () {
-        if (!showAnswer) {
-          onOptionSelected(letter);
-        }
-      },
+      onTap: showAnswer ? null : () => onOptionSelected(letter),
       child: Container(
         height: 52,
         decoration: BoxDecoration(
-          color: _getOptionColor(),
+          border: Border.all(color: kBlack.withValues(alpha: 0.15)),
+          color: controller.getOptionBackgroundColor(
+            showAnswer,
+            correctAnswer,
+            letter,
+            selectedOption,
+          ),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Row(
@@ -261,14 +246,19 @@ class OptionItem extends StatelessWidget {
               height: 40,
               width: 40,
               decoration: roundedDecoration.copyWith(
-                color: _getLetterContainerColor(),
+                color: controller.getLetterContainerColor(
+                  showAnswer,
+                  correctAnswer,
+                  letter,
+                  selectedOption,
+                ),
                 borderRadius: BorderRadius.circular(50),
               ),
               padding: const EdgeInsets.all(4),
               child: Center(
                 child: Text(
                   letter,
-                  style: context.textTheme.titleMedium?.copyWith(
+                  style: Get.textTheme.titleMedium?.copyWith(
                     fontSize: 24,
                     color:
                         showAnswer &&
@@ -284,117 +274,12 @@ class OptionItem extends StatelessWidget {
             Expanded(
               child: Text(
                 option,
-                style: context.textTheme.bodyMedium?.copyWith(fontSize: 18),
+                style: Get.textTheme.bodyMedium?.copyWith(fontSize: 18),
               ),
             ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class BottomButtons extends StatelessWidget {
-  final double height;
-  final double width;
-  final PageController pageController;
-  final int currentIndex;
-  final int totalQuestions;
-  const BottomButtons({
-    super.key,
-    required this.height,
-    required this.width,
-    required this.pageController,
-    required this.currentIndex,
-    required this.totalQuestions,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        // 50:50 Button
-        CommonRoundedElongatedButton(
-          height: height * 0.06,
-          width: width * 0.38,
-          color: skyColor,
-          borderRadius: BorderRadius.circular(25),
-          child: Text(
-            '50:50',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: kWhite,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          onTap: () {
-            // 50:50 logic here
-          },
-        ),
-
-        const SizedBox(width: 15),
-
-        // Navigation Button
-        CommonRoundedElongatedButton(
-          height: height * 0.06,
-          width: width * 0.38,
-          color: kViolet,
-          borderRadius: BorderRadius.circular(25),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              // Back Icon
-              GestureDetector(
-                onTap: () {
-                  if (currentIndex > 0) {
-                    pageController.previousPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Image.asset(
-                    'assets/images/back.png',
-                    color: kWhite,
-                    height: 20,
-                    width: 20,
-                  ),
-                ),
-              ),
-              // Question Index
-              Text(
-                '${currentIndex + 1}',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: kWhite,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              // Forward Icon
-              GestureDetector(
-                onTap: () {
-                  if (currentIndex < totalQuestions - 1) {
-                    pageController.nextPage(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                    );
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(6.0),
-                  child: Image.asset(
-                    'assets/images/next.png',
-                    color: kWhite,
-                    height: 20,
-                    width: 20,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
