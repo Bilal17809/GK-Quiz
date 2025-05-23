@@ -56,6 +56,7 @@ class ResultScreen extends StatelessWidget {
                               SizedBox(height: 40),
                               Expanded(
                                 child: ListView.builder(
+                                  physics: NeverScrollableScrollPhysics(),
                                   itemCount: 1,
                                   itemBuilder: (context, index) {
                                     return Card(
@@ -67,14 +68,14 @@ class ResultScreen extends StatelessWidget {
                                             child: Container(
                                               decoration: roundedDecoration
                                                   .copyWith(
-                                                    border: Border.all(
-                                                      color: greyBorderColor,
+                                                    color: kCoral.withAlpha(
+                                                      100,
                                                     ),
                                                   ),
                                               child: ListTile(
                                                 leading: Icon(
-                                                  Icons.fmd_good,
-                                                  color: kBlack,
+                                                  Icons.quiz,
+                                                  color: kCoral,
                                                 ),
                                                 title: Text('Total Questions'),
                                                 trailing: Text('20'),
@@ -87,14 +88,14 @@ class ResultScreen extends StatelessWidget {
                                             child: Container(
                                               decoration: roundedDecoration
                                                   .copyWith(
-                                                    border: Border.all(
-                                                      color: greyBorderColor,
+                                                    color: kCoral.withAlpha(
+                                                      100,
                                                     ),
                                                   ),
                                               child: ListTile(
                                                 leading: Icon(
-                                                  Icons.check,
-                                                  color: kBlack,
+                                                  Icons.done,
+                                                  color: kCoral,
                                                 ),
                                                 title: Text('Correct Answers'),
                                                 trailing: Text('18'),
@@ -106,14 +107,14 @@ class ResultScreen extends StatelessWidget {
                                             child: Container(
                                               decoration: roundedDecoration
                                                   .copyWith(
-                                                    border: Border.all(
-                                                      color: greyBorderColor,
+                                                    color: kCoral.withAlpha(
+                                                      100,
                                                     ),
                                                   ),
                                               child: ListTile(
                                                 leading: Icon(
-                                                  Icons.wrong_location,
-                                                  color: kBlack,
+                                                  Icons.close,
+                                                  color: kCoral,
                                                 ),
                                                 title: Text('Wrong Answers'),
                                                 trailing: Text('2'),
