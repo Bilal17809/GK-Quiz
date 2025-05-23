@@ -29,6 +29,7 @@ class QuestionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
+    final controller = Get.find<QuestionsController>();
 
     return Card(
       elevation: 2,
@@ -36,57 +37,62 @@ class QuestionCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              height: 36,
               decoration: roundedDecoration.copyWith(color: kWhite),
               padding: const EdgeInsets.all(12),
-              child: StepProgressIndicator(
-                totalSteps: 100,
-                currentStep: currentIndex,
-                size: 12,
-                padding: 0,
-                roundedEdges: const Radius.circular(10),
-                selectedGradientColor: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [kCoral.withValues(alpha: 0.2), kOrange],
-                ),
-                unselectedGradientColor: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [kWhite, greyColor.withAlpha(1)],
+              child: Obx(
+                () => StepProgressIndicator(
+                  totalSteps: 100,
+                  currentStep: controller.getProgressPercentage(),
+                  size: 12,
+                  padding: 0,
+                  roundedEdges: const Radius.circular(10),
+                  selectedGradientColor: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [kCoral.withValues(alpha: 0.2), kOrange],
+                  ),
+                  unselectedColor: greyColor.withValues(alpha: 0.2),
                 ),
               ),
             ),
             const SizedBox(height: 12),
-            Text(
-              question.topicName,
-              style: Get.textTheme.headlineMedium?.copyWith(
-                color: kRed,
-                fontSize: 24,
+            Center(
+              child: Text(
+                question.topicName,
+                style: Get.textTheme.headlineMedium?.copyWith(
+                  color: kRed,
+                  fontSize: 22,
+                ),
               ),
             ),
-            const SizedBox(height: 12),
             QuestionHeader(totalQuestions: totalQuestions),
             const SizedBox(height: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(question.question, style: Get.textTheme.titleMedium),
-              ],
-            ),
-            const SizedBox(height: 24),
-
-            Obx(
-              () => QuestionOptions(
-                question: question,
-                showAnswer: showAnswers[currentIndex] ?? false,
-                selectedOption: selectedAnswers[currentIndex],
-                onOptionSelected:
-                    (option) => onOptionSelected(currentIndex, option),
-                // heightMargin: 20,
-                // widthMargin: mobileWidth * 1,
+            SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    question.question,
+                    style: Get.textTheme.titleMedium?.copyWith(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(height: mobileHeight * 0.03),
+                  Obx(
+                    () => QuestionOptions(
+                      question: question,
+                      showAnswer: showAnswers[currentIndex] ?? false,
+                      selectedOption: selectedAnswers[currentIndex],
+                      onOptionSelected:
+                          (option) => onOptionSelected(currentIndex, option),
+                    ),
+                  ),
+                ],
               ),
             ),
             const Spacer(),
@@ -96,7 +102,6 @@ class QuestionCard extends StatelessWidget {
               currentIndex: currentIndex,
               totalQuestions: totalQuestions,
             ),
-            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -114,31 +119,35 @@ class QuestionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Text(
-          'Total Questions: $totalQuestions',
-          style: Get.textTheme.bodyMedium,
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 24),
-          height: 28,
-          width: 28,
-          decoration: roundedDecoration.copyWith(
-            color: kOrange,
-            borderRadius: BorderRadius.circular(50),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Image.asset('assets/images/forward.png', color: kWhite),
-        ),
-        Container(
-          margin: const EdgeInsets.only(left: 16),
-          height: 28,
-          width: 28,
-          decoration: roundedDecoration.copyWith(
-            color: kOrange,
-            borderRadius: BorderRadius.circular(50),
-          ),
-          padding: const EdgeInsets.all(8),
-          child: Image.asset('assets/images/share.png', color: kWhite),
+        Row(
+          children: [
+            Text(
+              'Total Questions: $totalQuestions',
+              style: Get.textTheme.bodyMedium,
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 24),
+              height: 28,
+              width: 28,
+              decoration: roundedDecoration.copyWith(
+                color: kOrange,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Image.asset('assets/images/forward.png', color: kWhite),
+            ),
+            Container(
+              margin: const EdgeInsets.only(left: 16),
+              height: 28,
+              width: 28,
+              decoration: roundedDecoration.copyWith(
+                color: kOrange,
+                borderRadius: BorderRadius.circular(50),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: Image.asset('assets/images/share.png', color: kWhite),
+            ),
+          ],
         ),
       ],
     );
@@ -171,8 +180,7 @@ class QuestionOptions extends StatelessWidget {
           selectedOption: selectedOption,
           onOptionSelected: onOptionSelected,
         ),
-
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
         OptionItem(
           letter: 'B',
           option: question.option2,
@@ -181,7 +189,7 @@ class QuestionOptions extends StatelessWidget {
           selectedOption: selectedOption,
           onOptionSelected: onOptionSelected,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
         OptionItem(
           letter: 'C',
           option: question.option3,
@@ -190,7 +198,7 @@ class QuestionOptions extends StatelessWidget {
           selectedOption: selectedOption,
           onOptionSelected: onOptionSelected,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: 12),
         OptionItem(
           letter: 'D',
           option: question.option4,
@@ -221,14 +229,16 @@ class OptionItem extends StatelessWidget {
     this.selectedOption,
     required this.onOptionSelected,
   });
+
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<QuestionsController>();
-
     return InkWell(
       onTap: showAnswer ? null : () => onOptionSelected(letter),
       child: Container(
-        height: 52,
+        constraints: BoxConstraints(
+          minHeight: 56, // minimum height for the container
+        ),
         decoration: BoxDecoration(
           border: Border.all(color: kBlack.withValues(alpha: 0.15)),
           color: controller.getOptionBackgroundColor(
@@ -242,7 +252,7 @@ class OptionItem extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              margin: const EdgeInsets.only(left: 16),
+              margin: const EdgeInsets.only(left: 8),
               height: 40,
               width: 40,
               decoration: roundedDecoration.copyWith(
@@ -254,12 +264,12 @@ class OptionItem extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(50),
               ),
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(6),
               child: Center(
                 child: Text(
                   letter,
                   style: Get.textTheme.titleMedium?.copyWith(
-                    fontSize: 24,
+                    fontSize: 16,
                     color:
                         showAnswer &&
                                 (correctAnswer == letter ||
@@ -270,11 +280,21 @@ class OptionItem extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: 12),
             Expanded(
-              child: Text(
-                option,
-                style: Get.textTheme.bodyMedium?.copyWith(fontSize: 18),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      option,
+                      style: Get.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

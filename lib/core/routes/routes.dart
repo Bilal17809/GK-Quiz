@@ -29,9 +29,11 @@ import 'package:template/presentations/home/view/home_screen.dart';
 import 'package:template/presentations/lessons/view/lessons_screen.dart';
 import 'package:template/presentations/practice/view/practice_screen.dart';
 import 'package:template/presentations/questions/view/questions_screen.dart';
+import 'package:template/presentations/questions_categories/view/questions_categories_screen.dart';
 import 'package:template/presentations/splash/view/splash_screen.dart';
 import 'package:template/presentations/take_a_test_list/view/take_a_test_list.dart';
 import 'package:template/presentations/take_test/view/take_test_screen.dart';
+import 'package:template/presentations/result/view/result_screen.dart';
 
 class Routes {
   static final routes = [
@@ -48,5 +50,10 @@ class Routes {
       name: RoutesName.takeATestScreen,
       page: () => const TakeATestList(),
     ),
+    GetPage(
+      name: RoutesName.questionsCategoriesScreen,
+      page: () => const QuestionsCategoriesScreen(),
+    ),
+    GetPage(name: RoutesName.resultScreen, page: () => const ResultScreen()),
   ];
 }
