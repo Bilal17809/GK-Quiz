@@ -11,7 +11,14 @@ class QuestionsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String topic = Get.arguments['topic'];
+    final int? categoryIndex = Get.arguments['categoryIndex'];
+
     final QuestionsController controller = Get.put(QuestionsController());
+
+    // Load questions based on whether category
+
+    controller.loadQuestionsForCategory(topic, categoryIndex!);
 
     return Scaffold(
       backgroundColor: kWhite,
@@ -23,14 +30,20 @@ class QuestionsScreen extends StatelessWidget {
               'GK Quiz',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Practice', style: context.textTheme.bodyLarge),
+            Text(
+              '$topic - Category $categoryIndex',
+              style: context.textTheme.bodyLarge,
+            ),
           ],
         ),
         leading: Padding(
           padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
           child: RoundedButton(
             backgroundColor: kRed,
-            onTap: () => Get.back(),
+            onTap: () {
+              controller.resetQuizState();
+              Get.back();
+            },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Image.asset('assets/images/back.png', color: kWhite),

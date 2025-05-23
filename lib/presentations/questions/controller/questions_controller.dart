@@ -1,8 +1,11 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:template/core/db_service/question_db_service.dart';
+import 'package:template/core/models/category_model.dart';
 import 'package:template/core/models/questions_data.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
+import 'package:toastification/toastification.dart';
 
 class QuestionsController extends GetxController {
   // Observable collections and state
@@ -11,17 +14,30 @@ class QuestionsController extends GetxController {
   final RxInt currentQuestionIndex = 0.obs;
   final RxMap<int, String> selectedAnswers = <int, String>{}.obs;
   final RxMap<int, bool> shouldShowAnswerResults = <int, bool>{}.obs;
+  final RxMap<String, int> topicCounts = <String, int>{}.obs;
+
+  // Categories state
+  final RxList<CategoryModel> questionCategories = <CategoryModel>[].obs;
+  final RxBool isLoadingCategories = false.obs;
+  final RxString currentTopic = ''.obs;
 
   // Page navigation controller
   late PageController questionsPageController = PageController();
 
-  // Get the topic from navigation arguments
-  String get currentTopic => Get.arguments['topic'] ?? '';
+  // Call this method from the screen to load questions for a specific topic
+  void loadQuestionsForTopic(String topic) {
+    _loadQuestionsForTopic(topic);
+  }
 
-  @override
-  void onInit() {
-    super.onInit();
-    _loadQuestionsForTopic();
+  // Call this method to load categories for a specific topic
+  void loadCategoriesForTopic(String topic) {
+    currentTopic.value = topic;
+    _loadCategoriesForTopic(topic);
+  }
+
+  // Load questions for a specific category (20 questions each)
+  void loadQuestionsForCategory(String topic, int categoryIndex) {
+    _loadQuestionsForCategory(topic, categoryIndex);
   }
 
   @override
@@ -30,42 +46,99 @@ class QuestionsController extends GetxController {
     super.onClose();
   }
 
-  // Retrieves all topics with their question counts from the database
-  Future<Map<String, int>> getTopicsWithQuestionCounts() async {
-    final allQuestions = await DBService.getAllQuestions();
-    final Map<String, int> topicCounts = {};
+  // Loads categories for the specified topic
+  Future<void> _loadCategoriesForTopic(String topic) async {
+    isLoadingCategories.value = true;
 
-    for (var question in allQuestions) {
-      topicCounts[question.topicName] =
-          (topicCounts[question.topicName] ?? 0) + 1;
-    }
+    final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
 
-    return topicCounts;
-  }
+    if (allQuestionsForTopic.isNotEmpty) {
+      final totalQuestions = allQuestionsForTopic.length;
+      final numberOfCategories = (totalQuestions / 20).floor();
+      final categories = <CategoryModel>[];
 
-  // Loads questions for the current topic from the database
-  Future<void> _loadQuestionsForTopic() async {
-    try {
-      isLoadingQuestions.value = true;
-      final questionsFromDb = await DBService.getQuestionsByTopic(currentTopic);
-      questions.assignAll(questionsFromDb);
-    } catch (e) {
-      // Shows an error snackbar with the given message
+      for (int i = 0; i < numberOfCategories; i++) {
+        final startIndex = i * 20;
+        final endIndex = startIndex + 20;
+
+        categories.add(
+          CategoryModel(
+            categoryIndex: i + 1,
+            title: 'Category ${i + 1}',
+            questionsRange: '${startIndex + 1} - $endIndex',
+            totalQuestions: 20,
+            topic: topic,
+          ),
+        );
+      }
+
+      questionCategories.assignAll(categories);
+    } else {
+      questionCategories.clear();
       Get.snackbar(
         'Error',
-        'Failed to loading questions from the database: ${e.toString()}',
+        'No questions available for this topic.',
         snackPosition: SnackPosition.BOTTOM,
       );
-    } finally {
-      isLoadingQuestions.value = false;
     }
+
+    isLoadingCategories.value = false;
+  }
+
+  // Loads questions for the specified topic from the database
+  Future<void> _loadQuestionsForTopic(String topic) async {
+    isLoadingQuestions.value = true;
+    final questionsFromDb = await DBService.getQuestionsByTopic(topic);
+    questions.assignAll(questionsFromDb);
+    isLoadingQuestions.value = false;
+  }
+
+  // Loads questions for a specific category
+  Future<void> _loadQuestionsForCategory(
+    String topic,
+    int categoryIndex,
+  ) async {
+    isLoadingQuestions.value = true;
+
+    final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
+
+    // Check if the list has enough questions for the requested category
+    final startIndex = (categoryIndex - 1) * 20;
+
+    if (allQuestionsForTopic.length > startIndex) {
+      final categoryQuestions =
+          allQuestionsForTopic.skip(startIndex).take(20).toList();
+      questions.assignAll(categoryQuestions);
+    } else {
+      questions.clear();
+      Get.snackbar(
+        'Error',
+        'No questions are available for this Category at the moment.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    }
+
+    isLoadingQuestions.value = false;
+  }
+
+  // Reset states when starting a new quiz
+  void resetQuizState() {
+    currentQuestionIndex.value = 0;
+    selectedAnswers.clear();
+    shouldShowAnswerResults.clear();
+    questionsPageController = PageController();
+  }
+
+  // Get progress percentage for step indicator (0-100)
+  int getProgressPercentage() {
+    if (questions.isEmpty) return 0;
+    return ((currentQuestionIndex.value + 1) * 100 / questions.length).round();
   }
 
   // Handles user's answer selection for a specific question
   void handleAnswerSelection(int questionIndex, String selectedOption) {
     selectedAnswers[questionIndex] = selectedOption;
     shouldShowAnswerResults[questionIndex] = true;
-
     // Refresh observables to trigger UI updates
     selectedAnswers.refresh();
     shouldShowAnswerResults.refresh();
@@ -76,12 +149,32 @@ class QuestionsController extends GetxController {
     currentQuestionIndex.value = index;
   }
 
-  // Navigates to the next question if available
+  // Navigates to the next question
   void goToNextQuestion() {
-    if (currentQuestionIndex.value < questions.length - 1) {
-      questionsPageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+    if (selectedAnswers.containsKey(currentQuestionIndex.value)) {
+      if (currentQuestionIndex.value < questions.length - 1) {
+        questionsPageController.nextPage(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        // After last question, navigate to the result screen
+        Get.toNamed(RoutesName.resultScreen);
+      }
+    } else {
+      // This will now run if no answer is selected
+      toastification.show(
+        type: ToastificationType.warning,
+        title: Text('Select an Option'),
+        description: Text(
+          'Please select an answer before moving to the next question.',
+        ),
+        style: ToastificationStyle.flatColored,
+        autoCloseDuration: const Duration(seconds: 2),
+        primaryColor: kCoral,
+        margin: EdgeInsets.all(8),
+        closeOnClick: true,
+        alignment: Alignment.bottomCenter,
       );
     }
   }
@@ -96,7 +189,7 @@ class QuestionsController extends GetxController {
     }
   }
 
-  // Shows the 50:50 snanckbar
+  // Shows the 50:50 snackbar
   void use5050Hint() {
     Get.snackbar(
       'Hint Used',
@@ -115,7 +208,6 @@ class QuestionsController extends GetxController {
     if (!showAnswer) return Colors.transparent;
     final isCorrect = correctLetter == currentLetter;
     final isSelected = selectedLetter == currentLetter;
-
     if (isCorrect) {
       return kDarkGreen1.withValues(alpha: 0.25);
     } else if (isSelected) {
@@ -134,7 +226,6 @@ class QuestionsController extends GetxController {
     if (!showAnswer) return greyColor.withOpacity(0.1);
     final isCorrect = correctAnswer == letter;
     final isSelected = selectedOption == letter;
-
     if (isCorrect) {
       return kDarkGreen1;
     } else if (isSelected) {

@@ -6,4 +6,7 @@ abstract class RoutesName {
   static const String questionsScreen = '/questions_screen';
   static const String testScreen = '/test_screen';
   static const String takeATestScreen = '/take_a_test_screen';
+  static const String questionsCategoriesScreen =
+      '/questions_categories_screen';
+  static const String resultScreen = '/result_screen';
 }

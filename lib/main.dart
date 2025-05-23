@@ -1,6 +1,7 @@
 import 'package:get/route_manager.dart';
 import 'package:template/core/routes/routes.dart';
 import 'package:template/core/routes/routes_name.dart';
+import 'package:toastification/toastification.dart';
 import '/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
@@ -13,12 +14,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.themeData,
-      initialRoute: RoutesName.homeScreen,
-      getPages: Routes.routes,
+    return ToastificationWrapper(
+      child: GetMaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.themeData,
+        initialRoute: RoutesName.homeScreen,
+        getPages: Routes.routes,
+      ),
     );
   }
 }
