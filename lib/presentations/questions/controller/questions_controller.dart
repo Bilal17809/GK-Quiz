@@ -15,6 +15,7 @@ class QuestionsController extends GetxController {
   final RxMap<int, String> selectedAnswers = <int, String>{}.obs;
   final RxMap<int, bool> shouldShowAnswerResults = <int, bool>{}.obs;
   final RxMap<String, int> topicCounts = <String, int>{}.obs;
+  final RxInt totalQuestionsInTopic = 0.obs;
 
   // Categories state
   final RxList<CategoryModel> questionCategories = <CategoryModel>[].obs;
@@ -44,6 +45,13 @@ class QuestionsController extends GetxController {
   void onClose() {
     questionsPageController.dispose();
     super.onClose();
+  }
+
+  Future<void> loadAllTopicCounts(List<String> topicNames) async {
+    for (String topic in topicNames) {
+      final questionsForTopic = await DBService.getQuestionsByTopic(topic);
+      topicCounts[topic] = questionsForTopic.length;
+    }
   }
 
   // Loads categories for the specified topic
@@ -127,6 +135,8 @@ class QuestionsController extends GetxController {
     selectedAnswers.clear();
     shouldShowAnswerResults.clear();
     questionsPageController = PageController();
+    // questionsPageController.dispose();
+    // questionsPageController = PageController();
   }
 
   // Get progress percentage for step indicator (0-100)

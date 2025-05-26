@@ -13,7 +13,7 @@ class PracticeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(QuestionsController());
-
+    controller.loadAllTopicCounts(gridTexts);
     return Scaffold(
       appBar: AppBar(
         title: Column(

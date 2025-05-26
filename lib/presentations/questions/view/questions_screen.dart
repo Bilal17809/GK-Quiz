@@ -17,7 +17,6 @@ class QuestionsScreen extends StatelessWidget {
     final QuestionsController controller = Get.put(QuestionsController());
 
     // Load questions based on whether category
-
     controller.loadQuestionsForCategory(topic, categoryIndex!);
 
     return Scaffold(
