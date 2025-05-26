@@ -20,10 +20,10 @@ class PracticeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GK Quiz',
+              'GK Quiz ############ ',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Practice', style: Get.textTheme.bodyLarge),
+            Text('Practice ', style: Get.textTheme.bodyLarge),
           ],
         ),
         leading: Padding(
@@ -62,8 +62,12 @@ class PracticeScreen extends StatelessWidget {
                 // Navigate to categories screen
                 Get.toNamed(
                   RoutesName.questionsCategoriesScreen,
-                  arguments: {'topic': text},
+                  arguments: {
+                    'topic': text,
+                    'index': index,
+                  },
                 );
+
               },
               child: Stack(
                 fit: StackFit.loose,

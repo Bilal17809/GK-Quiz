@@ -6,6 +6,13 @@ import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/questions/controller/questions_controller.dart';
 import 'package:template/presentations/questions/widgets/question_content.dart';
 
+import '../../../core/routes/routes_name.dart';
+
+/*
+<<<<<<<<<<< Must change >>>>>>>>>>>>>>
+This is Your Quiz screen ? the file name is Questions_screen.dart?
+correct this name! this should be GK Quiz Page not screen mention,
+*/
 class QuestionsScreen extends StatelessWidget {
   const QuestionsScreen({super.key});
 
@@ -13,6 +20,7 @@ class QuestionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final String topic = Get.arguments['topic'];
     final int? categoryIndex = Get.arguments['categoryIndex'];
+    final int? SubcategoryIndex = Get.arguments['SubCatIndex'];
 
     final QuestionsController controller = Get.put(QuestionsController());
 
@@ -26,11 +34,11 @@ class QuestionsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GK Quiz',
+              'GK Quiz $categoryIndex "," $SubcategoryIndex',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
             Text(
-              '$topic - Category $categoryIndex',
+              '$topic - Category  $categoryIndex',
               style: context.textTheme.bodyLarge,
             ),
           ],
@@ -61,6 +69,21 @@ class QuestionsScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Image.asset('assets/images/notes.png', color: kWhite),
           ),
+          Flexible(
+            child: TextButton(
+              onPressed: () {
+                Get.toNamed(
+                  RoutesName.resultScreen,
+                  arguments: {
+                    'categoryIndex': categoryIndex,
+                    'SubCatIndex': SubcategoryIndex,
+                  },
+                );
+              },
+              child: Text("Click"),
+            ),
+          )
+
         ],
       ),
       body: Obx(

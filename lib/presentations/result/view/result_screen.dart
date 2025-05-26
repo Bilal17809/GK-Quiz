@@ -15,8 +15,16 @@ class ResultScreen extends StatelessWidget {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
 
+    final arguments = Get.arguments as Map<String, dynamic>;
+    final int categoryIndex = arguments['categoryIndex'];
+    final int subCategoryIndex = arguments['SubCatIndex'];
+
     // Initialize the controller
     final ResultController resultController = Get.put(ResultController());
+
+    // Call calculateResults with category info
+    resultController.calculateResults(categoryIndex, subCategoryIndex);
+    print("############################## $categoryIndex ',' $subCategoryIndex ");
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -29,7 +37,7 @@ class ResultScreen extends StatelessWidget {
             children: [
               SizedBox(height: mobileHeight * 0.07),
               Text(
-                'QUIZ RESULT',
+                'QUIZ RESULT$categoryIndex ","$subCategoryIndex',
                 style: Get.textTheme.titleLarge?.copyWith(
                   color: kWhite,
                   shadows: [

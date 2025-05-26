@@ -10,16 +10,28 @@ import 'package:template/presentations/questions/controller/questions_controller
 import 'package:template/presentations/questions_categories/controller/quiz_result_controller.dart';
 import 'package:template/presentations/questions_categories/widgets/category_card.dart';
 
+import '../../result/controller/result_controller.dart';
+
+/*
+check the logic i have pass CateIndex and,
+SubCategoryIndex, throught wich i can get the correct and wrong asnwer
+*/
+
 class QuestionsCategoriesScreen extends StatelessWidget {
-  const QuestionsCategoriesScreen({super.key});
+  const QuestionsCategoriesScreen({super.key,});
 
   @override
   Widget build(BuildContext context) {
-    final String topic = Get.arguments?['topic'] ?? '';
+    final arguments = Get.arguments as Map<String, dynamic>;
+    final topic = arguments['topic'];
+    final CatIndex = arguments['index'];
+    // final String topic = Get.arguments?['topic'] ?? '';
+    // final index = arguments['index'];
+
     final QuestionsController controller = Get.put(QuestionsController());
     Get.put(QuizResultController());
+    final QuizResultController1 resultController = Get.put(QuizResultController1());
 
-    // Load categories for the current topic
     if (topic.isNotEmpty) {
       controller.loadCategoriesForTopic(topic);
     } else {
@@ -35,7 +47,7 @@ class QuestionsCategoriesScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GK Quiz',
+              'GK Quiz $CatIndex ################',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
             Text('Categories', style: Get.textTheme.bodyLarge),
@@ -101,31 +113,79 @@ class QuestionsCategoriesScreen extends StatelessWidget {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                return ListView.builder(
+                return  ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: controller.questionCategories.length,
                   itemBuilder: (context, index) {
                     final category = controller.questionCategories[index];
-                    return CategoryCard(
-                      category: category,
-                      onTap: () {
-                        // Reset quiz state before starting new category
-                        controller.resetQuizState();
-
-                        // Navigate to questions screen
-                        Get.toNamed(
-                          RoutesName.questionsScreen,
-                          arguments: {
-                            'topic': category.topic,
-                            'categoryIndex': category.categoryIndex,
-                            'isCategory': true,
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        CategoryCard(
+                          category: category,
+                          onTap: () {
+                            controller.resetQuizState();
+                            Get.toNamed(
+                              RoutesName.questionsScreen,
+                              arguments: {
+                                'topic': category.topic,
+                                'categoryIndex': category.categoryIndex,
+                                'isCategory': true,
+                                'CatIndex': index,
+                                'SubCatIndex': CatIndex,
+                              },
+                            );
                           },
-                        );
-                      },
-                      topic: topic,
+                          topic: topic,
+                        ),
+                        FutureBuilder<Map<String, dynamic>>(
+                          future: resultController.getQuizResult(index,CatIndex),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const Padding(
+                                padding: EdgeInsets.all(8),
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+
+                            if (!snapshot.hasData || (snapshot.data?['correct'] == 0 && snapshot.data?['wrong'] == 0)) {
+                              print("################# Fetching result for CatIndex: $CatIndex, index: $index");
+                              return const Padding(
+                                padding: EdgeInsets.all(8),
+                                child: Text('No previous result found.'),
+                              );
+                            }
+
+                            final data = snapshot.data!;
+                            return Padding(
+                              padding: const EdgeInsets.all(8),
+                              child: Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey.shade100,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: Colors.grey.shade300),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text('📊 Last Result for SubCategory $index',
+                                        style: Get.textTheme.titleSmall),
+                                    const SizedBox(height: 4),
+                                    Text('✅ Correct: ${data['correct']}'),
+                                    Text('❌ Wrong: ${data['wrong']}'),
+                                    Text('🎯 Score: ${data['percentage']}%'),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ],
                     );
                   },
                 );
+
               }),
             ),
           ],
