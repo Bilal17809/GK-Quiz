@@ -7,6 +7,7 @@ import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/presentations/questions/controller/questions_controller.dart';
+import 'package:template/presentations/questions_categories/controller/quiz_result_controller.dart';
 import 'package:template/presentations/questions_categories/widgets/category_card.dart';
 
 class QuestionsCategoriesScreen extends StatelessWidget {
@@ -16,6 +17,7 @@ class QuestionsCategoriesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final String topic = Get.arguments?['topic'] ?? '';
     final QuestionsController controller = Get.put(QuestionsController());
+    Get.put(QuizResultController());
 
     // Load categories for the current topic
     if (topic.isNotEmpty) {
