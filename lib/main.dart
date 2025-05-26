@@ -5,7 +5,8 @@ import 'package:toastification/toastification.dart';
 import '/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

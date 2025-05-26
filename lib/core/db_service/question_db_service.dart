@@ -28,7 +28,7 @@ class DBService {
     final maps = await db.query('question_table');
     return maps.map((e) => QuestionsModel.fromMap(e)).toList();
   }
-
+  
   static Future<List<QuestionsModel>> getQuestionsByTopic(String topic) async {
     final db = await database;
     final maps = await db.query(

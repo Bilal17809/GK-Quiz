@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class IconTextButton extends StatelessWidget {
+class TextIconButton extends StatelessWidget {
   final VoidCallback onPressed;
   final String text;
   final Widget icon;
@@ -8,8 +8,9 @@ class IconTextButton extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? color;
+  final Color foregroundColor;
 
-  const IconTextButton({
+  const TextIconButton({
     super.key,
     required this.onPressed,
     required this.text,
@@ -18,24 +19,28 @@ class IconTextButton extends StatelessWidget {
     this.width,
     this.height,
     this.color,
+    required this.foregroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    final mobileHeight = MediaQuery.of(context).size.height;
-    final mobileWidth = MediaQuery.of(context).size.width;
     return SizedBox(
       width: width,
       height: height,
       child: TextButton(
-        style: TextButton.styleFrom(backgroundColor: color),
+        style: TextButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: foregroundColor,
+        ),
         onPressed: onPressed,
         child: SizedBox(
-          width: mobileWidth * 1,
-          height: mobileHeight * 0.065,
+          width: width,
+          height: height,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [icon, const SizedBox(width: 8), Text(text)],
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+
+            children: [Text(text), const SizedBox(width: 8), icon],
           ),
         ),
       ),
