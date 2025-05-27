@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_widgets/elongated_button.dart';
 import 'package:template/core/theme/app_colors.dart';
-import 'package:template/presentations/questions/controller/questions_controller.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
 class BottomButtons extends StatelessWidget {
   final double height;
@@ -20,7 +20,7 @@ class BottomButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<QuestionsController>();
+    final controller = Get.find<QuizController>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,

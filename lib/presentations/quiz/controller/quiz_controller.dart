@@ -2,12 +2,13 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:template/core/db_service/question_db_service.dart';
 import 'package:template/core/models/category_model.dart';
+import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:toastification/toastification.dart';
 
-class QuestionsController extends GetxController {
+class QuizController extends GetxController {
   // Observable collections and state
   final RxList<QuestionsModel> questions = <QuestionsModel>[].obs;
   final RxBool isLoadingQuestions = true.obs;
@@ -22,8 +23,54 @@ class QuestionsController extends GetxController {
   final RxBool isLoadingCategories = false.obs;
   final RxString currentTopic = ''.obs;
 
+  // Arguments - initialize as nullable and get them when needed
+  int? _categoryIndex;
+  // int? _subcategoryIndex;
+
+  // Getters for arguments with safe access
+  int? get categoryIndex => _categoryIndex;
+  // int? get subcategoryIndex => _subcategoryIndex;
+
   // Page navigation controller
   late PageController questionsPageController = PageController();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _initializeArguments();
+  }
+
+  String getTopicNameByIndex(int index) {
+    if (index >= 0 && index < gridTexts.length) {
+      return gridTexts[index];
+    }
+    return '';
+  }
+
+  void _initializeArguments() {
+    final args = Get.arguments;
+    if (args != null && args is Map<String, dynamic>) {
+      _categoryIndex = args['categoryIndex'];
+      // _subcategoryIndex = args['SubCatIndex'];
+
+      // Debug print to verify arguments
+      print('QuizController - Arguments initialized:');
+      print('CategoryIndex: $_categoryIndex');
+      // print('SubCategoryIndex: $_subcategoryIndex');
+    }
+  }
+
+  // Method to update arguments if needed
+  void updateArguments(Map<String, dynamic>? arguments) {
+    if (arguments != null) {
+      _categoryIndex = arguments['categoryIndex'];
+      // _subcategoryIndex = arguments['SubCatIndex'];
+
+      print('QuizController - Arguments updated:');
+      print('CategoryIndex: $_categoryIndex');
+      // print('SubCategoryIndex: $_subcategoryIndex');
+    }
+  }
 
   // Call this method from the screen to load questions for a specific topic
   void loadQuestionsForTopic(String topic) {
@@ -57,7 +104,6 @@ class QuestionsController extends GetxController {
   // Loads categories for the specified topic
   Future<void> _loadCategoriesForTopic(String topic) async {
     isLoadingCategories.value = true;
-
     final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
 
     if (allQuestionsForTopic.isNotEmpty) {
@@ -68,7 +114,6 @@ class QuestionsController extends GetxController {
       for (int i = 0; i < numberOfCategories; i++) {
         final startIndex = i * 20;
         final endIndex = startIndex + 20;
-
         categories.add(
           CategoryModel(
             categoryIndex: i + 1,
@@ -79,7 +124,6 @@ class QuestionsController extends GetxController {
           ),
         );
       }
-
       questionCategories.assignAll(categories);
     } else {
       questionCategories.clear();
@@ -89,7 +133,6 @@ class QuestionsController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
-
     isLoadingCategories.value = false;
   }
 
@@ -107,12 +150,10 @@ class QuestionsController extends GetxController {
     int categoryIndex,
   ) async {
     isLoadingQuestions.value = true;
-
     final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
 
     // Check if the list has enough questions for the requested category
     final startIndex = (categoryIndex - 1) * 20;
-
     if (allQuestionsForTopic.length > startIndex) {
       final categoryQuestions =
           allQuestionsForTopic.skip(startIndex).take(20).toList();
@@ -125,7 +166,6 @@ class QuestionsController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
       );
     }
-
     isLoadingQuestions.value = false;
   }
 
@@ -135,8 +175,6 @@ class QuestionsController extends GetxController {
     selectedAnswers.clear();
     shouldShowAnswerResults.clear();
     questionsPageController = PageController();
-    // questionsPageController.dispose();
-    // questionsPageController = PageController();
   }
 
   // Get progress percentage for step indicator (0-100)
@@ -168,8 +206,16 @@ class QuestionsController extends GetxController {
           curve: Curves.easeInOut,
         );
       } else {
+        // Fix: Provide default values if arguments are null
+        final catIndex = _categoryIndex ?? 1;
+        // final subCatIndex = _subcategoryIndex ?? 0;
+
+        print('QuizController - Navigating to result with:');
+        print('CategoryIndex: $catIndex');
+        // print('SubCategoryIndex: $subCatIndex');
+
         // After last question, navigate to the result screen
-        Get.toNamed(RoutesName.resultScreen);
+        Get.toNamed(RoutesName.resultScreen, arguments: {'categoryIndex'});
       }
     } else {
       // This will now run if no answer is selected
@@ -216,8 +262,10 @@ class QuestionsController extends GetxController {
     String? selectedLetter,
   ) {
     if (!showAnswer) return Colors.transparent;
+
     final isCorrect = correctLetter == currentLetter;
     final isSelected = selectedLetter == currentLetter;
+
     if (isCorrect) {
       return kDarkGreen1.withValues(alpha: 0.25);
     } else if (isSelected) {
@@ -234,8 +282,10 @@ class QuestionsController extends GetxController {
     String? selectedOption,
   ) {
     if (!showAnswer) return greyColor.withOpacity(0.1);
+
     final isCorrect = correctAnswer == letter;
     final isSelected = selectedOption == letter;
+
     if (isCorrect) {
       return kDarkGreen1;
     } else if (isSelected) {

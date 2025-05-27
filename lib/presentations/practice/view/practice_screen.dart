@@ -5,15 +5,20 @@ import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/core/models/grid_data.dart';
-import 'package:template/presentations/questions/controller/questions_controller.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
+import 'package:template/presentations/result/controller/result_controller.dart';
 
 class PracticeScreen extends StatelessWidget {
   const PracticeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(QuestionsController());
+    final controller = Get.put(QuizController());
+    final QuizResultController1 resultController = Get.put(
+      QuizResultController1(),
+    );
     controller.loadAllTopicCounts(gridTexts);
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -61,13 +66,9 @@ class PracticeScreen extends StatelessWidget {
               onTap: () {
                 // Navigate to categories screen
                 Get.toNamed(
-                  RoutesName.questionsCategoriesScreen,
-                  arguments: {
-                    'topic': text,
-                    'index': index,
-                  },
+                  RoutesName.quizLevelsScreen,
+                  arguments: {'topic': text, 'index': index},
                 );
-
               },
               child: Stack(
                 fit: StackFit.loose,
@@ -128,54 +129,140 @@ class PracticeScreen extends StatelessWidget {
                           ],
                         ),
                         Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8, right: 8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Correct: 0',
-                                style: Get.textTheme.bodySmall?.copyWith(
-                                  color: kWhite,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
+                        // Real data section using FutureBuilder
+                        FutureBuilder<Map<String, dynamic>>(
+                          future: resultController.getOverallResult(index),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return Container(
+                                padding: const EdgeInsets.all(8),
+                                child: const SizedBox(
+                                  height: 16,
+                                  width: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                  ),
                                 ),
+                              );
+                            }
+
+                            final data = snapshot.data!;
+                            final percentage = data['percentage'] ?? 0.0;
+
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 4,
+                                          vertical: 2,
+                                        ),
+                                        decoration: roundedDecoration.copyWith(
+                                          color: kWhite.withValues(alpha: 0.25),
+                                        ),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  '${data['correct'] ?? 0}',
+                                                  style: Get.textTheme.bodySmall
+                                                      ?.copyWith(
+                                                        color: kDarkGreen1,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+
+                                                Icon(
+                                                  Icons.done_all,
+                                                  color: kDarkGreen1,
+                                                  size: 16,
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  '${data['wrong'] ?? 0}',
+                                                  style: Get.textTheme.bodySmall
+                                                      ?.copyWith(
+                                                        color: kRed.withValues(
+                                                          alpha: 0.7,
+                                                        ),
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                ),
+
+                                                Icon(
+                                                  Icons.close,
+                                                  color: kRed.withValues(
+                                                    alpha: 0.7,
+                                                  ),
+                                                  size: 16,
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  // Star rating based on percentage
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: List.generate(4, (starIndex) {
+                                        double starThreshold;
+                                        if (starIndex == 0) {
+                                          starThreshold = 10.0;
+                                        } else {
+                                          // Other 3 stars equally divide remaining 90%
+                                          starThreshold =
+                                              10.0 + ((starIndex) * 30.0);
+                                        }
+
+                                        bool isActive =
+                                            percentage >= starThreshold;
+
+                                        return Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 1,
+                                          ),
+                                          child: Icon(
+                                            Icons.star,
+                                            color:
+                                                isActive
+                                                    ? kCoral
+                                                    : kWhite.withValues(
+                                                      alpha: 0.3,
+                                                    ),
+                                            size: 14,
+                                          ),
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                ],
                               ),
-                              Text(
-                                'Wrong: 0',
-                                style: Get.textTheme.bodySmall?.copyWith(
-                                  color: kWhite,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Skipped: 1',
-                                style: Get.textTheme.bodySmall?.copyWith(
-                                  color: kWhite,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                              SizedBox(width: 8),
-                              Text(
-                                'Not Attempt: 247',
-                                style: Get.textTheme.bodySmall?.copyWith(
-                                  color: kWhite,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                            );
+                          },
                         ),
                       ],
                     ),

@@ -3,29 +3,57 @@ import 'package:get/get.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/questions/controller/questions_controller.dart';
-import 'package:template/presentations/questions/widgets/question_content.dart';
-
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
+import 'package:template/presentations/quiz/widgets/quiz_content.dart';
 import '../../../core/routes/routes_name.dart';
 
-/*
-<<<<<<<<<<< Must change >>>>>>>>>>>>>>
-This is Your Quiz screen ? the file name is Questions_screen.dart?
-correct this name! this should be GK Quiz Page not screen mention,
-*/
-class QuestionsScreen extends StatelessWidget {
-  const QuestionsScreen({super.key});
+class QuizScreen extends StatelessWidget {
+  const QuizScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String topic = Get.arguments['topic'];
-    final int? categoryIndex = Get.arguments['categoryIndex'];
-    final int? SubcategoryIndex = Get.arguments['SubCatIndex'];
+    // Get arguments with proper null checking
+    final arguments = Get.arguments as Map<String, dynamic>?;
 
-    final QuestionsController controller = Get.put(QuestionsController());
+    if (arguments == null) {
+      // Handle case where no arguments are passed
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error: Missing quiz parameters'),
+              ElevatedButton(
+                onPressed: () => Get.back(),
+                child: Text('Go Back'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
-    // Load questions based on whether category
-    controller.loadQuestionsForCategory(topic, categoryIndex!);
+    final String topic = arguments['topic'] ?? '';
+    final int topicIndex = arguments['topicIndex'] ?? arguments['index'] ?? 1;
+    final int categoryIndex = arguments['categoryIndex'] ?? 1;
+
+    // Debug print to verify arguments
+    print('QuizScreen - Arguments received:');
+    print('Topic: $topic');
+    print('TopicIndex: $topicIndex');
+    print('CategoryIndex: $categoryIndex');
+
+    final QuizController controller = Get.put(QuizController());
+
+    // Update controller arguments after initialization
+    controller.updateArguments({
+      'topic': topic,
+      'topicIndex': topicIndex,
+      'categoryIndex': categoryIndex,
+    });
+
+    // Load questions based on category
+    controller.loadQuestionsForCategory(topic, categoryIndex);
 
     return Scaffold(
       backgroundColor: kWhite,
@@ -34,11 +62,11 @@ class QuestionsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GK Quiz $categoryIndex "," $SubcategoryIndex',
+              'GK Quiz $categoryIndex',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
             Text(
-              '$topic - Category  $categoryIndex',
+              '$topic - Category $categoryIndex',
               style: context.textTheme.bodyLarge,
             ),
           ],
@@ -72,22 +100,26 @@ class QuestionsScreen extends StatelessWidget {
           Flexible(
             child: TextButton(
               onPressed: () {
+                print('Manual navigation with arguments:');
+                print('TopicIndex: $topicIndex');
+                print('CategoryIndex: $categoryIndex');
+
                 Get.toNamed(
                   RoutesName.resultScreen,
                   arguments: {
+                    'topicIndex': topicIndex,
                     'categoryIndex': categoryIndex,
-                    'SubCatIndex': SubcategoryIndex,
+                    'topic': topic,
                   },
                 );
               },
               child: Text("Click"),
             ),
-          )
-
+          ),
         ],
       ),
       body: Obx(
-        () => QuestionsContent(
+        () => QuizContent(
           isLoading: controller.isLoadingQuestions.value,
           questions: controller.questions,
           pageController: controller.questionsPageController,

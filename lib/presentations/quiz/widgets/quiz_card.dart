@@ -4,10 +4,10 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/questions/controller/questions_controller.dart';
-import 'package:template/presentations/questions/widgets/bottom_buttons.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
+import 'package:template/presentations/quiz/widgets/bottom_buttons.dart';
 
-class QuestionCard extends StatelessWidget {
+class QuizCard extends StatelessWidget {
   final QuestionsModel question;
   final int currentIndex;
   final int totalQuestions;
@@ -15,7 +15,7 @@ class QuestionCard extends StatelessWidget {
   final RxMap<int, bool> showAnswers;
   final Function(int, String) onOptionSelected;
 
-  const QuestionCard({
+  const QuizCard({
     super.key,
     required this.question,
     required this.currentIndex,
@@ -29,7 +29,7 @@ class QuestionCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
-    final controller = Get.find<QuestionsController>();
+    final controller = Get.find<QuizController>();
 
     return Card(
       elevation: 2,
@@ -232,7 +232,7 @@ class OptionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<QuestionsController>();
+    final controller = Get.find<QuizController>();
     return InkWell(
       onTap: showAnswer ? null : () => onOptionSelected(letter),
       child: Container(
