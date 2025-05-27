@@ -11,18 +11,17 @@ class BackIconButton extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
-      child:Padding(
+      child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Container(
-            decoration: rounderGreyBorderDecoration,
-            padding: const EdgeInsets.all(5),
-            child: Icon(Icons.arrow_back_ios)),
-      )
+          decoration: rounderGreyBorderDecoration,
+          padding: const EdgeInsets.all(5),
+          child: Icon(Icons.arrow_back_ios),
+        ),
+      ),
     );
   }
 }
-
-
 
 class NotificationIconButton extends StatelessWidget {
   final VoidCallback onTap;
@@ -33,7 +32,7 @@ class NotificationIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child:Icon(Icons.notifications_rounded)
+      child: Icon(Icons.notifications_rounded),
     );
   }
 }
@@ -47,9 +46,7 @@ class MoonIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Image.asset(
-        'images/moon_icon.png',
-      ),
+      child: Image.asset('images/moon_icon.png'),
     );
   }
 }
@@ -63,13 +60,12 @@ class TrIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Image.asset(
-        'images/try_icon.png',
-      ),
+      child: Image.asset('images/try_icon.png'),
     );
   }
 }
 
+// ignore: camel_case_types
 class compaignIconButton extends StatelessWidget {
   const compaignIconButton({super.key});
 
@@ -79,20 +75,14 @@ class compaignIconButton extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
-      child: Image.asset(
-        'images/Compaigns.svg',
-      ),
+      child: Image.asset('images/Compaigns.svg'),
     );
   }
 }
 
-
 class CardIcon extends StatelessWidget {
   final String icon;
-  const CardIcon({
-    super.key,
-    required this.icon,
-  });
+  const CardIcon({super.key, required this.icon});
 
   @override
   Widget build(BuildContext context) {
@@ -100,12 +90,7 @@ class CardIcon extends StatelessWidget {
       decoration: roundedDecoration,
       padding: const EdgeInsets.all(8),
       child: Center(
-        child: Image.asset(
-          icon,
-          height: 40,
-          width: 40,
-          fit: BoxFit.contain,
-        ),
+        child: Image.asset(icon, height: 40, width: 40, fit: BoxFit.contain),
       ),
     );
   }

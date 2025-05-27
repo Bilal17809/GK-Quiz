@@ -6,20 +6,22 @@ import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/core/routes/routes_name.dart';
-import 'package:template/presentations/questions/controller/questions_controller.dart';
-import 'package:template/presentations/questions_categories/controller/quiz_result_controller.dart';
-import 'package:template/presentations/questions_categories/widgets/category_card.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
+import 'package:template/presentations/quiz_levels/widgets/levels_card.dart';
+import '../../result/controller/result_controller.dart';
 
-class QuestionsCategoriesScreen extends StatelessWidget {
-  const QuestionsCategoriesScreen({super.key});
+class QuizLevelsScreen extends StatelessWidget {
+  const QuizLevelsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final String topic = Get.arguments?['topic'] ?? '';
-    final QuestionsController controller = Get.put(QuestionsController());
-    Get.put(QuizResultController());
+    final arguments = Get.arguments as Map<String, dynamic>;
+    final topic = arguments['topic'];
+    final topicIndex =
+        arguments['index']; // This is the grid index from practice screen
+    final QuizController controller = Get.put(QuizController());
+    Get.put(QuizResultController1());
 
-    // Load categories for the current topic
     if (topic.isNotEmpty) {
       controller.loadCategoriesForTopic(topic);
     } else {
@@ -35,7 +37,7 @@ class QuestionsCategoriesScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GK Quiz',
+              'GK Quiz Topic: $topicIndex',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
             Text('Categories', style: Get.textTheme.bodyLarge),
@@ -93,32 +95,34 @@ class QuestionsCategoriesScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
             // Categories List
             Expanded(
               child: Obx(() {
                 if (controller.isLoadingCategories.value) {
                   return const Center(child: CircularProgressIndicator());
                 }
-
                 return ListView.builder(
                   padding: const EdgeInsets.all(16),
                   itemCount: controller.questionCategories.length,
-                  itemBuilder: (context, index) {
-                    final category = controller.questionCategories[index];
-                    return CategoryCard(
+                  itemBuilder: (context, categoryIndex) {
+                    final category =
+                        controller.questionCategories[categoryIndex];
+                    return LevelsCard(
                       category: category,
+                      topicIndex: topicIndex,
+                      categoryIndex: categoryIndex,
                       onTap: () {
-                        // Reset quiz state before starting new category
                         controller.resetQuizState();
-
-                        // Navigate to questions screen
                         Get.toNamed(
-                          RoutesName.questionsScreen,
+                          RoutesName.quizScreen,
                           arguments: {
                             'topic': category.topic,
                             'categoryIndex': category.categoryIndex,
                             'isCategory': true,
+                            'topicIndex':
+                                topicIndex, // Pass the topic grid index
+                            'categoryIndexForResult':
+                                categoryIndex, // Pass the category index for result
                           },
                         );
                       },
