@@ -15,16 +15,43 @@ class ResultScreen extends StatelessWidget {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
 
-    final arguments = Get.arguments as Map<String, dynamic>;
-    final int categoryIndex = arguments['categoryIndex'];
-    final int subCategoryIndex = arguments['SubCatIndex'];
+    // Safely get arguments with null checks and default values
+    final arguments = Get.arguments as Map<String, dynamic>?;
+
+    if (arguments == null) {
+      debugPrint('ERROR: No arguments passed to ResultScreen');
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error: No quiz data found'),
+              ElevatedButton(
+                onPressed: () => Get.offAllNamed(RoutesName.homeScreen),
+                child: Text('Go Home'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Extract values using topicIndex and categoryIndex
+    final int topicIndex = arguments['topicIndex'] as int? ?? 1;
+    final int categoryIndex = arguments['categoryIndex'] as int? ?? 1;
+    final String topic = arguments['topic'] as String? ?? '';
+
+    debugPrint("Arguments received: $arguments");
+    debugPrint(
+      "Topic Index: $topicIndex, Category Index: $categoryIndex, Topic: $topic",
+    );
 
     // Initialize the controller
     final ResultController resultController = Get.put(ResultController());
 
-    // Call calculateResults with category info
-    resultController.calculateResults(categoryIndex, subCategoryIndex);
-    print("############################## $categoryIndex ',' $subCategoryIndex ");
+    // Call calculateResults with topicIndex and categoryIndex
+    resultController.calculateResults(topicIndex, categoryIndex);
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -37,7 +64,7 @@ class ResultScreen extends StatelessWidget {
             children: [
               SizedBox(height: mobileHeight * 0.07),
               Text(
-                'QUIZ RESULT$categoryIndex ","$subCategoryIndex',
+                'QUIZ RESULT (T$topicIndex, C$categoryIndex)',
                 style: Get.textTheme.titleLarge?.copyWith(
                   color: kWhite,
                   shadows: [
@@ -163,6 +190,7 @@ class ResultScreen extends StatelessWidget {
                                                 trailing: Text(
                                                   resultController
                                                       .correctAnswers
+                                                      .value
                                                       .toString(),
                                                   style: Get
                                                       .textTheme
@@ -203,7 +231,9 @@ class ResultScreen extends StatelessWidget {
                                                       ?.copyWith(color: kWhite),
                                                 ),
                                                 trailing: Text(
-                                                  resultController.wrongAnswers
+                                                  resultController
+                                                      .wrongAnswers
+                                                      .value
                                                       .toString(),
                                                   style: Get
                                                       .textTheme
@@ -219,7 +249,6 @@ class ResultScreen extends StatelessWidget {
                                   },
                                 ),
                               ),
-
                               Row(
                                 children: [
                                   Expanded(
@@ -227,13 +256,16 @@ class ResultScreen extends StatelessWidget {
                                       onPressed: () {
                                         resultController.resetQuiz();
                                         Get.toNamed(
-                                          RoutesName.questionsCategoriesScreen,
+                                          RoutesName.quizLevelsScreen,
+                                          arguments: {
+                                            'topic': topic,
+                                            'index': topicIndex,
+                                          },
                                         );
                                       },
                                       text: 'Retake Quiz',
                                       icon: Icon(Icons.refresh, size: 28),
                                       style: Get.textTheme.titleSmall,
-
                                       height: mobileHeight * 0.07,
                                       color: kCoral.withValues(alpha: 0.8),
                                       foregroundColor: kWhite,
@@ -277,20 +309,22 @@ class ResultScreen extends StatelessWidget {
                             children: [
                               // Progress circular bar
                               Positioned.fill(
-                                child: CircularStepProgressIndicator(
-                                  totalSteps: 100,
-                                  currentStep:
-                                      resultController.currentStep.value,
-                                  stepSize: mobileWidth * 0.030,
-                                  selectedColor: kCoral,
-                                  unselectedColor: greyBorderColor.withAlpha(
-                                    25,
+                                child: Obx(
+                                  () => CircularStepProgressIndicator(
+                                    totalSteps: 100,
+                                    currentStep:
+                                        resultController.currentStep.value,
+                                    stepSize: mobileWidth * 0.030,
+                                    selectedColor: kCoral,
+                                    unselectedColor: greyBorderColor.withAlpha(
+                                      25,
+                                    ),
+                                    padding: 0,
+                                    width: mobileWidth * 0.60,
+                                    height: mobileWidth * 0.60,
+                                    selectedStepSize: mobileWidth * 0.040,
+                                    roundedCap: (_, __) => true,
                                   ),
-                                  padding: 0,
-                                  width: mobileWidth * 0.60,
-                                  height: mobileWidth * 0.60,
-                                  selectedStepSize: mobileWidth * 0.040,
-                                  roundedCap: (_, __) => true,
                                 ),
                               ),
                               // Percentage text in the center
@@ -298,13 +332,15 @@ class ResultScreen extends StatelessWidget {
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      '${resultController.currentStep.toStringAsFixed(0)}%',
-                                      style: Get.textTheme.displayMedium
-                                          ?.copyWith(
-                                            color: kCoral,
-                                            fontWeight: FontWeight.bold,
-                                          ),
+                                    Obx(
+                                      () => Text(
+                                        '${resultController.currentStep.value}%',
+                                        style: Get.textTheme.displayMedium
+                                            ?.copyWith(
+                                              color: kCoral,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
                                     ),
                                     Text(
                                       'Correct Answers',

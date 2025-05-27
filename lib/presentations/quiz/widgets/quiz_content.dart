@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Import GetX
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/models/questions_data.dart';
-import 'package:template/presentations/questions/widgets/question_card.dart';
+import 'package:template/presentations/quiz/widgets/quiz_card.dart';
 
-class QuestionsContent extends StatelessWidget {
+class QuizContent extends StatelessWidget {
   final bool isLoading;
   final List<QuestionsModel> questions;
   final PageController pageController;
@@ -14,7 +14,7 @@ class QuestionsContent extends StatelessWidget {
   final RxMap<int, bool> showAnswers;
   final Function(int, String) onAnswerSelected;
 
-  const QuestionsContent({
+  const QuizContent({
     super.key,
     required this.isLoading,
     required this.questions,
@@ -44,7 +44,7 @@ class QuestionsContent extends StatelessWidget {
         itemCount: questions.length,
         onPageChanged: onPageChanged,
         itemBuilder: (context, index) {
-          return QuestionCard(
+          return QuizCard(
             question: questions[index],
             currentIndex: index,
             totalQuestions: questions.length,
