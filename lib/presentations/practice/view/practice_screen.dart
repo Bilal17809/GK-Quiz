@@ -4,7 +4,7 @@ import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/core/models/grid_data.dart';
+import 'package:template/presentations/practice/controller/practice_controller.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/result/controller/result_controller.dart';
 
@@ -13,11 +13,10 @@ class PracticeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(QuizController());
-    final QuizResultController1 resultController = Get.put(
-      QuizResultController1(),
-    );
-    controller.loadAllTopicCounts(gridTexts);
+    // Controller initialization
+    final quizController = Get.put(QuizController());
+    final resultController = Get.put(QuizResultController1());
+    final practiceController = Get.put(PracticeController());
 
     return Scaffold(
       appBar: AppBar(
@@ -25,7 +24,7 @@ class PracticeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GK Quiz ############ ',
+              'GK Quiz',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
             Text('Practice ', style: Get.textTheme.bodyLarge),
@@ -54,20 +53,18 @@ class PracticeScreen extends StatelessWidget {
             crossAxisSpacing: 10,
             childAspectRatio: 3.2 / 4,
           ),
-          itemCount: gridIcons.length,
+          itemCount: practiceController.gridItemCount,
           itemBuilder: (context, index) {
-            final color = gridColors[index % gridColors.length].withValues(
-              alpha: 0.75,
-            );
-            final icon = gridIcons[index % gridIcons.length];
-            final text = gridTexts[index % gridTexts.length];
+            final color = practiceController.getGridItemColor(index);
+            final icon = practiceController.getGridItemIcon(index);
+            final topic = practiceController.getGridItemText(index);
 
             return InkWell(
               onTap: () {
                 // Navigate to categories screen
                 Get.toNamed(
                   RoutesName.quizLevelsScreen,
-                  arguments: {'topic': text, 'index': index},
+                  arguments: {'topic': topic, 'index': index},
                 );
               },
               child: Stack(
@@ -82,32 +79,32 @@ class PracticeScreen extends StatelessWidget {
                           children: [
                             Padding(
                               padding: const EdgeInsets.only(right: 6, top: 4),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Obx(
-                                    () => Text(
-                                      'Ques: ${controller.topicCounts[text] ?? 0}',
+                              child: Obx(
+                                () => Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      'Ques: ${quizController.topicCounts[topic] ?? 0}',
                                       style: Get.textTheme.bodyMedium?.copyWith(
                                         color: kWhite,
                                         fontSize: 10,
                                         fontWeight: FontWeight.w500,
                                       ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
-                        SizedBox(height: 24),
+                        const SizedBox(height: 24),
                         Column(
                           children: [
                             Container(
                               decoration: roundedDecorationWithShadow.copyWith(
                                 color: kWhite.withAlpha(50),
                               ),
-                              padding: EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(8),
                               child: Image.asset(
                                 icon,
                                 color: kWhite,
@@ -118,7 +115,7 @@ class PracticeScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                text,
+                                topic,
                                 style: Get.textTheme.titleSmall?.copyWith(
                                   color: textWhiteColor,
                                   fontSize: 14,
@@ -128,8 +125,7 @@ class PracticeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        Spacer(),
-                        // Real data section using FutureBuilder
+                        const Spacer(),
                         FutureBuilder<Map<String, dynamic>>(
                           future: resultController.getOverallResult(index),
                           builder: (context, snapshot) {
@@ -149,6 +145,9 @@ class PracticeScreen extends StatelessWidget {
 
                             final data = snapshot.data!;
                             final percentage = data['percentage'] ?? 0.0;
+                            final starRating = practiceController.getStarRating(
+                              percentage,
+                            );
 
                             return Padding(
                               padding: const EdgeInsets.only(left: 8, right: 8),
@@ -156,7 +155,6 @@ class PracticeScreen extends StatelessWidget {
                                 children: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
-
                                     children: [
                                       Container(
                                         padding: const EdgeInsets.symmetric(
@@ -181,7 +179,6 @@ class PracticeScreen extends StatelessWidget {
                                                             FontWeight.w600,
                                                       ),
                                                 ),
-
                                                 Icon(
                                                   Icons.done_all,
                                                   color: kDarkGreen1,
@@ -203,7 +200,6 @@ class PracticeScreen extends StatelessWidget {
                                                             FontWeight.w600,
                                                       ),
                                                 ),
-
                                                 Icon(
                                                   Icons.close,
                                                   color: kRed.withValues(
@@ -219,7 +215,6 @@ class PracticeScreen extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 8),
-                                  // Star rating based on percentage
                                   Padding(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 8,
@@ -227,35 +222,28 @@ class PracticeScreen extends StatelessWidget {
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: List.generate(4, (starIndex) {
-                                        double starThreshold;
-                                        if (starIndex == 0) {
-                                          starThreshold = 10.0;
-                                        } else {
-                                          // Other 3 stars equally divide remaining 90%
-                                          starThreshold =
-                                              10.0 + ((starIndex) * 30.0);
-                                        }
-
-                                        bool isActive =
-                                            percentage >= starThreshold;
-
-                                        return Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 1,
-                                          ),
-                                          child: Icon(
-                                            Icons.star,
-                                            color:
-                                                isActive
-                                                    ? kCoral
-                                                    : kWhite.withValues(
-                                                      alpha: 0.3,
-                                                    ),
-                                            size: 14,
-                                          ),
-                                        );
-                                      }),
+                                      children:
+                                          starRating.asMap().entries.map((
+                                            entry,
+                                          ) {
+                                            final isActive = entry.value;
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 1,
+                                                  ),
+                                              child: Icon(
+                                                Icons.star,
+                                                color:
+                                                    isActive
+                                                        ? kCoral
+                                                        : kWhite.withValues(
+                                                          alpha: 0.3,
+                                                        ),
+                                                size: 14,
+                                              ),
+                                            );
+                                          }).toList(),
                                     ),
                                   ),
                                   const SizedBox(height: 4),

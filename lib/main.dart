@@ -5,8 +5,6 @@ import 'package:toastification/toastification.dart';
 import '/core/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 
-
-
 /*
 Revise all Files and their names,
 secondly "Navigate" the screen must from Ui Page,
