@@ -25,7 +25,6 @@ class QuizController extends GetxController {
 
   // Arguments - initialize as nullable and get them when needed
   int? _categoryIndex;
-  // int? _subcategoryIndex;
 
   // Getters for arguments with safe access
   int? get categoryIndex => _categoryIndex;
@@ -51,12 +50,6 @@ class QuizController extends GetxController {
     final args = Get.arguments;
     if (args != null && args is Map<String, dynamic>) {
       _categoryIndex = args['categoryIndex'];
-      // _subcategoryIndex = args['SubCatIndex'];
-
-      // Debug print to verify arguments
-      print('QuizController - Arguments initialized:');
-      print('CategoryIndex: $_categoryIndex');
-      // print('SubCategoryIndex: $_subcategoryIndex');
     }
   }
 
@@ -64,11 +57,6 @@ class QuizController extends GetxController {
   void updateArguments(Map<String, dynamic>? arguments) {
     if (arguments != null) {
       _categoryIndex = arguments['categoryIndex'];
-      // _subcategoryIndex = arguments['SubCatIndex'];
-
-      print('QuizController - Arguments updated:');
-      print('CategoryIndex: $_categoryIndex');
-      // print('SubCategoryIndex: $_subcategoryIndex');
     }
   }
 
@@ -206,16 +194,25 @@ class QuizController extends GetxController {
           curve: Curves.easeInOut,
         );
       } else {
-        // Fix: Provide default values if arguments are null
+        // Get the current topic name
+        final topicName = currentTopic.value;
+
+        // Calculate topicIndex from the topic name
+        int topicIndex = gridTexts.indexOf(topicName);
+        if (topicIndex == -1) topicIndex = 0; // fallback to 0 if not found
+
+        // Fix: Provide all required arguments like the working button
         final catIndex = _categoryIndex ?? 1;
-        // final subCatIndex = _subcategoryIndex ?? 0;
 
-        print('QuizController - Navigating to result with:');
-        print('CategoryIndex: $catIndex');
-        // print('SubCategoryIndex: $subCatIndex');
-
-        // After last question, navigate to the result screen
-        Get.toNamed(RoutesName.resultScreen, arguments: {'categoryIndex'});
+        // After last question, navigate to the result screen with all required arguments
+        Get.toNamed(
+          RoutesName.resultScreen,
+          arguments: {
+            'topicIndex': topicIndex,
+            'categoryIndex': catIndex,
+            'topic': topicName,
+          },
+        );
       }
     } else {
       // This will now run if no answer is selected

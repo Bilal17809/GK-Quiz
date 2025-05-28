@@ -5,7 +5,6 @@ import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz/widgets/quiz_content.dart';
-import '../../../core/routes/routes_name.dart';
 
 class QuizScreen extends StatelessWidget {
   const QuizScreen({super.key});
@@ -37,12 +36,6 @@ class QuizScreen extends StatelessWidget {
     final int topicIndex = arguments['topicIndex'] ?? arguments['index'] ?? 1;
     final int categoryIndex = arguments['categoryIndex'] ?? 1;
 
-    // Debug print to verify arguments
-    print('QuizScreen - Arguments received:');
-    print('Topic: $topic');
-    print('TopicIndex: $topicIndex');
-    print('CategoryIndex: $categoryIndex');
-
     final QuizController controller = Get.put(QuizController());
 
     // Update controller arguments after initialization
@@ -66,7 +59,7 @@ class QuizScreen extends StatelessWidget {
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
             Text(
-              '$topic - Category $categoryIndex',
+              '$topic - Level $categoryIndex',
               style: context.textTheme.bodyLarge,
             ),
           ],
@@ -96,25 +89,6 @@ class QuizScreen extends StatelessWidget {
             ),
             padding: const EdgeInsets.all(8),
             child: Image.asset('assets/images/notes.png', color: kWhite),
-          ),
-          Flexible(
-            child: TextButton(
-              onPressed: () {
-                print('Manual navigation with arguments:');
-                print('TopicIndex: $topicIndex');
-                print('CategoryIndex: $categoryIndex');
-
-                Get.toNamed(
-                  RoutesName.resultScreen,
-                  arguments: {
-                    'topicIndex': topicIndex,
-                    'categoryIndex': categoryIndex,
-                    'topic': topic,
-                  },
-                );
-              },
-              child: Text("Click"),
-            ),
           ),
         ],
       ),
