@@ -37,10 +37,10 @@ class QuizLevelsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'GK Quiz Topic: $topicIndex',
+              'GK Quiz',
               style: Get.textTheme.titleMedium?.copyWith(color: kRed),
             ),
-            Text('Categories', style: Get.textTheme.bodyLarge),
+            Text('Levels', style: Get.textTheme.bodyLarge),
           ],
         ),
         leading: Padding(
