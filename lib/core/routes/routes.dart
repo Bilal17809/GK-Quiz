@@ -25,15 +25,17 @@
 
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:template/core/routes/routes_name.dart';
+import 'package:template/presentations/customized_quiz/view/customized_quiz_screen.dart';
 import 'package:template/presentations/home/view/home_screen.dart';
 import 'package:template/presentations/lessons/view/lessons_screen.dart';
 import 'package:template/presentations/practice/view/practice_screen.dart';
+import 'package:template/presentations/qna/view/qna_screen.dart';
 import 'package:template/presentations/quiz/view/quiz_screen.dart';
 import 'package:template/presentations/quiz_levels/view/quiz_levels_screen.dart';
-import 'package:template/presentations/splash/view/splash_screen.dart';
-import 'package:template/presentations/take_a_test_list/view/take_a_test_list.dart';
-import 'package:template/presentations/take_test/view/take_test_screen.dart';
+import 'package:template/presentations/quiz_selection/view/quiz_selection_screen.dart';
 import 'package:template/presentations/result/view/result_screen.dart';
+import 'package:template/presentations/splash/view/splash_screen.dart';
+import 'package:template/presentations/take_test/view/take_test_screen.dart';
 
 class Routes {
   static final routes = [
@@ -48,12 +50,17 @@ class Routes {
     GetPage(name: RoutesName.testScreen, page: () => const TakeTestScreen()),
     GetPage(
       name: RoutesName.takeATestScreen,
-      page: () => const TakeATestList(),
+      page: () => const QuizSelectionScreen(),
     ),
     GetPage(
       name: RoutesName.quizLevelsScreen,
       page: () => const QuizLevelsScreen(),
     ),
     GetPage(name: RoutesName.resultScreen, page: () => ResultScreen()),
+    GetPage(name: RoutesName.qnaScreen, page: () => QnaScreen()),
+    GetPage(
+      name: RoutesName.customizedQuizScreen,
+      page: () => CustomizedQuizScreen(),
+    ),
   ];
 }

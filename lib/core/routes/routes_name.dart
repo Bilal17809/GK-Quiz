@@ -8,4 +8,6 @@ abstract class RoutesName {
   static const String takeATestScreen = '/take_a_test_screen';
   static const String quizLevelsScreen = '/quiz_levels_screen';
   static const String resultScreen = '/result_screen';
+  static const String qnaScreen = '/qna_screen';
+  static const String customizedQuizScreen = '/customized_quiz_screen';
 }
