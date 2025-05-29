@@ -3,12 +3,13 @@ import 'package:get/get.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/models/grid_data.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/core/routes/routes_name.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz_levels/widgets/levels_card.dart';
-import '../../result/controller/result_controller.dart';
+
+import '../controller/quiz_result_controller.dart';
 
 class QuizLevelsScreen extends StatelessWidget {
   const QuizLevelsScreen({super.key});
@@ -20,7 +21,7 @@ class QuizLevelsScreen extends StatelessWidget {
     final topicIndex =
         arguments['index']; // This is the grid index from practice screen
     final QuizController controller = Get.put(QuizController());
-    Get.put(QuizResultController1());
+    Get.put(QuizResultController());
 
     if (topic.isNotEmpty) {
       controller.loadCategoriesForTopic(topic);

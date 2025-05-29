@@ -256,11 +256,11 @@ class ResultScreen extends StatelessWidget {
                                       onPressed: () {
                                         resultController.resetQuiz();
                                         Get.toNamed(
-                                          RoutesName.quizLevelsScreen,
-                                          arguments: {
-                                            'topic': topic,
-                                            'index': topicIndex,
-                                          },
+                                          RoutesName.practiceScreen,
+                                          // arguments: {
+                                          //   'topic': topic,
+                                          //   'index': topicIndex,
+                                          // },
                                         );
                                       },
                                       text: 'Retake Quiz',

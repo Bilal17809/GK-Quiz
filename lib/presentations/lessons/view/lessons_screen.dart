@@ -3,7 +3,9 @@ import 'package:get/get.dart';
 import 'package:template/core/common_widgets/common_widgets.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
+
 import '../../../core/models/grid_data.dart';
+import '../../../core/routes/routes_name.dart';
 
 class LessonsScreen extends StatelessWidget {
   const LessonsScreen({super.key});
@@ -52,34 +54,42 @@ class LessonsScreen extends StatelessWidget {
             );
             final icon = gridIcons[index % gridIcons.length];
             final text = gridTexts[index % gridTexts.length];
-            return Container(
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    decoration: roundedDecorationWithShadow.copyWith(
-                      color: kWhite.withAlpha(50),
+            return InkWell(
+              onTap: () {
+                Get.toNamed(
+                  RoutesName.qnaScreen,
+                  arguments: {'topic': gridTexts[index]},
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: roundedDecorationWithShadow.copyWith(
+                        color: kWhite.withAlpha(50),
+                      ),
+                      padding: EdgeInsets.all(8),
+                      child: Image.asset(
+                        icon,
+                        color: kWhite,
+                        width: 40,
+                        height: 40,
+                      ),
                     ),
-                    padding: EdgeInsets.all(8),
-                    child: Image.asset(
-                      icon,
-                      color: kWhite,
-                      width: 40,
-                      height: 40,
+                    const SizedBox(height: 8),
+                    Text(
+                      text,
+                      style: Get.textTheme.titleSmall!.copyWith(
+                        color: textWhiteColor,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    text,
-                    style: Get.textTheme.titleSmall!.copyWith(
-                      color: textWhiteColor,
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

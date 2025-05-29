@@ -4,7 +4,8 @@ import 'package:template/core/models/category_model.dart';
 import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/result/controller/result_controller.dart';
+
+import '../controller/quiz_result_controller.dart';
 
 class LevelsCard extends StatelessWidget {
   final CategoryModel category;
@@ -24,8 +25,8 @@ class LevelsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final QuizResultController1 resultController =
-        Get.find<QuizResultController1>();
+    final QuizResultController resultController =
+        Get.find<QuizResultController>();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),

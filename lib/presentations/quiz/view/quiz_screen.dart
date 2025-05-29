@@ -60,7 +60,7 @@ class QuizScreen extends StatelessWidget {
             ),
             Text(
               '$topic - Level $categoryIndex',
-              style: context.textTheme.bodyLarge,
+              style: Get.textTheme.bodyLarge,
             ),
           ],
         ),

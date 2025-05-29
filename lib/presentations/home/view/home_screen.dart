@@ -60,18 +60,88 @@ class HomeScreen extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
           child: Column(
             children: [
-              Column(
+              const SizedBox(height: 12),
+              IconTextButton(
+                onPressed: () {
+                  Get.toNamed(RoutesName.lessonsScreen);
+                },
+                text: 'Lesson to Study',
+                icon: Container(
+                  decoration: BoxDecoration(
+                    color: kBlue,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Image.asset(
+                      'assets/images/reading-book.png',
+                      color: kWhite,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                ),
+                style: Get.textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 12),
+              IconTextButton(
+                onPressed: () {
+                  Get.toNamed(RoutesName.practiceScreen);
+                },
+                text: 'Practice',
+                icon: Container(
+                  decoration: BoxDecoration(
+                    color: kCoral,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: Image.asset(
+                      'assets/images/checklist.png',
+                      color: kWhite,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                ),
+                style: Get.textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const SizedBox(height: 12),
                   IconTextButton(
+                    width: mobileWidth / 2 - 25,
                     onPressed: () {
-                      Get.toNamed(RoutesName.lessonsScreen);
+                      Get.toNamed(RoutesName.testScreen);
                     },
-                    text: 'Lesson to Study',
+                    text: 'Take a\nTest',
                     icon: Container(
                       decoration: BoxDecoration(
-                        color: kBlue,
-                        borderRadius: BorderRadius.circular(12),
+                        color: kTealGreen1,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: Image.asset(
+                          'assets/images/test.png',
+                          color: kWhite,
+                          width: 40,
+                          height: 40,
+                        ),
+                      ),
+                    ),
+                    style: Get.textTheme.titleMedium,
+                  ),
+                  const SizedBox(width: 12),
+                  IconTextButton(
+                    width: mobileWidth / 2 - 25,
+                    onPressed: () {},
+                    text: 'Country\nQuiz',
+                    icon: Container(
+                      decoration: BoxDecoration(
+                        color: kViolet,
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(4.0),
@@ -83,176 +153,98 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                     ),
-                    style: Get.textTheme.headlineSmall,
+                    style: Get.textTheme.titleMedium,
                   ),
-                  const SizedBox(height: 12),
-                  IconTextButton(
-                    onPressed: () {
-                      Get.toNamed(RoutesName.practiceScreen);
-                    },
-                    text: 'Practice',
-                    icon: Container(
-                      decoration: BoxDecoration(
-                        color: kCoral,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Image.asset(
-                          'assets/images/checklist.png',
-                          color: kWhite,
-                          width: 40,
-                          height: 40,
-                        ),
-                      ),
-                    ),
-                    style: Get.textTheme.headlineSmall,
+                ],
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: mobileWidth,
+                height: mobileHeight * 0.12,
+                child: Card(
+                  color: kWhite,
+                  elevation: 2,
+                  margin: EdgeInsets.zero,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Row(
                     children: [
-                      IconTextButton(
-                        width: mobileWidth / 2 - 25,
-                        onPressed: () {
-                          Get.toNamed(RoutesName.testScreen);
-                        },
-                        text: 'Take a\nTest',
-                        icon: Container(
-                          decoration: BoxDecoration(
-                            color: kTealGreen1,
-                            borderRadius: BorderRadius.circular(8),
+                      Expanded(
+                        child: InkWell(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            bottomLeft: Radius.circular(8),
                           ),
+                          onTap: () {},
                           child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Image.asset(
-                              'assets/images/test.png',
-                              color: kWhite,
-                              width: 40,
-                              height: 40,
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: kOrange,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Image.asset(
+                                      'assets/images/share.png',
+                                      color: kBlack,
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Share App',
+                                  style: Get.textTheme.titleSmall,
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        style: Get.textTheme.titleMedium,
                       ),
-                      const SizedBox(width: 12),
-                      IconTextButton(
-                        width: mobileWidth / 2 - 25,
-                        onPressed: () {},
-                        text: 'Country\nQuiz',
-                        icon: Container(
-                          decoration: BoxDecoration(
-                            color: kViolet,
-                            borderRadius: BorderRadius.circular(8),
+                      Expanded(
+                        child: InkWell(
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
                           ),
+                          onTap: () {},
                           child: Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: Image.asset(
-                              'assets/images/reading-book.png',
-                              color: kWhite,
-                              width: 40,
-                              height: 40,
+                            padding: const EdgeInsets.symmetric(vertical: 12.0),
+                            child: Column(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: skyColor,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Image.asset(
+                                      'assets/images/no-ads.png',
+                                      color: kWhite,
+                                      width: 30,
+                                      height: 30,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Remove Ads',
+                                  style: Get.textTheme.titleSmall,
+                                ),
+                              ],
                             ),
                           ),
                         ),
-                        style: Get.textTheme.titleMedium,
                       ),
                     ],
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: mobileWidth,
-                    height: mobileHeight * 0.12,
-                    child: Card(
-                      color: kWhite,
-                      elevation: 2,
-                      margin: EdgeInsets.zero,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: InkWell(
-                              borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(8),
-                                bottomLeft: Radius.circular(8),
-                              ),
-                              onTap: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12.0,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: kOrange,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Image.asset(
-                                          'assets/images/share.png',
-                                          color: kBlack,
-                                          width: 30,
-                                          height: 30,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Share App',
-                                      style: Get.textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                            child: InkWell(
-                              borderRadius: const BorderRadius.only(
-                                topRight: Radius.circular(8),
-                                bottomRight: Radius.circular(8),
-                              ),
-                              onTap: () {},
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12.0,
-                                ),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: skyColor,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4.0),
-                                        child: Image.asset(
-                                          'assets/images/no-ads.png',
-                                          color: kWhite,
-                                          width: 30,
-                                          height: 30,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      'Remove Ads',
-                                      style: Get.textTheme.titleSmall,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
