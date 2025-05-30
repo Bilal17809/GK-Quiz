@@ -1,5 +1,6 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:template/core/common_audios/quiz_sounds.dart';
 import 'package:template/core/db_service/question_db_service.dart';
 import 'package:template/core/models/category_model.dart';
 import 'package:template/core/models/grid_data.dart';
@@ -10,7 +11,7 @@ import 'package:toastification/toastification.dart';
 
 class QuizController extends GetxController {
   // Observable collections and state
-  final RxList<QuestionsModel> questions = <QuestionsModel>[].obs;
+  final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;
   final RxBool isLoadingQuestions = true.obs;
   final RxInt currentQuestionIndex = 0.obs;
   final RxMap<int, String> selectedAnswers = <int, String>{}.obs;
@@ -18,32 +19,19 @@ class QuizController extends GetxController {
   final RxMap<String, int> topicCounts = <String, int>{}.obs;
   final RxInt totalQuestionsInTopic = 0.obs;
 
-  // Categories state
   final RxList<CategoryModel> questionCategories = <CategoryModel>[].obs;
   final RxBool isLoadingCategories = false.obs;
   final RxString currentTopic = ''.obs;
 
-  // Arguments - initialize as nullable and get them when needed
   int? _categoryIndex;
-
-  // Getters for arguments with safe access
   int? get categoryIndex => _categoryIndex;
-  // int? get subcategoryIndex => _subcategoryIndex;
 
-  // Page navigation controller
   late PageController questionsPageController = PageController();
 
   @override
   void onInit() {
     super.onInit();
     _initializeArguments();
-  }
-
-  String getTopicNameByIndex(int index) {
-    if (index >= 0 && index < gridTexts.length) {
-      return gridTexts[index];
-    }
-    return '';
   }
 
   void _initializeArguments() {
@@ -53,25 +41,21 @@ class QuizController extends GetxController {
     }
   }
 
-  // Method to update arguments if needed
   void updateArguments(Map<String, dynamic>? arguments) {
     if (arguments != null) {
       _categoryIndex = arguments['categoryIndex'];
     }
   }
 
-  // Call this method from the screen to load questions for a specific topic
   void loadQuestionsForTopic(String topic) {
     _loadQuestionsForTopic(topic);
   }
 
-  // Call this method to load categories for a specific topic
   void loadCategoriesForTopic(String topic) {
     currentTopic.value = topic;
     _loadCategoriesForTopic(topic);
   }
 
-  // Load questions for a specific category (20 questions each)
   void loadQuestionsForCategory(String topic, int categoryIndex) {
     _loadQuestionsForCategory(topic, categoryIndex);
   }
@@ -89,7 +73,6 @@ class QuizController extends GetxController {
     }
   }
 
-  // Loads categories for the specified topic
   Future<void> _loadCategoriesForTopic(String topic) async {
     isLoadingCategories.value = true;
     final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
@@ -124,30 +107,27 @@ class QuizController extends GetxController {
     isLoadingCategories.value = false;
   }
 
-  // Loads questions for the specified topic from the database
   Future<void> _loadQuestionsForTopic(String topic) async {
     isLoadingQuestions.value = true;
     final questionsFromDb = await DBService.getQuestionsByTopic(topic);
-    questions.assignAll(questionsFromDb);
+    questionsList.assignAll(questionsFromDb);
     isLoadingQuestions.value = false;
   }
 
-  // Loads questions for a specific category
   Future<void> _loadQuestionsForCategory(
     String topic,
     int categoryIndex,
   ) async {
     isLoadingQuestions.value = true;
     final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
-
-    // Check if the list has enough questions for the requested category
     final startIndex = (categoryIndex - 1) * 20;
+
     if (allQuestionsForTopic.length > startIndex) {
       final categoryQuestions =
           allQuestionsForTopic.skip(startIndex).take(20).toList();
-      questions.assignAll(categoryQuestions);
+      questionsList.assignAll(categoryQuestions);
     } else {
-      questions.clear();
+      questionsList.clear();
       Get.snackbar(
         'Error',
         'No questions are available for this Category at the moment.',
@@ -157,7 +137,6 @@ class QuizController extends GetxController {
     isLoadingQuestions.value = false;
   }
 
-  // Reset states when starting a new quiz
   void resetQuizState() {
     currentQuestionIndex.value = 0;
     selectedAnswers.clear();
@@ -165,57 +144,55 @@ class QuizController extends GetxController {
     questionsPageController = PageController();
   }
 
-  // Get progress percentage for step indicator (0-100)
   int getProgressPercentage() {
-    if (questions.isEmpty) return 0;
-    return ((currentQuestionIndex.value + 1) * 100 / questions.length).round();
+    if (questionsList.isEmpty) return 0;
+    return ((currentQuestionIndex.value + 1) * 100 / questionsList.length)
+        .round();
   }
 
-  // Handles user's answer selection for a specific question
   void handleAnswerSelection(int questionIndex, String selectedOption) {
     selectedAnswers[questionIndex] = selectedOption;
     shouldShowAnswerResults[questionIndex] = true;
-    // Refresh observables to trigger UI updates
+
+    final correctAnswer = questionsList[questionIndex].answer;
+    if (selectedOption == correctAnswer) {
+      QuizSounds.playCorrectSound();
+    } else {
+      QuizSounds.playWrongSound();
+    }
+
     selectedAnswers.refresh();
     shouldShowAnswerResults.refresh();
   }
 
-  // Updates the current question index when page changes
   void onPageChanged(int index) {
     currentQuestionIndex.value = index;
   }
 
-  // Navigates to the next question
   void goToNextQuestion() {
     if (selectedAnswers.containsKey(currentQuestionIndex.value)) {
-      if (currentQuestionIndex.value < questions.length - 1) {
+      if (currentQuestionIndex.value < questionsList.length - 1) {
         questionsPageController.nextPage(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeInOut,
         );
       } else {
-        // Get the current topic name
         final topicName = currentTopic.value;
-
-        // Calculate topicIndex from the topic name
         int topicIndex = gridTexts.indexOf(topicName);
-        if (topicIndex == -1) topicIndex = 0; // fallback to 0 if not found
-
-        // Fix: Provide all required arguments like the working button
+        if (topicIndex == -1) topicIndex = 0;
         final catIndex = _categoryIndex ?? 1;
-
-        // After last question, navigate to the result screen with all required arguments
+        QuizSounds.playCompletionSound();
         Get.toNamed(
           RoutesName.resultScreen,
           arguments: {
             'topicIndex': topicIndex,
-            'categoryIndex': catIndex,
+            'categoryIndex': categoryIndex,
             'topic': topicName,
+            'fromCustomQuiz': false,
           },
         );
       }
     } else {
-      // This will now run if no answer is selected
       toastification.show(
         type: ToastificationType.warning,
         title: Text('Select an Option'),
@@ -232,7 +209,6 @@ class QuizController extends GetxController {
     }
   }
 
-  // Navigates to the previous question if available
   void goToPreviousQuestion() {
     if (currentQuestionIndex.value > 0) {
       questionsPageController.previousPage(
@@ -242,52 +218,11 @@ class QuizController extends GetxController {
     }
   }
 
-  // Shows the 50:50 snackbar
   void use5050Hint() {
     Get.snackbar(
       'Hint Used',
       '50:50 hint activated!',
       snackPosition: SnackPosition.TOP,
     );
-  }
-
-  // Determines the background color for an answer option based on correctness and selection
-  Color getOptionBackgroundColor(
-    bool showAnswer,
-    String correctLetter,
-    String currentLetter,
-    String? selectedLetter,
-  ) {
-    if (!showAnswer) return Colors.transparent;
-
-    final isCorrect = correctLetter == currentLetter;
-    final isSelected = selectedLetter == currentLetter;
-
-    if (isCorrect) {
-      return kDarkGreen1.withValues(alpha: 0.25);
-    } else if (isSelected) {
-      return kRed.withValues(alpha: 0.25);
-    }
-    return Colors.transparent;
-  }
-
-  // Determines the color for the option letter container
-  Color getLetterContainerColor(
-    bool showAnswer,
-    String correctAnswer,
-    String letter,
-    String? selectedOption,
-  ) {
-    if (!showAnswer) return greyColor.withOpacity(0.1);
-
-    final isCorrect = correctAnswer == letter;
-    final isSelected = selectedOption == letter;
-
-    if (isCorrect) {
-      return kDarkGreen1;
-    } else if (isSelected) {
-      return kRed;
-    }
-    return greyColor.withOpacity(0.1);
   }
 }

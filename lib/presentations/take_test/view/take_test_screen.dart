@@ -47,7 +47,7 @@ class TakeTestScreen extends StatelessWidget {
                   SizedBox(height: 12),
                   IconTextButton(
                     onPressed: () {
-                      Get.toNamed(RoutesName.takeATestScreen);
+                      Get.toNamed(RoutesName.quizSelectionScreen);
                     },
                     text: 'Take a Test',
                     icon: Container(

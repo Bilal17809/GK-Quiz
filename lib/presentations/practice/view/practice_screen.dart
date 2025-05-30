@@ -92,6 +92,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   RoutesName.quizLevelsScreen,
                   arguments: {'topic': topic, 'index': index},
                 );
+                _refreshTimer?.cancel();
               },
               child: Stack(
                 fit: StackFit.expand,

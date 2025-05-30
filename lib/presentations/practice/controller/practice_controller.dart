@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:template/core/models/grid_data.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
@@ -31,7 +30,7 @@ class PracticeController extends GetxController {
       quizController.loadAllTopicCounts(gridTexts);
       topicCounts.value = Map.from(quizController.topicCounts);
     } catch (e) {
-      print('Error loading questions: $e');
+      debugPrint('Error loading questions: $e');
     }
   }
 
@@ -42,7 +41,7 @@ class PracticeController extends GetxController {
       quizController.loadAllTopicCounts(gridTexts);
       topicCounts.value = Map.from(quizController.topicCounts);
     } catch (e) {
-      print('Error loading topic counts: $e');
+      debugPrint('Error loading topic counts: $e');
     }
   }
 

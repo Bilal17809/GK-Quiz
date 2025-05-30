@@ -95,7 +95,7 @@ class QuizScreen extends StatelessWidget {
       body: Obx(
         () => QuizContent(
           isLoading: controller.isLoadingQuestions.value,
-          questions: controller.questions,
+          questions: controller.questionsList,
           pageController: controller.questionsPageController,
           currentIndex: controller.currentQuestionIndex.value,
           onPageChanged: controller.onPageChanged,

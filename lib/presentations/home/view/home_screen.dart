@@ -136,7 +136,9 @@ class HomeScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   IconTextButton(
                     width: mobileWidth / 2 - 25,
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(RoutesName.countryScreen);
+                    },
                     text: 'Country\nQuiz',
                     icon: Container(
                       decoration: BoxDecoration(

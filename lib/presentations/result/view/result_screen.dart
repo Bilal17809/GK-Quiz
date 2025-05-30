@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:template/core/common_widgets/text_icon_button.dart';
 import 'package:template/core/routes/routes_name.dart';
@@ -17,9 +18,11 @@ class ResultScreen extends StatelessWidget {
 
     // Safely get arguments with null checks and default values
     final arguments = Get.arguments as Map<String, dynamic>?;
+    final bool fromCustomQuiz = arguments?['fromCustomQuiz'] as bool? ?? false;
 
     if (arguments == null) {
       debugPrint('ERROR: No arguments passed to ResultScreen');
+
       return Scaffold(
         body: Center(
           child: Column(
@@ -52,6 +55,23 @@ class ResultScreen extends StatelessWidget {
     // Call calculateResults with topicIndex and categoryIndex
     resultController.calculateResults(topicIndex, categoryIndex);
 
+    // Show congratulation dialog after build completes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      PanaraInfoDialog.show(
+        context,
+        title: 'Congratulations!',
+        message:
+            "You've completed the quiz with ${resultController.currentStep.value}% correct answers!",
+        buttonText: "Okay",
+        onTapDismiss: () {
+          Get.back();
+        },
+
+        panaraDialogType: PanaraDialogType.custom,
+        color: kCoral,
+      );
+    });
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -64,7 +84,7 @@ class ResultScreen extends StatelessWidget {
             children: [
               SizedBox(height: mobileHeight * 0.07),
               Text(
-                'QUIZ RESULT (T$topicIndex, C$categoryIndex)',
+                'QUIZ RESULT',
                 style: Get.textTheme.titleLarge?.copyWith(
                   color: kWhite,
                   shadows: [
@@ -255,13 +275,29 @@ class ResultScreen extends StatelessWidget {
                                     child: TextIconButton(
                                       onPressed: () {
                                         resultController.resetQuiz();
-                                        Get.toNamed(
-                                          RoutesName.practiceScreen,
-                                          // arguments: {
-                                          //   'topic': topic,
-                                          //   'index': topicIndex,
-                                          // },
-                                        );
+                                        if (fromCustomQuiz) {
+                                          // Pass the required arguments when going to QnaScreen
+                                          Get.toNamed(
+                                            RoutesName.quizSelectionScreen,
+                                            arguments: {
+                                              'topic': topic,
+                                              'topicIndex': topicIndex,
+                                              'categoryIndex': categoryIndex,
+                                              'fromCustomQuiz': true,
+                                            },
+                                          );
+                                        } else {
+                                          // For regular quiz, go back to practice screen
+                                          Get.toNamed(
+                                            RoutesName.practiceScreen,
+                                            arguments: {
+                                              'topic': topic,
+                                              'topicIndex': topicIndex,
+                                              'categoryIndex': categoryIndex,
+                                              'fromCustomQuiz': false,
+                                            },
+                                          );
+                                        }
                                       },
                                       text: 'Retake Quiz',
                                       icon: Icon(Icons.refresh, size: 28),
