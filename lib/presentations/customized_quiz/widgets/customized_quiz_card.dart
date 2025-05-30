@@ -4,12 +4,12 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
-import 'package:template/presentations/quiz/widgets/bottom_buttons.dart';
+import 'package:template/presentations/customized_quiz/controller/cutomized_quiz_controller.dart';
 
-import '../view/ui_helpers.dart';
+import '../../quiz/view/ui_helpers.dart';
+import 'customized_bottom_buttons.dart';
 
-class QuizCard extends StatelessWidget {
+class CustomizedQuizCard extends StatelessWidget {
   final QuestionsModel question;
   final int currentIndex;
   final int totalQuestions;
@@ -17,7 +17,7 @@ class QuizCard extends StatelessWidget {
   final RxMap<int, bool> showAnswers;
   final Function(int, String) onOptionSelected;
 
-  const QuizCard({
+  const CustomizedQuizCard({
     super.key,
     required this.question,
     required this.currentIndex,
@@ -31,7 +31,7 @@ class QuizCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
-    final controller = Get.find<QuizController>();
+    final controller = Get.find<CustomizedQuizController>();
 
     return Card(
       elevation: 2,
@@ -71,7 +71,7 @@ class QuizCard extends StatelessWidget {
                 ),
               ),
             ),
-            QuestionHeader(totalQuestions: totalQuestions),
+            CustomizedQuestionHeader(totalQuestions: totalQuestions),
             const SizedBox(height: 12),
             SingleChildScrollView(
               child: Column(
@@ -86,7 +86,7 @@ class QuizCard extends StatelessWidget {
                   ),
                   SizedBox(height: mobileHeight * 0.03),
                   Obx(
-                    () => QuestionOptions(
+                    () => CustomizedQuestionOptions(
                       question: question,
                       showAnswer: showAnswers[currentIndex] ?? false,
                       selectedOption: selectedAnswers[currentIndex],
@@ -98,7 +98,7 @@ class QuizCard extends StatelessWidget {
               ),
             ),
             const Spacer(),
-            BottomButtons(
+            CustomizedBottomButtons(
               height: mobileHeight,
               width: mobileWidth,
               currentIndex: currentIndex,
@@ -111,10 +111,10 @@ class QuizCard extends StatelessWidget {
   }
 }
 
-class QuestionHeader extends StatelessWidget {
+class CustomizedQuestionHeader extends StatelessWidget {
   final int totalQuestions;
 
-  const QuestionHeader({super.key, required this.totalQuestions});
+  const CustomizedQuestionHeader({super.key, required this.totalQuestions});
 
   @override
   Widget build(BuildContext context) {
@@ -156,13 +156,13 @@ class QuestionHeader extends StatelessWidget {
   }
 }
 
-class QuestionOptions extends StatelessWidget {
+class CustomizedQuestionOptions extends StatelessWidget {
   final QuestionsModel question;
   final bool showAnswer;
   final String? selectedOption;
   final Function(String) onOptionSelected;
 
-  const QuestionOptions({
+  const CustomizedQuestionOptions({
     super.key,
     required this.question,
     required this.showAnswer,
@@ -174,7 +174,7 @@ class QuestionOptions extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        OptionItem(
+        CustomizedOptionItem(
           letter: 'A',
           option: question.option1,
           showAnswer: showAnswer,
@@ -183,7 +183,7 @@ class QuestionOptions extends StatelessWidget {
           onOptionSelected: onOptionSelected,
         ),
         const SizedBox(height: 12),
-        OptionItem(
+        CustomizedOptionItem(
           letter: 'B',
           option: question.option2,
           showAnswer: showAnswer,
@@ -192,7 +192,7 @@ class QuestionOptions extends StatelessWidget {
           onOptionSelected: onOptionSelected,
         ),
         const SizedBox(height: 12),
-        OptionItem(
+        CustomizedOptionItem(
           letter: 'C',
           option: question.option3,
           showAnswer: showAnswer,
@@ -201,7 +201,7 @@ class QuestionOptions extends StatelessWidget {
           onOptionSelected: onOptionSelected,
         ),
         const SizedBox(height: 12),
-        OptionItem(
+        CustomizedOptionItem(
           letter: 'D',
           option: question.option4,
           showAnswer: showAnswer,
@@ -214,7 +214,7 @@ class QuestionOptions extends StatelessWidget {
   }
 }
 
-class OptionItem extends StatelessWidget {
+class CustomizedOptionItem extends StatelessWidget {
   final String letter;
   final String option;
   final bool showAnswer;
@@ -222,7 +222,7 @@ class OptionItem extends StatelessWidget {
   final String? selectedOption;
   final Function(String) onOptionSelected;
 
-  const OptionItem({
+  const CustomizedOptionItem({
     super.key,
     required this.letter,
     required this.option,

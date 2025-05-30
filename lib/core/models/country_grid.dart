@@ -1,0 +1,31 @@
+final List<String> countryIcons = [
+  'assets/images/govt.png',
+  'assets/images/capital.png',
+  'assets/images/dollar-symbol.png',
+  'assets/images/isd_code.png',
+  'assets/images/national-games.png',
+  'assets/images/dove.png',
+  'assets/images/lotus.png',
+  'assets/images/elephant.png',
+  'assets/images/flag.png',
+];
+
+final List<String> countryTexts = [
+  'Physics',
+  'Chemistry',
+  'Disease prevention',
+  'World History',
+  'General Science',
+  'Agriculture',
+  'Human Body',
+  'Animals & Birds',
+  'Capitals and Countries',
+  'Computer',
+  'World Currencies',
+  'Everyday science',
+  'Inventions and Inventors',
+  'National animal',
+  'National bird',
+  'National games',
+  'Awards',
+];

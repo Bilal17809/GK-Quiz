@@ -1,23 +1,54 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
+import '../../customized_quiz/controller/cutomized_quiz_controller.dart';
 import '../../quiz_levels/controller/quiz_result_controller.dart';
 
 class ResultController extends GetxController {
   // Observable variables
-  final int totalQuestions = 20;
+  final RxInt totalQuestions = 20.obs;
   final RxInt correctAnswers = 0.obs;
   final RxInt wrongAnswers = 0.obs;
   final RxInt currentStep = 0.obs;
 
-  /// Calculate results from the quiz data using topicIndex and categoryIndex
+  /// Calculate results from the quiz data - auto-detects quiz type
   void calculateResults(int topicIndex, int categoryIndex) {
-    final questionsController = Get.find<QuizController>();
-    final questions = questionsController.questions;
-    final selectedAnswers = questionsController.selectedAnswers;
+    // Auto-detect which controller exists
+    bool isCustomizedQuiz = Get.isRegistered<CustomizedQuizController>();
 
+    List<dynamic> questions;
+    Map<int, String> selectedAnswers;
+    int totalQuestionsCount;
+
+    if (isCustomizedQuiz) {
+      // Handle customized quiz
+      try {
+        final customizedController = Get.find<CustomizedQuizController>();
+        questions = customizedController.questionsList;
+        selectedAnswers = customizedController.selectedAnswers;
+        totalQuestionsCount = customizedController.questionsList.length;
+      } catch (e) {
+        throw Exception('Error accessing CustomizedQuizController: $e');
+      }
+    } else {
+      // Handle regular quiz
+      try {
+        final questionsController = Get.find<QuizController>();
+        questions = questionsController.questionsList;
+        selectedAnswers = questionsController.selectedAnswers;
+        totalQuestionsCount = 20; // Regular quiz always has 20 questions
+      } catch (e) {
+        throw Exception('Error accessing QuizController: $e');
+      }
+    }
+
+    // Update total questions count
+    totalQuestions.value = totalQuestionsCount;
+
+    // Calculate correct answers
     int correct = 0;
-    for (int i = 0; i < totalQuestions; i++) {
+    for (int i = 0; i < totalQuestionsCount; i++) {
       if (selectedAnswers[i] != null &&
           selectedAnswers[i] == questions[i].answer) {
         correct++;
@@ -25,13 +56,19 @@ class ResultController extends GetxController {
     }
 
     correctAnswers.value = correct;
-    wrongAnswers.value = totalQuestions - correct;
+    wrongAnswers.value = totalQuestionsCount - correct;
 
-    // Use double division for more accurate percentage calculation
+    // Calculate percentage
     currentStep.value =
-        totalQuestions > 0 ? ((correct * 100) / totalQuestions).round() : 0;
+        totalQuestionsCount > 0
+            ? ((correct * 100) / totalQuestionsCount).round()
+            : 0;
 
-    // Save the result using topicIndex and categoryIndex
+    debugPrint(
+      'Results: $correct/$totalQuestionsCount (${currentStep.value}%)',
+    );
+
+    // Save the result
     Get.put(QuizResultController()).saveQuizResult(
       topicIndex: topicIndex,
       categoryIndex: categoryIndex,
@@ -48,7 +85,23 @@ class ResultController extends GetxController {
     correctAnswers.value = 0;
     wrongAnswers.value = 0;
     currentStep.value = 0;
-    final questionsController = Get.find<QuizController>();
-    questionsController.resetQuizState();
+    totalQuestions.value = 20;
+
+    // Reset whichever controller exists
+    if (Get.isRegistered<CustomizedQuizController>()) {
+      try {
+        final customizedController = Get.find<CustomizedQuizController>();
+        customizedController.resetQuizState();
+      } catch (e) {
+        throw Exception('Error resetting CustomizedQuizController: $e');
+      }
+    } else if (Get.isRegistered<QuizController>()) {
+      try {
+        final questionsController = Get.find<QuizController>();
+        questionsController.resetQuizState();
+      } catch (e) {
+        throw Exception('Error resetting QuizController: $e');
+      }
+    }
   }
 }
