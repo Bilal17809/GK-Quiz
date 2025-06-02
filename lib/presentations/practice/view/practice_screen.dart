@@ -31,7 +31,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
     super.initState();
     _refreshTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
       practiceController.loadAllQuestions();
-      // Refresh cached results periodically - Fixed: Added await
+      // Refresh cached results periodically
       practiceController.refreshResults();
     });
   }

@@ -26,6 +26,8 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/presentations/country/view/country_screen.dart';
+import 'package:template/presentations/country_levels/view/country_levels_screen.dart';
+import 'package:template/presentations/country_quiz/view/country_quiz_screen.dart';
 import 'package:template/presentations/customized_quiz/view/customized_quiz_screen.dart';
 import 'package:template/presentations/home/view/home_screen.dart';
 import 'package:template/presentations/lessons/view/lessons_screen.dart';
@@ -68,5 +70,13 @@ class Routes {
       page: () => QuizSelectionScreen(),
     ),
     GetPage(name: RoutesName.countryScreen, page: () => CountryScreen()),
+    GetPage(
+      name: RoutesName.countryLevelsScreen,
+      page: () => CountryLevelsScreen(),
+    ),
+    GetPage(
+      name: RoutesName.countryQuizScreen,
+      page: () => CountryQuizScreen(),
+    ),
   ];
 }
