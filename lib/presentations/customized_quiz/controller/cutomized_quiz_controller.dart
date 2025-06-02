@@ -109,6 +109,7 @@ class CustomizedQuizController extends GetxController {
 
   void onPageChanged(int index) {
     currentQuestionIndex.value = index;
+    QuizSounds.clearSound();
   }
 
   void goToNextQuestion() {

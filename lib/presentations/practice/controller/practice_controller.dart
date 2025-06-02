@@ -23,7 +23,7 @@ class PracticeController extends GetxController {
     await resultController.refreshAllResults();
   }
 
-  /// Load all questions and refresh topic counts
+  // Load all questions and refresh topic counts
   void loadAllQuestions() {
     try {
       final quizController = Get.find<QuizController>();
@@ -34,7 +34,7 @@ class PracticeController extends GetxController {
     }
   }
 
-  /// Load topic counts for all grid items
+  // Load topic counts for all grid items
   void loadAllTopicCounts() {
     try {
       final quizController = Get.find<QuizController>();

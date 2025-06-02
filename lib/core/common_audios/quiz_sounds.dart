@@ -14,4 +14,8 @@ class QuizSounds {
   static Future<void> playCompletionSound() async {
     await _audioPlayer.play(AssetSource('audios/result.wav'));
   }
+
+  static Future<void> clearSound() async {
+    await _audioPlayer.stop();
+  }
 }

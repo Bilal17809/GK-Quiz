@@ -1,17 +1,47 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/country/controller/country_controller.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
 import '../../../core/common_widgets/round_image.dart';
+import '../../../core/models/country_grid.dart';
 import '../../../core/theme/app_colors.dart';
 
-class CountryScreen extends StatelessWidget {
+class CountryScreen extends StatefulWidget {
   const CountryScreen({super.key});
 
   @override
+  State<CountryScreen> createState() => _CountryScreenState();
+}
+
+class _CountryScreenState extends State<CountryScreen> {
+  //Initialize controllers
+  final CountryController countryController = Get.put(CountryController());
+  final quizController = Get.put(QuizController());
+
+  Timer? _refreshTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
+      countryController.loadAllQuestions();
+    });
+  }
+
+  @override
+  void dispose() {
+    _refreshTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final CountryController countryController = Get.put(CountryController());
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -74,14 +104,24 @@ class CountryScreen extends StatelessWidget {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 12,
-                crossAxisSpacing: 9,
+                crossAxisSpacing: 12,
                 childAspectRatio: 1 / 1,
               ),
-              itemCount: 10,
+              itemCount: countryIcons.length,
               itemBuilder: (context, index) {
+                final icon = countryIcons[index % countryIcons.length];
+                final topic = countryTexts[index % countryTexts.length];
                 return InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Get.toNamed(
+                      RoutesName.countryLevelsScreen,
+                      arguments: {'topic': topic, 'index': index},
+                    );
+
+                    _refreshTimer?.cancel();
+                  },
                   child: Stack(
+                    clipBehavior: Clip.none,
                     fit: StackFit.expand,
                     children: [
                       Container(
@@ -90,14 +130,14 @@ class CountryScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                            const SizedBox(height: 50),
+                            const SizedBox(height: 35),
                             Container(
                               decoration: roundedDecorationWithShadow.copyWith(
                                 color: kWhite.withAlpha(50),
                               ),
                               padding: const EdgeInsets.all(8),
                               child: Image.asset(
-                                'assets/images/capital.png',
+                                icon,
                                 color: kWhite,
                                 width: 40,
                                 height: 40,
@@ -106,7 +146,7 @@ class CountryScreen extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
-                                'Grid # ${index + 1}',
+                                topic,
                                 style: Get.textTheme.titleSmall?.copyWith(
                                   color: textWhiteColor,
                                   fontSize: 14,
@@ -115,6 +155,54 @@ class CountryScreen extends StatelessWidget {
                               ),
                             ),
                           ],
+                        ),
+                      ),
+                      Obx(
+                        () => Positioned(
+                          top: -6,
+                          left: -6,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: kCoral,
+                              shape: BoxShape.circle,
+                            ),
+                            padding: EdgeInsets.all(6),
+                            child: Text(
+                              '${countryController.topicCounts[topic] ?? 0}',
+                              style: Get.textTheme.bodyMedium?.copyWith(
+                                color: textWhiteColor,
+                                fontSize: 10,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 8,
+                        left: 8,
+                        right: 8,
+                        child: Container(
+                          height: 24,
+                          margin: const EdgeInsets.only(top: 4),
+                          decoration: roundedDecoration.copyWith(
+                            color: kWhite.withValues(alpha: 0.7),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 6),
+                          child: StepProgressIndicator(
+                            totalSteps: 100,
+                            currentStep: 24,
+                            size: 8,
+                            padding: 0,
+                            roundedEdges: const Radius.circular(10),
+                            selectedGradientColor: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [kCoral.withValues(alpha: 0.2), kOrange],
+                            ),
+                            unselectedColor: greyColor.withValues(alpha: 0.2),
+                          ),
                         ),
                       ),
                     ],

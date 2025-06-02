@@ -1,16 +1,12 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_audios/quiz_sounds.dart';
-import 'package:template/core/db_service/question_db_service.dart';
-import 'package:template/core/models/category_model.dart';
-import 'package:template/core/models/grid_data.dart';
-import 'package:template/core/models/questions_data.dart';
-import 'package:template/core/routes/routes_name.dart';
-import 'package:template/core/theme/app_colors.dart';
-import 'package:toastification/toastification.dart';
 
-class QuizController extends GetxController {
-  // Observable collections and state
+import '../../../core/common_audios/quiz_sounds.dart';
+import '../../../core/db_service/question_db_service.dart';
+import '../../../core/models/category_model.dart';
+import '../../../core/models/questions_data.dart';
+
+class CountryQuizController extends GetxController {
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;
   final RxBool isLoadingQuestions = true.obs;
   final RxInt currentQuestionIndex = 0.obs;
@@ -37,7 +33,7 @@ class QuizController extends GetxController {
   void _initializeArguments() {
     final args = Get.arguments;
     if (args != null && args is Map<String, dynamic>) {
-      _categoryIndex = args['categoryIndex'];
+      _categoryIndex = args[categoryIndex];
     }
   }
 
@@ -76,7 +72,6 @@ class QuizController extends GetxController {
   Future<void> _loadCategoriesForTopic(String topic) async {
     isLoadingCategories.value = true;
     final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
-
     if (allQuestionsForTopic.isNotEmpty) {
       final totalQuestions = allQuestionsForTopic.length;
       final numberOfCategories = (totalQuestions / 20).floor();
@@ -170,7 +165,7 @@ class QuizController extends GetxController {
     QuizSounds.clearSound();
   }
 
-  void goToNextQuestion() {
+  /* void goToNextQuestion() {
     if (selectedAnswers.containsKey(currentQuestionIndex.value)) {
       if (currentQuestionIndex.value < questionsList.length - 1) {
         questionsPageController.nextPage(
@@ -179,7 +174,7 @@ class QuizController extends GetxController {
         );
       } else {
         final topicName = currentTopic.value;
-        int topicIndex = gridTexts.indexOf(topicName);
+        int topicIndex = countryTexts.indexOf(topicName);
         if (topicIndex == -1) topicIndex = 0;
         final catIndex = _categoryIndex ?? 1;
         QuizSounds.playCompletionSound();
@@ -217,13 +212,5 @@ class QuizController extends GetxController {
         curve: Curves.easeInOut,
       );
     }
-  }
-
-  void use5050Hint() {
-    Get.snackbar(
-      'Hint Used',
-      '50:50 hint activated!',
-      snackPosition: SnackPosition.TOP,
-    );
-  }
+  }*/
 }
