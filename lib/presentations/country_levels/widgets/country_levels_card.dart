@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:template/core/models/category_model.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/country_levels/controller/country_result_controller.dart';
+import 'package:template/presentations/country_levels/controller/country_levels_controller.dart';
 
 class CountryLevelsCard extends StatelessWidget {
   final CategoryModel category;
@@ -23,8 +23,8 @@ class CountryLevelsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CountryResultController countryResultController =
-        Get.find<CountryResultController>();
+    final CountryLevelsController countryResultController =
+        Get.find<CountryLevelsController>();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -34,7 +34,7 @@ class CountryLevelsCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: roundedDecoration.copyWith(
-            color: kTealGreen1.withValues(alpha: 0.5),
+            color: kTealGreen1.withValues(alpha: 0.7),
             border: Border.all(color: kBlack.withValues(alpha: 0.3)),
           ),
           child: Column(
@@ -46,7 +46,7 @@ class CountryLevelsCard extends StatelessWidget {
                     height: 40,
                     width: 40,
                     decoration: roundedDecoration.copyWith(
-                      color: kCoral,
+                      color: kTealGreen1.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Center(
@@ -76,7 +76,7 @@ class CountryLevelsCard extends StatelessWidget {
                         Text(
                           'Total: ${category.totalQuestions} Questions',
                           style: Get.textTheme.bodySmall?.copyWith(
-                            color: textGreyColor,
+                            color: kWhite,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -88,7 +88,7 @@ class CountryLevelsCard extends StatelessWidget {
                     height: 30,
                     width: 30,
                     decoration: roundedDecoration.copyWith(
-                      color: kCoral,
+                      color: kTealGreen1.withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(17.5),
                     ),
                     child: Icon(
@@ -177,14 +177,16 @@ class CountryLevelsCard extends StatelessWidget {
                                   children: [
                                     Icon(
                                       Icons.radio_button_checked,
-                                      color: kCoral,
+                                      color: kTealGreen1.withValues(alpha: 0.9),
                                       size: 16,
                                     ),
                                     const SizedBox(width: 2),
                                     Text(
                                       '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
                                       style: Get.textTheme.bodySmall?.copyWith(
-                                        color: kCoral,
+                                        color: kTealGreen1.withValues(
+                                          alpha: 0.9,
+                                        ),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

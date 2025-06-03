@@ -70,7 +70,7 @@ class QuizLevelsScreen extends StatelessWidget {
                 decoration: roundedDecoration.copyWith(
                   color: gridColors[gridTexts.indexOf(topic) %
                           gridColors.length]
-                      .withValues(alpha: 0.7),
+                      .withValues(alpha: 0.9),
                   border: Border.all(color: greyBorderColor),
                 ),
                 child: Column(

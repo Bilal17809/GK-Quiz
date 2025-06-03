@@ -8,7 +8,7 @@ import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../quiz/controller/quiz_controller.dart';
-import '../controller/country_result_controller.dart';
+import '../controller/country_levels_controller.dart';
 
 class CountryLevelsScreen extends StatelessWidget {
   const CountryLevelsScreen({super.key});
@@ -20,7 +20,7 @@ class CountryLevelsScreen extends StatelessWidget {
     final topicIndex =
         arguments['index']; // This is the grid index from country screen
     final QuizController quizController = Get.put(QuizController());
-    Get.put(CountryResultController());
+    Get.put(CountryLevelsController());
 
     if (topic.isNotEmpty) {
       quizController.loadCategoriesForTopic(topic);
@@ -66,7 +66,7 @@ class CountryLevelsScreen extends StatelessWidget {
                 margin: const EdgeInsets.all(kBodyHp),
                 padding: const EdgeInsets.all(kBodyHp),
                 decoration: roundedDecoration.copyWith(
-                  color: kTealGreen1.withValues(alpha: 0.7),
+                  color: kTealGreen1.withValues(alpha: 0.9),
                   border: Border.all(color: greyBorderColor),
                 ),
                 child: Column(

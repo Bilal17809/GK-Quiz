@@ -4,23 +4,24 @@ class RoundedButton extends StatelessWidget {
   final Widget child;
   final Color? backgroundColor;
   final VoidCallback? onTap;
+  final double? width;
+  final double? height;
 
   const RoundedButton({
     super.key,
     required this.child,
     this.backgroundColor,
     this.onTap,
+    this.height,
+    this.width,
   });
 
   @override
   Widget build(BuildContext context) {
     final button = Container(
-      width: 35,
-      height: 35,
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        shape: BoxShape.circle,
-      ),
+      width: width ?? 35,
+      height: height ?? 35,
+      decoration: BoxDecoration(color: backgroundColor, shape: BoxShape.circle),
       alignment: Alignment.center,
       child: child,
     );
@@ -30,19 +31,20 @@ class RoundedButton extends StatelessWidget {
   }
 }
 
-
-
-
 class AnimatedRoundedButton extends StatefulWidget {
   final Widget child;
   final Color? backgroundColor;
   final VoidCallback? onTap;
+  final double? width;
+  final double? height;
 
   const AnimatedRoundedButton({
     super.key,
     required this.child,
     this.backgroundColor,
     this.onTap,
+    this.width,
+    this.height,
   });
 
   @override
@@ -66,15 +68,14 @@ class _AnimatedRoundedButtonState extends State<AnimatedRoundedButton>
     _scaleAnimation = TweenSequence<double>([
       TweenSequenceItem(tween: Tween(begin: 1.0, end: 2.0), weight: 50),
       TweenSequenceItem(tween: Tween(begin: 2.0, end: 1.0), weight: 50),
-    ]).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOutCubic,
-    ));
+    ]).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOutCubic),
+    );
   }
 
   Future<void> _handleTap() async {
     if (widget.onTap != null) {
-      await _controller.forward(from: 0.0); // Play pop animation
+      await _controller.forward(from: 0.0);
       widget.onTap!();
     }
   }
@@ -92,8 +93,8 @@ class _AnimatedRoundedButtonState extends State<AnimatedRoundedButton>
       child: ScaleTransition(
         scale: _scaleAnimation,
         child: Container(
-          width: 35,
-          height: 35,
+          width: widget.width ?? 35,
+          height: widget.height ?? 35,
           decoration: BoxDecoration(
             color: widget.backgroundColor ?? Colors.transparent,
             shape: BoxShape.circle,
@@ -105,4 +106,3 @@ class _AnimatedRoundedButtonState extends State<AnimatedRoundedButton>
     );
   }
 }
-
