@@ -37,7 +37,7 @@ class LevelsCard extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: roundedDecoration.copyWith(
             color: gridColors[gridTexts.indexOf(topic) % gridColors.length]
-                .withValues(alpha: 0.5),
+                .withValues(alpha: 0.7),
             border: Border.all(color: kBlack.withValues(alpha: 0.3)),
           ),
           child: Column(
@@ -46,10 +46,12 @@ class LevelsCard extends StatelessWidget {
                 children: [
                   // Category Icon
                   Container(
-                    height: 40,
-                    width: 40,
+                    height: 35,
+                    width: 35,
                     decoration: roundedDecoration.copyWith(
-                      color: kCoral,
+                      color: gridColors[gridTexts.indexOf(topic) %
+                              gridColors.length]
+                          .withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: Center(
@@ -79,7 +81,7 @@ class LevelsCard extends StatelessWidget {
                         Text(
                           'Total: ${category.totalQuestions} Questions',
                           style: Get.textTheme.bodySmall?.copyWith(
-                            color: textGreyColor,
+                            color: kWhite,
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -88,10 +90,12 @@ class LevelsCard extends StatelessWidget {
                   ),
                   // Arrow Icon
                   Container(
-                    height: 30,
-                    width: 30,
+                    height: 35,
+                    width: 35,
                     decoration: roundedDecoration.copyWith(
-                      color: kCoral,
+                      color: gridColors[gridTexts.indexOf(topic) %
+                              gridColors.length]
+                          .withValues(alpha: 0.9),
                       borderRadius: BorderRadius.circular(17.5),
                     ),
                     child: Icon(
@@ -180,14 +184,22 @@ class LevelsCard extends StatelessWidget {
                                   children: [
                                     Icon(
                                       Icons.radio_button_checked,
-                                      color: kCoral,
+                                      color: gridColors[gridTexts.indexOf(
+                                                topic,
+                                              ) %
+                                              gridColors.length]
+                                          .withValues(alpha: 0.9),
                                       size: 16,
                                     ),
                                     const SizedBox(width: 2),
                                     Text(
                                       '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
                                       style: Get.textTheme.bodySmall?.copyWith(
-                                        color: kCoral,
+                                        color: gridColors[gridTexts.indexOf(
+                                                  topic,
+                                                ) %
+                                                gridColors.length]
+                                            .withValues(alpha: 0.9),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),

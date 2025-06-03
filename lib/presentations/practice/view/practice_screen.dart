@@ -204,7 +204,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                       ],
                     ),
                   ),
-                  // Replace FutureBuilder with Obx for reactive stars
+                  // Percentage stars
                   Positioned(
                     top: 8,
                     left: 8,
