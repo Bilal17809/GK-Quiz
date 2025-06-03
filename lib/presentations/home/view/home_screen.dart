@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/custom_text_button.dart';
+import 'package:template/core/common_widgets/big_icon_text_button.dart';
+import 'package:template/core/common_widgets/long_icon_text_button.dart';
 import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
+import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/navigation_drawer/view/navigation_drawer.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -12,7 +14,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
@@ -41,212 +42,159 @@ class HomeScreen extends StatelessWidget {
             Text('Enrich your knowledge', style: Get.textTheme.bodyLarge),
           ],
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 6),
-            child: IconButton(
-              onPressed: () {},
-              icon: Image.asset(
-                'assets/images/bell.png',
-                width: 26,
-                height: 26,
-              ),
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
           child: Column(
             children: [
-              const SizedBox(height: 12),
-              IconTextButton(
-                onPressed: () {
-                  Get.toNamed(RoutesName.lessonsScreen);
-                },
-                text: 'Lesson to Study',
-                icon: Container(
-                  decoration: BoxDecoration(
-                    color: kBlue,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset(
-                      'assets/images/reading-book.png',
-                      color: kWhite,
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                ),
-                style: Get.textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 12),
-              IconTextButton(
-                onPressed: () {
-                  Get.toNamed(RoutesName.practiceScreen);
-                },
-                text: 'Practice',
-                icon: Container(
-                  decoration: BoxDecoration(
-                    color: kCoral,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Image.asset(
-                      'assets/images/checklist.png',
-                      color: kWhite,
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                ),
-                style: Get.textTheme.headlineSmall,
-              ),
-              const SizedBox(height: 12),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconTextButton(
-                    width: mobileWidth / 2 - 25,
-                    onPressed: () {
-                      Get.toNamed(RoutesName.testScreen);
-                    },
-                    text: 'Take a\nTest',
-                    icon: Container(
-                      decoration: BoxDecoration(
-                        color: kTealGreen1,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Image.asset(
-                          'assets/images/test.png',
-                          color: kWhite,
-                          width: 40,
-                          height: 40,
+                  Expanded(
+                    child: BigIconTextButton(
+                      height: mobileWidth * 0.40,
+                      width: mobileWidth * 0.40,
+                      color: kBlue.withValues(alpha: 0.9),
+                      onPressed: () {
+                        Get.toNamed(RoutesName.lessonsScreen);
+                      },
+                      text: 'Lesson to Study',
+                      icon: Container(
+                        decoration: roundedDecoration.copyWith(
+                          color: kWhite.withValues(alpha: 0.2),
                         ),
-                      ),
-                    ),
-                    style: Get.textTheme.titleMedium,
-                  ),
-                  const SizedBox(width: 12),
-                  IconTextButton(
-                    width: mobileWidth / 2 - 25,
-                    onPressed: () {
-                      Get.toNamed(RoutesName.countryScreen);
-                    },
-                    text: 'Country\nQuiz',
-                    icon: Container(
-                      decoration: BoxDecoration(
-                        color: kViolet,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: Image.asset(
                           'assets/images/reading-book.png',
                           color: kWhite,
-                          width: 40,
-                          height: 40,
+                          width: mobileWidth * 0.1,
+                          height: mobileWidth * 0.1,
                         ),
                       ),
+                      style: Get.textTheme.headlineSmall,
                     ),
-                    style: Get.textTheme.titleMedium,
+                  ),
+                  SizedBox(width: mobileWidth * 0.03),
+                  Expanded(
+                    child: BigIconTextButton(
+                      height: mobileWidth * 0.40,
+                      width: mobileWidth * 0.40,
+                      color: kCoral.withValues(alpha: 0.9),
+                      onPressed: () {
+                        Get.toNamed(RoutesName.practiceScreen);
+                      },
+                      text: 'Practice',
+                      icon: Container(
+                        decoration: roundedDecoration.copyWith(
+                          color: kWhite.withValues(alpha: 0.2),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/images/checklist.png',
+                          color: kWhite,
+                          width: mobileWidth * 0.1,
+                          height: mobileWidth * 0.1,
+                        ),
+                      ),
+                      style: Get.textTheme.headlineSmall,
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: mobileWidth,
-                height: mobileHeight * 0.12,
-                child: Card(
-                  color: kWhite,
-                  elevation: 2,
-                  margin: EdgeInsets.zero,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+              SizedBox(height: 12),
+              LongIconTextButton(
+                height: mobileWidth * 0.30,
+
+                color: kYellow,
+                onPressed: () {
+                  Get.toNamed(RoutesName.testScreen);
+                },
+                text: 'Take a Test',
+                icon: Container(
+                  decoration: roundedDecoration.copyWith(
+                    color: kWhite.withValues(alpha: 0.2),
                   ),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(8),
-                            bottomLeft: Radius.circular(8),
-                          ),
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: kOrange,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Image.asset(
-                                      'assets/images/share.png',
-                                      color: kBlack,
-                                      width: 30,
-                                      height: 30,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Share App',
-                                  style: Get.textTheme.titleSmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(8),
-                            bottomRight: Radius.circular(8),
-                          ),
-                          onTap: () {},
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                            child: Column(
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: skyColor,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(4.0),
-                                    child: Image.asset(
-                                      'assets/images/no-ads.png',
-                                      color: kWhite,
-                                      width: 30,
-                                      height: 30,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'Remove Ads',
-                                  style: Get.textTheme.titleSmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'assets/images/test.png',
+                    color: kWhite,
+                    width: mobileWidth * 0.1,
+                    height: mobileWidth * 0.1,
                   ),
                 ),
+                style: Get.textTheme.titleMedium,
+              ),
+              SizedBox(height: 12),
+              Row(
+                children: [
+                  Expanded(
+                    child: BigIconTextButton(
+                      height: mobileWidth * 0.40,
+                      width: mobileWidth * 0.40,
+                      color: kTealGreen1.withValues(alpha: 0.9),
+                      onPressed: () {
+                        Get.toNamed(RoutesName.countryScreen);
+                      },
+                      text: 'Country Quiz',
+                      icon: Container(
+                        decoration: roundedDecoration.copyWith(
+                          color: kWhite.withValues(alpha: 0.2),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/images/reading-book.png',
+                          color: kWhite,
+                          width: mobileWidth * 0.1,
+                          height: mobileWidth * 0.1,
+                        ),
+                      ),
+                      style: Get.textTheme.titleMedium,
+                    ),
+                  ),
+                  SizedBox(width: mobileWidth * 0.03),
+                  Expanded(
+                    child: BigIconTextButton(
+                      height: mobileWidth * 0.40,
+                      width: mobileWidth * 0.40,
+                      color: kMediumGreen2.withValues(alpha: 0.9),
+                      onPressed: () {},
+                      text: 'Remove Ads',
+                      icon: Container(
+                        decoration: roundedDecoration.copyWith(
+                          color: kWhite.withValues(alpha: 0.2),
+                        ),
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.asset(
+                          'assets/images/no-ads.png',
+                          color: kWhite,
+                          width: mobileWidth * 0.1,
+                          height: mobileWidth * 0.1,
+                        ),
+                      ),
+                      style: Get.textTheme.titleMedium,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 12),
+              LongIconTextButton(
+                height: mobileWidth * 0.3,
+
+                color: skyColor.withValues(alpha: 0.9),
+                onPressed: () {},
+                text: 'Progress',
+                icon: Container(
+                  decoration: roundedDecoration.copyWith(
+                    color: kWhite.withValues(alpha: 0.2),
+                  ),
+                  padding: const EdgeInsets.all(8.0),
+                  child: Icon(
+                    Icons.bar_chart,
+                    color: kWhite,
+                    size: mobileWidth * 0.1,
+                  ),
+                ),
+                style: Get.textTheme.titleMedium,
               ),
             ],
           ),

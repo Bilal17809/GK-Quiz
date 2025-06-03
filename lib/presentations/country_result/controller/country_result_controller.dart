@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import '../../country_levels/controller/country_levels_controller.dart';
 import '../../country_quiz/controller/country_quiz_controller.dart';
-import '../../quiz_levels/controller/quiz_result_controller.dart';
 
 class CountryResultController extends GetxController {
   // Observable variables
@@ -46,7 +46,7 @@ class CountryResultController extends GetxController {
       );
 
       // Save the result
-      Get.put(QuizResultController()).saveQuizResult(
+      Get.put(CountryLevelsController()).saveQuizResult(
         topicIndex: topicIndex,
         categoryIndex: categoryIndex,
         correctAnswers: correctAnswers.value,

@@ -11,6 +11,7 @@ import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import '../../../core/common_widgets/round_image.dart';
 import '../../../core/models/country_grid.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../country_levels/controller/country_levels_controller.dart';
 
 class CountryScreen extends StatefulWidget {
   const CountryScreen({super.key});
@@ -23,6 +24,9 @@ class _CountryScreenState extends State<CountryScreen> {
   //Initialize controllers
   final CountryController countryController = Get.put(CountryController());
   final quizController = Get.put(QuizController());
+  final CountryLevelsController levelsController = Get.put(
+    CountryLevelsController(),
+  );
 
   Timer? _refreshTimer;
 
@@ -31,6 +35,8 @@ class _CountryScreenState extends State<CountryScreen> {
     super.initState();
     _refreshTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
       countryController.loadAllQuestions();
+      // Also refresh the levels controller results
+      levelsController.refreshAllResults();
     });
   }
 
@@ -111,13 +117,13 @@ class _CountryScreenState extends State<CountryScreen> {
               itemBuilder: (context, index) {
                 final icon = countryIcons[index % countryIcons.length];
                 final topic = countryTexts[index % countryTexts.length];
+
                 return InkWell(
                   onTap: () {
                     Get.toNamed(
                       RoutesName.countryLevelsScreen,
                       arguments: {'topic': topic, 'index': index},
                     );
-
                     _refreshTimer?.cancel();
                   },
                   child: Stack(
@@ -179,6 +185,7 @@ class _CountryScreenState extends State<CountryScreen> {
                           ),
                         ),
                       ),
+                      // Dynamic Progress Indicator
                       Positioned(
                         bottom: 8,
                         left: 8,
@@ -190,22 +197,35 @@ class _CountryScreenState extends State<CountryScreen> {
                             color: kWhite.withValues(alpha: 0.7),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 6),
-                          child: StepProgressIndicator(
-                            totalSteps: 100,
-                            currentStep: 24,
-                            size: 8,
-                            padding: 0,
-                            roundedEdges: const Radius.circular(10),
-                            selectedGradientColor: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                kTealGreen1.withValues(alpha: 0.2),
-                                kTealGreen1,
-                              ],
-                            ),
-                            unselectedColor: greyColor.withValues(alpha: 0.2),
-                          ),
+                          child: Obx(() {
+                            // Get dynamic progress data
+                            final result = levelsController
+                                .getOverallResultSync(index);
+                            final totalQuestions =
+                                countryController.topicCounts[topic] ?? 0;
+                            final correctAnswers = result['correct'] as int;
+
+                            // Current step is the number of correct answers
+                            final currentStep = correctAnswers;
+
+                            return StepProgressIndicator(
+                              totalSteps:
+                                  totalQuestions > 0 ? totalQuestions : 1,
+                              currentStep: currentStep.clamp(0, totalQuestions),
+                              size: 8,
+                              padding: 0,
+                              roundedEdges: const Radius.circular(10),
+                              selectedGradientColor: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  kTealGreen1.withValues(alpha: 0.2),
+                                  kTealGreen1,
+                                ],
+                              ),
+                              unselectedColor: greyColor.withValues(alpha: 0.2),
+                            );
+                          }),
                         ),
                       ),
                     ],
