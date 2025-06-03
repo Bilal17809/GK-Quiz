@@ -14,7 +14,6 @@ class CountryQuizController extends GetxController {
   final RxMap<int, bool> shouldShowAnswerResults = <int, bool>{}.obs;
   final RxMap<String, int> topicCounts = <String, int>{}.obs;
   final RxInt totalQuestionsInTopic = 0.obs;
-
   final RxList<CategoryModel> questionCategories = <CategoryModel>[].obs;
   final RxBool isLoadingCategories = false.obs;
   final RxString currentTopic = ''.obs;
@@ -33,7 +32,7 @@ class CountryQuizController extends GetxController {
   void _initializeArguments() {
     final args = Get.arguments;
     if (args != null && args is Map<String, dynamic>) {
-      _categoryIndex = args[categoryIndex];
+      _categoryIndex = args['categoryIndex'];
     }
   }
 
@@ -76,7 +75,6 @@ class CountryQuizController extends GetxController {
       final totalQuestions = allQuestionsForTopic.length;
       final numberOfCategories = (totalQuestions / 20).floor();
       final categories = <CategoryModel>[];
-
       for (int i = 0; i < numberOfCategories; i++) {
         final startIndex = i * 20;
         final endIndex = startIndex + 20;
@@ -116,7 +114,6 @@ class CountryQuizController extends GetxController {
     isLoadingQuestions.value = true;
     final allQuestionsForTopic = await DBService.getQuestionsByTopic(topic);
     final startIndex = (categoryIndex - 1) * 20;
-
     if (allQuestionsForTopic.length > startIndex) {
       final categoryQuestions =
           allQuestionsForTopic.skip(startIndex).take(20).toList();
@@ -146,16 +143,20 @@ class CountryQuizController extends GetxController {
   }
 
   void handleAnswerSelection(int questionIndex, String selectedOption) {
+    // Update the selected answer and show results
     selectedAnswers[questionIndex] = selectedOption;
     shouldShowAnswerResults[questionIndex] = true;
 
     final correctAnswer = questionsList[questionIndex].answer;
+
+    // Play appropriate sound
     if (selectedOption == correctAnswer) {
       QuizSounds.playCorrectSound();
     } else {
       QuizSounds.playWrongSound();
     }
 
+    // Force update the reactive maps
     selectedAnswers.refresh();
     shouldShowAnswerResults.refresh();
   }
@@ -164,53 +165,4 @@ class CountryQuizController extends GetxController {
     currentQuestionIndex.value = index;
     QuizSounds.clearSound();
   }
-
-  /* void goToNextQuestion() {
-    if (selectedAnswers.containsKey(currentQuestionIndex.value)) {
-      if (currentQuestionIndex.value < questionsList.length - 1) {
-        questionsPageController.nextPage(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
-        );
-      } else {
-        final topicName = currentTopic.value;
-        int topicIndex = countryTexts.indexOf(topicName);
-        if (topicIndex == -1) topicIndex = 0;
-        final catIndex = _categoryIndex ?? 1;
-        QuizSounds.playCompletionSound();
-        Get.toNamed(
-          RoutesName.resultScreen,
-          arguments: {
-            'topicIndex': topicIndex,
-            'categoryIndex': categoryIndex,
-            'topic': topicName,
-            'fromCustomQuiz': false,
-          },
-        );
-      }
-    } else {
-      toastification.show(
-        type: ToastificationType.warning,
-        title: Text('Select an Option'),
-        description: Text(
-          'Please select an answer before moving to the next question.',
-        ),
-        style: ToastificationStyle.flatColored,
-        autoCloseDuration: const Duration(seconds: 2),
-        primaryColor: kCoral,
-        margin: EdgeInsets.all(8),
-        closeOnClick: true,
-        alignment: Alignment.bottomCenter,
-      );
-    }
-  }
-
-  void goToPreviousQuestion() {
-    if (currentQuestionIndex.value > 0) {
-      questionsPageController.previousPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    }
-  }*/
 }

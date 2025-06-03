@@ -5,7 +5,7 @@ import 'package:template/core/models/country_grid.dart';
 
 import '../../quiz/controller/quiz_controller.dart';
 
-class CountryResultController extends GetxController {
+class CountryLevelsController extends GetxController {
   // Add reactive cache for results
   final RxMap<int, Map<String, dynamic>> _cachedResults =
       <int, Map<String, dynamic>>{}.obs;
@@ -20,10 +20,13 @@ class CountryResultController extends GetxController {
 
   /// Load all cached results from SharedPreferences
   Future<void> _loadAllCachedResults() async {
-    final prefs = await SharedPreferences.getInstance();
+    final countryPrefs = await SharedPreferences.getInstance();
     // Load results for all topics (assuming you have up to 20 topics)
     for (int topicIndex = 0; topicIndex < 20; topicIndex++) {
-      final result = await _calculateOverallResultFromPrefs(topicIndex, prefs);
+      final result = await _calculateOverallResultFromPrefs(
+        topicIndex,
+        countryPrefs,
+      );
       _cachedResults[topicIndex] = result;
     }
     // Trigger UI update
@@ -33,7 +36,7 @@ class CountryResultController extends GetxController {
   /// Calculate overall result from SharedPreferences
   Future<Map<String, dynamic>> _calculateOverallResultFromPrefs(
     int topicIndex,
-    SharedPreferences prefs,
+    SharedPreferences countryPrefs,
   ) async {
     int totalCorrect = 0;
     int totalWrong = 0;
@@ -44,9 +47,9 @@ class CountryResultController extends GetxController {
       categoryIndex <= maxCategories;
       categoryIndex++
     ) {
-      String baseKey = 'result${topicIndex}_$categoryIndex';
-      int correct = prefs.getInt('${baseKey}_correct') ?? 0;
-      int wrong = prefs.getInt('${baseKey}_wrong') ?? 0;
+      String baseKey = 'country_result${topicIndex}_$categoryIndex';
+      int correct = countryPrefs.getInt('${baseKey}_correct') ?? 0;
+      int wrong = countryPrefs.getInt('${baseKey}_wrong') ?? 0;
 
       if (correct > 0 || wrong > 0) {
         totalCorrect += correct;
@@ -80,18 +83,18 @@ class CountryResultController extends GetxController {
     required int wrongAnswers,
     required double percentage,
   }) async {
-    final prefs = await SharedPreferences.getInstance();
-    String baseKey = 'result${topicIndex}_$categoryIndex';
+    final countryPrefs = await SharedPreferences.getInstance();
+    String baseKey = 'country_result${topicIndex}_$categoryIndex';
 
-    await prefs.setInt('${baseKey}_correct', correctAnswers);
-    await prefs.setInt('${baseKey}_wrong', wrongAnswers);
+    await countryPrefs.setInt('${baseKey}_correct', correctAnswers);
+    await countryPrefs.setInt('${baseKey}_wrong', wrongAnswers);
     // Fixed: Added missing underscore in the key
-    await prefs.setDouble('${baseKey}_percentage', percentage);
+    await countryPrefs.setDouble('${baseKey}_percentage', percentage);
 
     // Update cached result for this topic
     final updatedResult = await _calculateOverallResultFromPrefs(
       topicIndex,
-      prefs,
+      countryPrefs,
     );
     _cachedResults[topicIndex] = updatedResult;
 
@@ -99,9 +102,9 @@ class CountryResultController extends GetxController {
     _refreshTrigger.value++;
 
     // Verify the data was saved
-    final savedCorrect = prefs.getInt('${baseKey}_correct');
-    final savedWrong = prefs.getInt('${baseKey}_wrong');
-    final savedPercentage = prefs.getDouble('${baseKey}_percentage');
+    final savedCorrect = countryPrefs.getInt('${baseKey}_correct');
+    final savedWrong = countryPrefs.getInt('${baseKey}_wrong');
+    final savedPercentage = countryPrefs.getDouble('${baseKey}_percentage');
 
     debugPrint(
       'Verified saved data - Correct: $savedCorrect, Wrong: $savedWrong, Percentage: $savedPercentage',
@@ -112,13 +115,13 @@ class CountryResultController extends GetxController {
     int topicIndex,
     int categoryIndex,
   ) async {
-    final prefs = await SharedPreferences.getInstance();
-    String baseKey = 'result${topicIndex}_$categoryIndex';
+    final countryPrefs = await SharedPreferences.getInstance();
+    String baseKey = 'country_result${topicIndex}_$categoryIndex';
 
     final result = {
-      'correct': prefs.getInt('${baseKey}_correct') ?? 0,
-      'wrong': prefs.getInt('${baseKey}_wrong') ?? 0,
-      'percentage': prefs.getDouble('${baseKey}_percentage') ?? 0.0,
+      'correct': countryPrefs.getInt('${baseKey}_correct') ?? 0,
+      'wrong': countryPrefs.getInt('${baseKey}_wrong') ?? 0,
+      'percentage': countryPrefs.getDouble('${baseKey}_percentage') ?? 0.0,
     };
 
     return result;
@@ -126,8 +129,8 @@ class CountryResultController extends GetxController {
 
   /// Get overall topic results (original async method)
   Future<Map<String, dynamic>> getOverallResult(int topicIndex) async {
-    final prefs = await SharedPreferences.getInstance();
-    return await _calculateOverallResultFromPrefs(topicIndex, prefs);
+    final countryPrefs = await SharedPreferences.getInstance();
+    return await _calculateOverallResultFromPrefs(topicIndex, countryPrefs);
   }
 
   /// Get overall result synchronously (for reactive UI)
@@ -145,8 +148,11 @@ class CountryResultController extends GetxController {
 
   /// Refresh result for a specific topic
   Future<void> refreshTopicResult(int topicIndex) async {
-    final prefs = await SharedPreferences.getInstance();
-    final result = await _calculateOverallResultFromPrefs(topicIndex, prefs);
+    final countryPrefs = await SharedPreferences.getInstance();
+    final result = await _calculateOverallResultFromPrefs(
+      topicIndex,
+      countryPrefs,
+    );
     _cachedResults[topicIndex] = result;
     _refreshTrigger.value++;
   }

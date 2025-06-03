@@ -79,7 +79,7 @@ class _CountryScreenState extends State<CountryScreen> {
                     left: -countryController.shift.value,
                     child: Image.asset(
                       'assets/images/world_map.png',
-                      color: kCoral,
+                      color: kTealGreen1.withValues(alpha: 0.9),
                       width: countryController.imageWidth,
                       fit: BoxFit.cover,
                     ),
@@ -90,7 +90,7 @@ class _CountryScreenState extends State<CountryScreen> {
                         countryController.shift.value,
                     child: Image.asset(
                       'assets/images/world_map.png',
-                      color: kCoral,
+                      color: kTealGreen1.withValues(alpha: 0.9),
                       width: countryController.imageWidth,
                       fit: BoxFit.cover,
                     ),
@@ -126,7 +126,7 @@ class _CountryScreenState extends State<CountryScreen> {
                     children: [
                       Container(
                         decoration: roundedDecoration.copyWith(
-                          color: kTealGreen1.withValues(alpha: 0.95),
+                          color: kTealGreen1.withValues(alpha: 0.9),
                         ),
                         child: Column(
                           children: [
@@ -163,7 +163,7 @@ class _CountryScreenState extends State<CountryScreen> {
                           left: -6,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: kCoral,
+                              color: kTealGreen1.withValues(alpha: 0.9),
                               shape: BoxShape.circle,
                             ),
                             padding: EdgeInsets.all(6),
@@ -199,7 +199,10 @@ class _CountryScreenState extends State<CountryScreen> {
                             selectedGradientColor: LinearGradient(
                               begin: Alignment.topLeft,
                               end: Alignment.bottomRight,
-                              colors: [kCoral.withValues(alpha: 0.2), kOrange],
+                              colors: [
+                                kTealGreen1.withValues(alpha: 0.2),
+                                kTealGreen1,
+                              ],
                             ),
                             unselectedColor: greyColor.withValues(alpha: 0.2),
                           ),
