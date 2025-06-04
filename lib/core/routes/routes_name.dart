@@ -15,4 +15,5 @@ abstract class RoutesName {
   static const String countryLevelsScreen = '/country_levels_screen';
   static const String countryQuizScreen = '/country_quiz_screen';
   static const String countryResultScreen = '/country_result_screen';
+  static const String progressScreen = '/progress_screen';
 }

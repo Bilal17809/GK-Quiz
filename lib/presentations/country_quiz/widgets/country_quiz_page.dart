@@ -15,6 +15,8 @@ class CountryQuizPage extends StatelessWidget {
   final int totalQuestions;
   final CountryQuizController controller;
   final Size mobileSize;
+  final int topicIndex;
+  final String topic;
   final Function(int, String) onAnswerSelected;
 
   const CountryQuizPage({
@@ -25,6 +27,8 @@ class CountryQuizPage extends StatelessWidget {
     required this.controller,
     required this.mobileSize,
     required this.onAnswerSelected,
+    required this.topicIndex,
+    required this.topic,
   });
 
   @override
@@ -44,14 +48,14 @@ class CountryQuizPage extends StatelessWidget {
             fit: StackFit.expand,
             clipBehavior: Clip.none,
             children: [
-              // Background card
+              // Question card
               Positioned(
                 top: mobileSize.height * 0.25,
                 left: mobileSize.width * 0.05,
                 right: mobileSize.width * 0.05,
                 child: Container(
-                  height: mobileSize.height * 0.25,
-                  width: mobileSize.width * 0.9,
+                  height: mobileSize.height * 0.30,
+
                   decoration: roundedDecoration.copyWith(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     color: kWhite,
@@ -135,7 +139,7 @@ class CountryQuizPage extends StatelessWidget {
                 right: 0,
                 child: Center(
                   child: Text(
-                    'COUNTRY QUIZ',
+                    '$topic - Level $topicIndex',
                     style: Get.textTheme.titleLarge?.copyWith(
                       color: kWhite,
                       shadows: [

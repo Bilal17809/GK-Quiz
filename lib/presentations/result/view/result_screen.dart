@@ -139,18 +139,16 @@ class ResultScreen extends StatelessWidget {
                                             padding: const EdgeInsets.all(12.0),
                                             child: Container(
                                               decoration: roundedDecoration
-                                                  .copyWith(
-                                                    color: kCoral.withAlpha(
-                                                      100,
-                                                    ),
-                                                  ),
+                                                  .copyWith(color: kWhite),
                                               child: ListTile(
                                                 leading: Container(
                                                   decoration:
                                                       roundedDecorationWithShadow
                                                           .copyWith(
-                                                            color: kWhite
-                                                                .withAlpha(50),
+                                                            color: kCoral
+                                                                .withValues(
+                                                                  alpha: 0.2,
+                                                                ),
                                                           ),
                                                   padding: EdgeInsets.all(6),
                                                   child: Icon(
@@ -163,7 +161,7 @@ class ResultScreen extends StatelessWidget {
                                                   style: Get
                                                       .textTheme
                                                       .titleSmall
-                                                      ?.copyWith(color: kWhite),
+                                                      ?.copyWith(color: kCoral),
                                                 ),
                                                 trailing: Text(
                                                   resultController
@@ -178,21 +176,19 @@ class ResultScreen extends StatelessWidget {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(12.0),
                                             child: Container(
                                               decoration: roundedDecoration
-                                                  .copyWith(
-                                                    color: kCoral.withAlpha(
-                                                      100,
-                                                    ),
-                                                  ),
+                                                  .copyWith(color: kWhite),
                                               child: ListTile(
                                                 leading: Container(
                                                   decoration:
                                                       roundedDecorationWithShadow
                                                           .copyWith(
-                                                            color: kWhite
-                                                                .withAlpha(50),
+                                                            color: kCoral
+                                                                .withValues(
+                                                                  alpha: 0.2,
+                                                                ),
                                                           ),
                                                   padding: EdgeInsets.all(6),
                                                   child: Icon(
@@ -205,7 +201,7 @@ class ResultScreen extends StatelessWidget {
                                                   style: Get
                                                       .textTheme
                                                       .titleSmall
-                                                      ?.copyWith(color: kWhite),
+                                                      ?.copyWith(color: kCoral),
                                                 ),
                                                 trailing: Text(
                                                   resultController
@@ -221,21 +217,19 @@ class ResultScreen extends StatelessWidget {
                                             ),
                                           ),
                                           Padding(
-                                            padding: const EdgeInsets.all(8.0),
+                                            padding: const EdgeInsets.all(12.0),
                                             child: Container(
                                               decoration: roundedDecoration
-                                                  .copyWith(
-                                                    color: kCoral.withAlpha(
-                                                      100,
-                                                    ),
-                                                  ),
+                                                  .copyWith(color: kWhite),
                                               child: ListTile(
                                                 leading: Container(
                                                   decoration:
                                                       roundedDecorationWithShadow
                                                           .copyWith(
-                                                            color: kWhite
-                                                                .withAlpha(50),
+                                                            color: kCoral
+                                                                .withValues(
+                                                                  alpha: 0.2,
+                                                                ),
                                                           ),
                                                   padding: EdgeInsets.all(6),
                                                   child: Icon(
@@ -248,7 +242,7 @@ class ResultScreen extends StatelessWidget {
                                                   style: Get
                                                       .textTheme
                                                       .titleSmall
-                                                      ?.copyWith(color: kWhite),
+                                                      ?.copyWith(color: kCoral),
                                                 ),
                                                 trailing: Text(
                                                   resultController
