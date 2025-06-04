@@ -33,6 +33,7 @@ import 'package:template/presentations/customized_quiz/view/customized_quiz_scre
 import 'package:template/presentations/home/view/home_screen.dart';
 import 'package:template/presentations/lessons/view/lessons_screen.dart';
 import 'package:template/presentations/practice/view/practice_screen.dart';
+import 'package:template/presentations/progress/view/progress_screen.dart';
 import 'package:template/presentations/qna/view/qna_screen.dart';
 import 'package:template/presentations/quiz/view/quiz_screen.dart';
 import 'package:template/presentations/quiz_levels/view/quiz_levels_screen.dart';
@@ -83,5 +84,6 @@ class Routes {
       name: RoutesName.countryResultScreen,
       page: () => CountryResultScreen(),
     ),
+    GetPage(name: RoutesName.progressScreen, page: () => ProgressScreen()),
   ];
 }

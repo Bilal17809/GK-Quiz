@@ -82,10 +82,16 @@ class LessonsScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Text(
-                      text,
-                      style: Get.textTheme.titleSmall!.copyWith(
-                        color: textWhiteColor,
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          text,
+                          style: Get.textTheme.titleSmall!.copyWith(
+                            color: textWhiteColor,
+                          ),
+                        ),
                       ),
                     ),
                   ],

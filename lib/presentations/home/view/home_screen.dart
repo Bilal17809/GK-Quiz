@@ -9,6 +9,8 @@ import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/navigation_drawer/view/navigation_drawer.dart';
 
+import '../../../core/common_widgets/bottom_nav_bar.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -181,7 +183,9 @@ class HomeScreen extends StatelessWidget {
                 height: mobileWidth * 0.3,
 
                 color: skyColor.withValues(alpha: 0.9),
-                onPressed: () {},
+                onPressed: () {
+                  Get.toNamed(RoutesName.progressScreen);
+                },
                 text: 'Progress',
                 icon: Container(
                   decoration: roundedDecoration.copyWith(
@@ -200,6 +204,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+      bottomNavigationBar: BottomNavBar(currentIndex: 0),
     );
   }
 }

@@ -39,10 +39,13 @@ class BigIconTextButton extends StatelessWidget {
             children: [
               icon,
               const SizedBox(height: 8),
-              Text(
-                textAlign: TextAlign.center,
-                text,
-                style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  textAlign: TextAlign.center,
+                  text,
+                  style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
+                ),
               ),
             ],
           ),

@@ -124,6 +124,8 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
               controller: countryQuizController,
               mobileSize: mobileSize,
               onAnswerSelected: _handleAnswerSelection,
+              topicIndex: topicIndex,
+              topic: topic,
             );
           },
         );
