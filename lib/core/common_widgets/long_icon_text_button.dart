@@ -10,16 +10,18 @@ class LongIconTextButton extends StatelessWidget {
   final double? width;
   final double? height;
   final Color? color;
+  final Color? iconColor;
 
   const LongIconTextButton({
     super.key,
     required this.onPressed,
     required this.text,
     required this.icon,
-    required this.style,
+    this.style,
     this.width,
     this.height,
     this.color,
+    this.iconColor,
   });
 
   @override
@@ -37,12 +39,16 @@ class LongIconTextButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
 
             children: [
-              icon,
+              IconTheme(
+                data: IconThemeData(color: iconColor ?? kWhite),
+                child: icon,
+              ),
               const SizedBox(width: 8),
               Text(
                 textAlign: TextAlign.center,
                 text,
-                style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
+                style:
+                    style ?? Get.textTheme.titleMedium?.copyWith(color: kWhite),
               ),
             ],
           ),

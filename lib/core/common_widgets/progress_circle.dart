@@ -34,9 +34,16 @@ class ProgressCircle extends StatelessWidget {
             children: [
               Icon(icon, color: kTealGreen1),
               SizedBox(height: 2),
-              Text(
-                '$value/$totalValue',
-                style: Get.textTheme.titleMedium?.copyWith(color: kBlack),
+              FittedBox(
+                alignment: Alignment.center,
+                fit: BoxFit.scaleDown,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                  child: Text(
+                    '$value/$totalValue',
+                    style: Get.textTheme.titleMedium?.copyWith(color: kBlack),
+                  ),
+                ),
               ),
             ],
           ),

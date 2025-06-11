@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_widgets/big_icon_text_button.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/long_icon_text_button.dart';
-import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
@@ -20,30 +20,9 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       drawer: const NavigationDrawerWidget(),
-      appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
-          child: Builder(
-            builder: (context) {
-              return RoundedButton(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Image.asset('assets/images/menu.png', color: kRed),
-              );
-            },
-          ),
-        ),
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GK Quiz',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text('Enrich your knowledge', style: Get.textTheme.bodyLarge),
-          ],
-        ),
+      appBar: CustomAppBar(
+        subtitle: 'Enrich your knowledge',
+        useBackButton: false,
       ),
       body: SafeArea(
         child: Padding(
@@ -124,7 +103,7 @@ class HomeScreen extends StatelessWidget {
                     height: mobileWidth * 0.1,
                   ),
                 ),
-                style: Get.textTheme.titleMedium,
+                style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
               ),
               SizedBox(height: 12),
               Row(
@@ -198,7 +177,7 @@ class HomeScreen extends StatelessWidget {
                     size: mobileWidth * 0.1,
                   ),
                 ),
-                style: Get.textTheme.titleMedium,
+                style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
               ),
             ],
           ),

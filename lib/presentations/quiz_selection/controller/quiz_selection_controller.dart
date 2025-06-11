@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
-import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/models/questions_data.dart';
 
+import '../../../core/common_widgets/grid_data.dart';
 import '../../../core/db_service/question_db_service.dart';
 
 class QuizSelectionController extends GetxController {

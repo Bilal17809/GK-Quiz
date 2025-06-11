@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/country/controller/country_controller.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
-import '../../../core/common_widgets/round_image.dart';
-import '../../../core/models/country_grid.dart';
+import '../../../core/common_widgets/country_grid.dart';
+import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../country_levels/controller/country_levels_controller.dart';
 
@@ -49,31 +50,7 @@ class _CountryScreenState extends State<CountryScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GK Quiz',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text('Country Quiz', style: Get.textTheme.bodyLarge),
-          ],
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
-          child: RoundedButton(
-            backgroundColor: kRed,
-            onTap: () {
-              Get.back();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/images/back.png', color: kWhite),
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(subtitle: 'Country Quiz'),
       body: SafeArea(
         child: Stack(
           children: [
@@ -104,9 +81,8 @@ class _CountryScreenState extends State<CountryScreen> {
                 ],
               );
             }),
-            //Grid
             GridView.builder(
-              padding: const EdgeInsets.all(8),
+              padding: kGridPadding,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
                 mainAxisSpacing: 12,
@@ -150,14 +126,17 @@ class _CountryScreenState extends State<CountryScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                topic,
-                                style: Get.textTheme.titleSmall?.copyWith(
-                                  color: textWhiteColor,
-                                  fontSize: 14,
+                              padding: const EdgeInsets.all(6.0),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(
+                                  topic,
+                                  style: Get.textTheme.titleSmall?.copyWith(
+                                    color: textWhiteColor,
+                                    fontSize: 14,
+                                  ),
+                                  textAlign: TextAlign.center,
                                 ),
-                                textAlign: TextAlign.center,
                               ),
                             ),
                           ],
@@ -204,8 +183,6 @@ class _CountryScreenState extends State<CountryScreen> {
                             final totalQuestions =
                                 countryController.topicCounts[topic] ?? 0;
                             final correctAnswers = result['correct'] as int;
-
-                            // Current step is the number of correct answers
                             final currentStep = correctAnswers;
 
                             return StepProgressIndicator(

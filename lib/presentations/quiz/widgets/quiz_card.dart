@@ -7,7 +7,7 @@ import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz/widgets/bottom_buttons.dart';
 
-import '../view/ui_helpers.dart';
+import '../../../core/utils/ui_helpers.dart';
 
 class QuizCard extends StatelessWidget {
   final QuestionsModel question;

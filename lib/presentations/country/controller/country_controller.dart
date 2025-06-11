@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:template/core/models/country_grid.dart';
+import 'package:template/core/common_widgets/country_grid.dart';
 
 import '../../quiz/controller/quiz_controller.dart';
 

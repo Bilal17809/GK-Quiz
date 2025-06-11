@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/round_image.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
@@ -50,34 +50,8 @@ class QuizScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: kWhite,
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GK Quiz $categoryIndex',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text(
-              '$topic - Level $categoryIndex',
-              style: Get.textTheme.bodyLarge,
-            ),
-          ],
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
-          child: RoundedButton(
-            backgroundColor: kRed,
-            onTap: () {
-              controller.resetQuizState();
-              Get.back();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/images/back.png', color: kWhite),
-            ),
-          ),
-        ),
+      appBar: CustomAppBar(
+        subtitle: '$topic - Level $categoryIndex',
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 24),

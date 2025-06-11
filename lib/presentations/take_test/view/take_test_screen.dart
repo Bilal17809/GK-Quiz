@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/custom_text_button.dart';
-import 'package:template/core/common_widgets/round_image.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
@@ -12,31 +12,7 @@ class TakeTestScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GK Quiz',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text('Take a Test', style: Get.textTheme.bodyLarge),
-          ],
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
-          child: RoundedButton(
-            backgroundColor: kRed,
-            onTap: () {
-              Get.back();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/images/back.png', color: kWhite),
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(subtitle: 'Take a Test'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: kBodyHp),

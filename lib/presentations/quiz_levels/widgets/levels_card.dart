@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/models/category_model.dart';
-import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 
+import '../../../core/common_widgets/grid_data.dart';
 import '../controller/quiz_result_controller.dart';
 
 class LevelsCard extends StatelessWidget {

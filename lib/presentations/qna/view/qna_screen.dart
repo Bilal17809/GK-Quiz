@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
+import 'package:template/core/common_widgets/long_icon_text_button.dart';
 
-import '../../../core/common_widgets/round_image.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
@@ -16,28 +17,8 @@ class QnaScreen extends StatelessWidget {
     final topic = (Get.arguments as Map<String, dynamic>)['topic'] ?? '';
 
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GK Quiz',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text('Learn - $topic', style: Get.textTheme.bodyLarge),
-          ],
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
-          child: RoundedButton(
-            backgroundColor: kRed,
-            onTap: () => Get.back(),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/images/back.png', color: kWhite),
-            ),
-          ),
-        ),
+      appBar: CustomAppBar(
+        subtitle: 'Learn - $topic',
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 24),
@@ -75,18 +56,21 @@ class QnaScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: 30,
-                          width: 30,
+                          height: 25,
+                          width: 25,
+                          padding: EdgeInsets.all(2),
                           decoration: roundedDecoration.copyWith(
                             color: kOrange,
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: Center(
-                            child: Text(
-                              '${index + 1}',
-                              style: Get.textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w500,
-                                color: kWhite,
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                '${index + 1}',
+                                style: Get.textTheme.titleLarge?.copyWith(
+                                  color: kWhite,
+                                ),
                               ),
                             ),
                           ),
@@ -99,8 +83,8 @@ class QnaScreen extends StatelessWidget {
                             children: [
                               Text(
                                 question.question,
-                                style: Get.textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.w300,
+                                style: Get.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                             ],
@@ -109,19 +93,69 @@ class QnaScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            'Answer: ${qnaController.getCorrectOptionText(question)}',
-                            style: Get.textTheme.titleMedium,
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
+
+                    Obx(() {
+                      final isAnswerRevealed = qnaController.isAnswerRevealed(
+                        index,
+                      );
+
+                      if (isAnswerRevealed) {
+                        return Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.all(12),
+                          decoration: roundedDecorationWithShadow.copyWith(
+                            color: kCoral.withValues(alpha: 0.2),
                           ),
-                        ),
-                      ],
-                    ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Answer:',
+                                style: Get.textTheme.titleSmall?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: kCoral.withValues(alpha: 0.7),
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                qnaController.getCorrectOptionText(question),
+                                style: Get.textTheme.bodyMedium?.copyWith(
+                                  color: kBlack,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        return Center(
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              textButtonTheme: TextButtonThemeData(
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      30,
+                                    ), // more circular
+                                  ),
+                                ),
+                              ),
+                            ),
+                            child: LongIconTextButton(
+                              width: 120,
+                              height: 40,
+                              style: Get.textTheme.titleSmall?.copyWith(
+                                color: kWhite,
+                              ),
+                              onPressed:
+                                  () => qnaController.revealAnswer(index),
+                              text: 'Answer',
+                              icon: Icon(Icons.remove_red_eye, size: 16),
+                              color: kCoral,
+                            ),
+                          ),
+                        );
+                      }
+                    }),
                   ],
                 ),
               ),

@@ -9,7 +9,7 @@ import '../../../core/models/questions_data.dart';
 import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
-import '../../quiz/view/ui_helpers.dart';
+import '../../../core/utils/ui_helpers.dart';
 import '../widgets/country_quiz_page.dart';
 
 class CountryQuizScreen extends StatefulWidget {

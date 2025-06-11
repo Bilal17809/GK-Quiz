@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/round_image.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
-import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz_levels/widgets/levels_card.dart';
 
+import '../../../core/common_widgets/grid_data.dart';
 import '../controller/quiz_result_controller.dart';
 
 class QuizLevelsScreen extends StatelessWidget {
@@ -33,31 +33,7 @@ class QuizLevelsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GK Quiz',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text('Levels', style: Get.textTheme.bodyLarge),
-          ],
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
-          child: RoundedButton(
-            backgroundColor: kRed,
-            onTap: () {
-              Get.back();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/images/back.png', color: kWhite),
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(subtitle: 'Levels'),
       body: SafeArea(
         child: Column(
           children: [
