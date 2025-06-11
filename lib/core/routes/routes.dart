@@ -23,7 +23,7 @@
 //   }
 // }
 
-import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:get/get.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/presentations/country/view/country_screen.dart';
 import 'package:template/presentations/country_levels/view/country_levels_screen.dart';
@@ -44,46 +44,107 @@ import 'package:template/presentations/take_test/view/take_test_screen.dart';
 
 class Routes {
   static final routes = [
-    GetPage(name: RoutesName.homeScreen, page: () => const HomeScreen()),
-    GetPage(name: RoutesName.splashScreen, page: () => const SplashScreen()),
-    GetPage(name: RoutesName.lessonsScreen, page: () => const LessonsScreen()),
+    GetPage(
+      name: RoutesName.homeScreen,
+      page: () => const HomeScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.splashScreen,
+      page: () => const SplashScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.lessonsScreen,
+      page: () => const LessonsScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
     GetPage(
       name: RoutesName.practiceScreen,
       page: () => const PracticeScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
-    GetPage(name: RoutesName.quizScreen, page: () => QuizScreen()),
-    GetPage(name: RoutesName.testScreen, page: () => const TakeTestScreen()),
+    GetPage(
+      name: RoutesName.quizScreen,
+      page: () => QuizScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.testScreen,
+      page: () => const TakeTestScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
     GetPage(
       name: RoutesName.takeATestScreen,
       page: () => const QuizSelectionScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
       name: RoutesName.quizLevelsScreen,
       page: () => const QuizLevelsScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
-    GetPage(name: RoutesName.resultScreen, page: () => ResultScreen()),
-    GetPage(name: RoutesName.qnaScreen, page: () => QnaScreen()),
+    GetPage(
+      name: RoutesName.resultScreen,
+      page: () => ResultScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.qnaScreen,
+      page: () => QnaScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
     GetPage(
       name: RoutesName.customizedQuizScreen,
       page: () => CustomizedQuizScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
       name: RoutesName.quizSelectionScreen,
       page: () => QuizSelectionScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
-    GetPage(name: RoutesName.countryScreen, page: () => CountryScreen()),
+    GetPage(
+      name: RoutesName.countryScreen,
+      page: () => CountryScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
     GetPage(
       name: RoutesName.countryLevelsScreen,
       page: () => CountryLevelsScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
       name: RoutesName.countryQuizScreen,
       page: () => CountryQuizScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
       name: RoutesName.countryResultScreen,
       page: () => CountryResultScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
     ),
-    GetPage(name: RoutesName.progressScreen, page: () => ProgressScreen()),
+    GetPage(
+      name: RoutesName.progressScreen,
+      page: () => ProgressScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
   ];
 }

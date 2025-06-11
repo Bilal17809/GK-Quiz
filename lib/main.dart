@@ -1,17 +1,21 @@
-import 'package:get/route_manager.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:template/core/local_storage/shared_preferences_storage.dart';
 import 'package:template/core/routes/routes.dart';
 import 'package:template/core/routes/routes_name.dart';
+import 'package:template/presentations/country_levels/controller/country_levels_controller.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
+import 'package:template/presentations/quiz_levels/controller/quiz_result_controller.dart';
 import 'package:toastification/toastification.dart';
-import '/core/theme/app_theme.dart';
-import 'package:flutter/material.dart';
 
-/*
-Revise all Files and their names,
-secondly "Navigate" the screen must from Ui Page,
-usually route use in UI where User interact, not in contrl,
-see all file and review
-*/
-void main() {
+import '/core/theme/app_theme.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Get.putAsync(() => SharedPreferencesService().init());
+  Get.put(QuizController());
+  Get.put(QuizResultController());
+  Get.put(CountryLevelsController());
   runApp(const MyApp());
 }
 

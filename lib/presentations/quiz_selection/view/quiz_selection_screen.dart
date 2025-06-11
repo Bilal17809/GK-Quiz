@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_widgets/common_text_button.dart';
-import 'package:template/core/common_widgets/round_image.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
-import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 
+import '../../../core/common_widgets/grid_data.dart';
 import '../controller/quiz_selection_controller.dart';
 
 class QuizSelectionScreen extends StatelessWidget {
@@ -19,30 +19,7 @@ class QuizSelectionScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: appBarBgColor,
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'GK Quiz',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text('Take a Test', style: Get.textTheme.bodyLarge),
-          ],
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: RoundedButton(
-            backgroundColor: kRed,
-            onTap: () => Get.back(),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/images/back.png', color: kWhite),
-            ),
-          ),
-        ),
-      ),
+      appBar: CustomAppBar(subtitle: 'Take a Test'),
       body: Column(
         children: [
           Expanded(
@@ -96,13 +73,21 @@ class QuizSelectionScreen extends StatelessWidget {
                               ),
                               Expanded(
                                 child: ListTile(
-                                  title: Text(
-                                    topic,
-                                    style: Get.textTheme.titleMedium,
+                                  title: FittedBox(
+                                    alignment: Alignment.centerLeft,
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      topic,
+                                      style: Get.textTheme.titleSmall,
+                                    ),
                                   ),
-                                  subtitle: Text(
-                                    'Total Questions: $questionCount',
-                                    style: Get.textTheme.bodySmall,
+                                  subtitle: FittedBox(
+                                    alignment: Alignment.centerLeft,
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'Total Questions: $questionCount',
+                                      style: Get.textTheme.bodySmall,
+                                    ),
                                   ),
                                   trailing: Obx(
                                     () => Checkbox(

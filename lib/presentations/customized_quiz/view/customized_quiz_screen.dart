@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/presentations/customized_quiz/controller/cutomized_quiz_controller.dart';
 
-import '../../../core/common_widgets/round_image.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../widgets/customized_quiz_content.dart';
@@ -19,34 +19,8 @@ class CustomizedQuizScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: kWhite,
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Customized Quiz',
-              style: Get.textTheme.titleMedium?.copyWith(color: kRed),
-            ),
-            Text(
-              '$topic - Questions: $questionCount',
-              style: Get.textTheme.bodyLarge,
-            ),
-          ],
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.only(left: 8.0, top: 10, bottom: 10),
-          child: RoundedButton(
-            backgroundColor: kRed,
-            onTap: () {
-              customizedQuizController.resetQuizState();
-              Get.back();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset('assets/images/back.png', color: kWhite),
-            ),
-          ),
-        ),
+      appBar: CustomAppBar(
+        subtitle: '$topic - Questions: $questionCount',
         actions: [
           Container(
             margin: const EdgeInsets.only(right: 24),
@@ -61,6 +35,7 @@ class CustomizedQuizScreen extends StatelessWidget {
           ),
         ],
       ),
+
       body: Obx(
         () => CustomizedQuizContent(
           isLoading: customizedQuizController.isLoading.value,

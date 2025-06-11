@@ -37,15 +37,12 @@ class CountryResultScreen extends StatelessWidget {
       "Topic Index: $topicIndex, Category Index: $categoryIndex, Topic: $topic",
     );
 
-    // Initialize the controller
     final CountryResultController countryResultController = Get.put(
       CountryResultController(),
     );
 
-    // Call calculateResults with topicIndex and categoryIndex
     countryResultController.calculateResults(topicIndex, categoryIndex);
 
-    // Show congratulation dialog after build completes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       PanaraInfoDialog.show(
         context,
@@ -137,11 +134,18 @@ class CountryResultScreen extends StatelessWidget {
                       ),
                     ),
                     Center(
-                      child: Text(
-                        '${countryResultController.currentStep.value}%',
-                        style: Get.textTheme.displayLarge?.copyWith(
-                          color: kTealGreen1.withValues(alpha: 0.9),
-                          fontWeight: FontWeight.bold,
+                      child: FittedBox(
+                        alignment: Alignment.center,
+                        fit: BoxFit.scaleDown,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text(
+                            '${countryResultController.currentStep.value}%',
+                            style: Get.textTheme.displayMedium?.copyWith(
+                              color: kTealGreen1.withValues(alpha: 0.9),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -158,24 +162,24 @@ class CountryResultScreen extends StatelessWidget {
                 top: mobileHeight * 0.42,
                 left: mobileWidth * 0.05,
                 right: mobileWidth * 0.05,
-                child: Container(
-                  height: mobileHeight * 0.25,
-                  width: mobileWidth * 0.9,
-                  decoration: roundedDecoration.copyWith(
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
-                    color: kWhite,
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              child: Column(
+                child: Expanded(
+                  child: Container(
+                    height: mobileHeight * 0.25,
+                    width: mobileWidth * 0.9,
+                    decoration: roundedDecoration.copyWith(
+                      borderRadius: BorderRadius.all(Radius.circular(25)),
+                      color: kWhite,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
@@ -202,17 +206,14 @@ class CountryResultScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       const Icon(
                                         Icons.circle,
-                                        color: kTealGreen1,
+                                        color: kCoral,
                                         size: 20,
                                       ),
                                       SizedBox(width: 8),
@@ -220,27 +221,29 @@ class CountryResultScreen extends StatelessWidget {
                                         '${countryResultController.totalQuestions}',
                                         style: Get.textTheme.displaySmall
                                             ?.copyWith(
-                                              color: kTealGreen1,
+                                              color: kCoral,
                                               fontSize: 28,
                                             ),
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    'Total Questions',
-                                    style: Get.textTheme.titleSmall,
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'Total Questions',
+                                      style: Get.textTheme.titleSmall,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Flexible(
-                              flex: 2,
-                              child: Column(
+                            ],
+                          ),
+                          SizedBox(height: 12),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
@@ -268,10 +271,7 @@ class CountryResultScreen extends StatelessWidget {
                                   ),
                                 ],
                               ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Column(
+                              Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
@@ -292,16 +292,19 @@ class CountryResultScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  Text(
-                                    'Wrong Answers',
-                                    style: Get.textTheme.titleSmall,
+                                  FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Text(
+                                      'Wrong Answers',
+                                      style: Get.textTheme.titleSmall,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -355,7 +358,7 @@ class CountryResultScreen extends StatelessWidget {
                           onTap: () {
                             Get.toNamed(RoutesName.countryQuizScreen);
                           },
-                          backgroundColor: kYellow,
+                          backgroundColor: kCoral,
                           child: Icon(Icons.remove_red_eye, color: kWhite),
                         ),
                         SizedBox(height: 5),

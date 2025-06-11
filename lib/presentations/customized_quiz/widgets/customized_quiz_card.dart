@@ -6,7 +6,7 @@ import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/customized_quiz/controller/cutomized_quiz_controller.dart';
 
-import '../../quiz/view/ui_helpers.dart';
+import '../../../core/utils/ui_helpers.dart';
 import 'customized_bottom_buttons.dart';
 
 class CustomizedQuizCard extends StatelessWidget {

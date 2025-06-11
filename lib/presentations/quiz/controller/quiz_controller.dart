@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 import 'package:template/core/common_audios/quiz_sounds.dart';
 import 'package:template/core/db_service/question_db_service.dart';
 import 'package:template/core/models/category_model.dart';
-import 'package:template/core/models/grid_data.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:toastification/toastification.dart';
+
+import '../../../core/common_widgets/grid_data.dart';
 
 class QuizController extends GetxController {
   // Observable collections and state
@@ -181,7 +182,7 @@ class QuizController extends GetxController {
         final topicName = currentTopic.value;
         int topicIndex = gridTexts.indexOf(topicName);
         if (topicIndex == -1) topicIndex = 0;
-        final catIndex = _categoryIndex ?? 1;
+        // final catIndex = _categoryIndex ?? 1;
         QuizSounds.playCompletionSound();
         Get.toNamed(
           RoutesName.resultScreen,

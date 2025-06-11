@@ -49,13 +49,8 @@ class ResultScreen extends StatelessWidget {
       "Topic Index: $topicIndex, Category Index: $categoryIndex, Topic: $topic",
     );
 
-    // Initialize the controller
     final ResultController resultController = Get.put(ResultController());
-
-    // Call calculateResults with topicIndex and categoryIndex
     resultController.calculateResults(topicIndex, categoryIndex);
-
-    // Show congratulation dialog after build completes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       PanaraInfoDialog.show(
         context,
