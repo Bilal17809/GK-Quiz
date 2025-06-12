@@ -68,7 +68,7 @@ class QnaScreen extends StatelessWidget {
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 '${index + 1}',
-                                style: Get.textTheme.titleLarge?.copyWith(
+                                style: context.textTheme.titleLarge?.copyWith(
                                   color: kWhite,
                                 ),
                               ),
@@ -83,7 +83,7 @@ class QnaScreen extends StatelessWidget {
                             children: [
                               Text(
                                 question.question,
-                                style: Get.textTheme.titleSmall?.copyWith(
+                                style: context.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -111,7 +111,7 @@ class QnaScreen extends StatelessWidget {
                             children: [
                               Text(
                                 'Answer:',
-                                style: Get.textTheme.titleSmall?.copyWith(
+                                style: context.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: kCoral.withValues(alpha: 0.7),
                                 ),
@@ -119,7 +119,7 @@ class QnaScreen extends StatelessWidget {
                               const SizedBox(height: 4),
                               Text(
                                 qnaController.getCorrectOptionText(question),
-                                style: Get.textTheme.bodyMedium?.copyWith(
+                                style: context.textTheme.bodyMedium?.copyWith(
                                   color: kBlack,
                                 ),
                               ),
@@ -143,7 +143,7 @@ class QnaScreen extends StatelessWidget {
                             child: LongIconTextButton(
                               width: 120,
                               height: 40,
-                              style: Get.textTheme.titleSmall?.copyWith(
+                              style: context.textTheme.titleSmall?.copyWith(
                                 color: kWhite,
                               ),
                               onPressed:

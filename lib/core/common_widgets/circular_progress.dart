@@ -39,11 +39,14 @@ class CircularProgressWidget extends StatelessWidget {
               ),
 
               Center(
-                child: Text(
-                  '${percentage.toInt()}%',
-                  style: Get.textTheme.titleLarge?.copyWith(
-                    color: kBlack,
-                    fontWeight: FontWeight.bold,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    '${percentage.toInt()}%',
+                    style: Get.textTheme.titleSmall?.copyWith(
+                      color: kBlack,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
@@ -53,7 +56,7 @@ class CircularProgressWidget extends StatelessWidget {
         Center(
           child: Text(
             label,
-            style: Get.textTheme.titleLarge?.copyWith(
+            style: Get.textTheme.titleSmall?.copyWith(
               color: progressColor.withValues(alpha: 0.9),
               fontWeight: FontWeight.bold,
             ),

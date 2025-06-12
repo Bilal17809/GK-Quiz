@@ -25,10 +25,11 @@ class SectionCard extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Image(image: image, width: mobileHeight * 0.05),
-              SizedBox(width: 12),
-              Text(title, style: Get.textTheme.titleLarge),
+              Image(image: image, width: mobileHeight * 0.045),
+              SizedBox(width: 4),
+              Text(title, style: Get.textTheme.titleMedium),
             ],
           ),
           child,

@@ -6,6 +6,7 @@ import 'package:template/core/common_widgets/text_icon_button.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/result/controller/result_controller.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -16,13 +17,11 @@ class ResultScreen extends StatelessWidget {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
 
-    // Safely get arguments with null checks and default values
     final arguments = Get.arguments as Map<String, dynamic>?;
     final bool fromCustomQuiz = arguments?['fromCustomQuiz'] as bool? ?? false;
 
     if (arguments == null) {
       debugPrint('ERROR: No arguments passed to ResultScreen');
-
       return Scaffold(
         body: Center(
           child: Column(
@@ -39,7 +38,6 @@ class ResultScreen extends StatelessWidget {
       );
     }
 
-    // Extract values using topicIndex and categoryIndex
     final int topicIndex = arguments['topicIndex'] as int? ?? 1;
     final int categoryIndex = arguments['categoryIndex'] as int? ?? 1;
     final String topic = arguments['topic'] as String? ?? '';
@@ -50,21 +48,25 @@ class ResultScreen extends StatelessWidget {
     );
 
     final ResultController resultController = Get.put(ResultController());
-    resultController.calculateResults(topicIndex, categoryIndex);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      PanaraInfoDialog.show(
-        context,
-        title: 'Congratulations!',
-        message:
-            "You've completed the quiz with ${resultController.currentStep.value}% correct answers!",
-        buttonText: "Okay",
-        onTapDismiss: () {
-          Get.back();
-        },
 
-        panaraDialogType: PanaraDialogType.custom,
-        color: kCoral,
-      );
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!resultController.isInitialized.value) {
+        resultController.calculateResults(topicIndex, categoryIndex);
+        resultController.isInitialized.value = true;
+
+        PanaraInfoDialog.show(
+          context,
+          title: 'Congratulations!',
+          message:
+              "You've completed the quiz with ${resultController.currentStep.value}% correct answers!",
+          buttonText: "Okay",
+          onTapDismiss: () {
+            Get.back();
+          },
+          panaraDialogType: PanaraDialogType.custom,
+          color: kCoral,
+        );
+      }
     });
 
     return Scaffold(
@@ -80,7 +82,7 @@ class ResultScreen extends StatelessWidget {
               SizedBox(height: mobileHeight * 0.07),
               Text(
                 'QUIZ RESULT',
-                style: Get.textTheme.titleLarge?.copyWith(
+                style: context.textTheme.titleLarge?.copyWith(
                   color: kWhite,
                   shadows: [
                     Shadow(
@@ -119,7 +121,7 @@ class ResultScreen extends StatelessWidget {
                           ),
                           child: Column(
                             children: [
-                              SizedBox(height: mobileHeight * 0.15),
+                              SizedBox(height: mobileHeight * 0.1),
                               //result card
                               Expanded(
                                 child: ListView.builder(
@@ -158,14 +160,18 @@ class ResultScreen extends StatelessWidget {
                                                       .titleSmall
                                                       ?.copyWith(color: kCoral),
                                                 ),
-                                                trailing: Text(
-                                                  resultController
-                                                      .totalQuestions
-                                                      .toString(),
-                                                  style: Get
-                                                      .textTheme
-                                                      .titleSmall
-                                                      ?.copyWith(color: kCoral),
+                                                trailing: Obx(
+                                                  () => Text(
+                                                    resultController
+                                                        .totalQuestions
+                                                        .toString(),
+                                                    style: Get
+                                                        .textTheme
+                                                        .titleSmall
+                                                        ?.copyWith(
+                                                          color: kCoral,
+                                                        ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -198,15 +204,19 @@ class ResultScreen extends StatelessWidget {
                                                       .titleSmall
                                                       ?.copyWith(color: kCoral),
                                                 ),
-                                                trailing: Text(
-                                                  resultController
-                                                      .correctAnswers
-                                                      .value
-                                                      .toString(),
-                                                  style: Get
-                                                      .textTheme
-                                                      .titleSmall
-                                                      ?.copyWith(color: kCoral),
+                                                trailing: Obx(
+                                                  () => Text(
+                                                    resultController
+                                                        .correctAnswers
+                                                        .value
+                                                        .toString(),
+                                                    style: Get
+                                                        .textTheme
+                                                        .titleSmall
+                                                        ?.copyWith(
+                                                          color: kCoral,
+                                                        ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -239,15 +249,19 @@ class ResultScreen extends StatelessWidget {
                                                       .titleSmall
                                                       ?.copyWith(color: kCoral),
                                                 ),
-                                                trailing: Text(
-                                                  resultController
-                                                      .wrongAnswers
-                                                      .value
-                                                      .toString(),
-                                                  style: Get
-                                                      .textTheme
-                                                      .titleSmall
-                                                      ?.copyWith(color: kCoral),
+                                                trailing: Obx(
+                                                  () => Text(
+                                                    resultController
+                                                        .wrongAnswers
+                                                        .value
+                                                        .toString(),
+                                                    style: Get
+                                                        .textTheme
+                                                        .titleSmall
+                                                        ?.copyWith(
+                                                          color: kCoral,
+                                                        ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
@@ -265,9 +279,8 @@ class ResultScreen extends StatelessWidget {
                                       onPressed: () {
                                         resultController.resetQuiz();
                                         if (fromCustomQuiz) {
-                                          // Pass the required arguments when going to QnaScreen
                                           Get.toNamed(
-                                            RoutesName.quizSelectionScreen,
+                                            RoutesName.customizedQuizScreen,
                                             arguments: {
                                               'topic': topic,
                                               'topicIndex': topicIndex,
@@ -276,9 +289,9 @@ class ResultScreen extends StatelessWidget {
                                             },
                                           );
                                         } else {
-                                          // For regular quiz, go back to practice screen
+                                          Get.delete<QuizController>();
                                           Get.toNamed(
-                                            RoutesName.practiceScreen,
+                                            RoutesName.quizScreen,
                                             arguments: {
                                               'topic': topic,
                                               'topicIndex': topicIndex,
@@ -289,22 +302,22 @@ class ResultScreen extends StatelessWidget {
                                         }
                                       },
                                       text: 'Retake Quiz',
-                                      icon: Icon(Icons.refresh, size: 28),
-                                      style: Get.textTheme.titleSmall,
+                                      icon: Icon(Icons.refresh, size: 20),
+                                      style: context.textTheme.titleSmall,
                                       height: mobileHeight * 0.07,
                                       color: kCoral.withValues(alpha: 0.8),
                                       foregroundColor: kWhite,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
+                                  SizedBox(width: 12),
                                   Expanded(
                                     child: TextIconButton(
                                       onPressed: () {
                                         Get.offAllNamed(RoutesName.homeScreen);
                                       },
                                       text: 'Exit',
-                                      icon: Icon(Icons.exit_to_app, size: 28),
-                                      style: Get.textTheme.titleSmall,
+                                      icon: Icon(Icons.exit_to_app, size: 20),
+                                      style: context.textTheme.titleSmall,
                                       height: mobileHeight * 0.07,
                                       color: kRed.withValues(alpha: 0.6),
                                       foregroundColor: kWhite,
@@ -324,8 +337,8 @@ class ResultScreen extends StatelessWidget {
                       right: 0,
                       child: Center(
                         child: Container(
-                          width: mobileWidth * 0.60,
-                          height: mobileWidth * 0.60,
+                          width: mobileWidth * 0.55,
+                          height: mobileWidth * 0.55,
                           decoration: BoxDecoration(
                             color: kWhite,
                             shape: BoxShape.circle,
@@ -360,7 +373,7 @@ class ResultScreen extends StatelessWidget {
                                     Obx(
                                       () => Text(
                                         '${resultController.currentStep.value}%',
-                                        style: Get.textTheme.displayMedium
+                                        style: context.textTheme.displayMedium
                                             ?.copyWith(
                                               color: kCoral,
                                               fontWeight: FontWeight.bold,
@@ -369,10 +382,11 @@ class ResultScreen extends StatelessWidget {
                                     ),
                                     Text(
                                       'Correct Answers',
-                                      style: Get.textTheme.titleSmall?.copyWith(
-                                        color: textGreyColor,
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                      style: context.textTheme.titleSmall
+                                          ?.copyWith(
+                                            color: textGreyColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
                                     ),
                                   ],
                                 ),

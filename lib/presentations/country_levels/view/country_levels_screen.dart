@@ -49,7 +49,7 @@ class CountryLevelsScreen extends StatelessWidget {
                   children: [
                     Text(
                       topic,
-                      style: Get.textTheme.titleLarge?.copyWith(
+                      style: context.textTheme.titleLarge?.copyWith(
                         color: kWhite,
                         fontWeight: FontWeight.bold,
                       ),
@@ -59,7 +59,7 @@ class CountryLevelsScreen extends StatelessWidget {
                     Obx(
                       () => Text(
                         'Total Questions: ${quizController.topicCounts[topic] ?? 0}',
-                        style: Get.textTheme.bodyMedium?.copyWith(
+                        style: context.textTheme.bodyMedium?.copyWith(
                           color: kWhite,
                           fontWeight: FontWeight.w500,
                         ),

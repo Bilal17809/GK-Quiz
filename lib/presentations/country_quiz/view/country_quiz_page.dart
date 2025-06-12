@@ -54,21 +54,26 @@ class CountryQuizPage extends StatelessWidget {
                 left: mobileSize.width * 0.05,
                 right: mobileSize.width * 0.05,
                 child: Container(
-                  height: mobileSize.height * 0.30,
+                  height: mobileSize.height * 0.28,
 
                   decoration: roundedDecoration.copyWith(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     color: kWhite,
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(10.0),
+                    padding: EdgeInsets.only(
+                      top: mobileSize.height * 0.1,
+                      left: 12.0,
+                      right: 12.0,
+                      bottom: 12.0,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
                           question.question,
-                          textAlign: TextAlign.start,
-                          style: Get.textTheme.titleMedium?.copyWith(
+                          textAlign: TextAlign.center,
+                          style: context.textTheme.titleSmall?.copyWith(
                             fontSize: 18,
                             fontWeight: FontWeight.w500,
                             color: kBlack,
@@ -121,7 +126,7 @@ class CountryQuizPage extends StatelessWidget {
                         Center(
                           child: Text(
                             '${currentIndex + 1}', // Use currentIndex instead of reactive value
-                            style: Get.textTheme.displayMedium?.copyWith(
+                            style: context.textTheme.displayMedium?.copyWith(
                               color: kTealGreen1.withValues(alpha: 0.9),
                               fontWeight: FontWeight.bold,
                             ),
@@ -139,8 +144,8 @@ class CountryQuizPage extends StatelessWidget {
                 right: 0,
                 child: Center(
                   child: Text(
-                    '$topic - Level $topicIndex',
-                    style: Get.textTheme.titleLarge?.copyWith(
+                    topic,
+                    style: context.textTheme.titleLarge?.copyWith(
                       color: kWhite,
                       shadows: [
                         Shadow(
@@ -157,22 +162,28 @@ class CountryQuizPage extends StatelessWidget {
             ],
           ),
         ),
-        SizedBox(height: mobileSize.height * 0.15),
-        Padding(
-          padding: const EdgeInsets.all(kBodyHp),
-          child: Card(
-            elevation: 0,
-            color: kWhite,
+        SizedBox(height: mobileSize.height * 0.18),
+        // Options
+        Expanded(
+          child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Obx(
-                () => QuestionOptions(
-                  question: question,
-                  showAnswer:
-                      controller.shouldShowAnswerResults[currentIndex] ?? false,
-                  selectedOption: controller.selectedAnswers[currentIndex],
-                  onOptionSelected:
-                      (option) => onAnswerSelected(currentIndex, option),
+              padding: const EdgeInsets.all(kBodyHp),
+              child: Card(
+                elevation: 0,
+                color: kWhite,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Obx(
+                    () => QuestionOptions(
+                      question: question,
+                      showAnswer:
+                          controller.shouldShowAnswerResults[currentIndex] ??
+                          false,
+                      selectedOption: controller.selectedAnswers[currentIndex],
+                      onOptionSelected:
+                          (option) => onAnswerSelected(currentIndex, option),
+                    ),
+                  ),
                 ),
               ),
             ),

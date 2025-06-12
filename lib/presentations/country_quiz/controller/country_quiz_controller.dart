@@ -143,20 +143,17 @@ class CountryQuizController extends GetxController {
   }
 
   void handleAnswerSelection(int questionIndex, String selectedOption) {
-    // Update the selected answer and show results
     selectedAnswers[questionIndex] = selectedOption;
     shouldShowAnswerResults[questionIndex] = true;
 
     final correctAnswer = questionsList[questionIndex].answer;
 
-    // Play appropriate sound
     if (selectedOption == correctAnswer) {
       QuizSounds.playCorrectSound();
     } else {
       QuizSounds.playWrongSound();
     }
 
-    // Force update the reactive maps
     selectedAnswers.refresh();
     shouldShowAnswerResults.refresh();
   }

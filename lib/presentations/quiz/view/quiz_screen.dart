@@ -36,7 +36,7 @@ class QuizScreen extends StatelessWidget {
     final int topicIndex = arguments['topicIndex'] ?? arguments['index'] ?? 1;
     final int categoryIndex = arguments['categoryIndex'] ?? 1;
 
-    final QuizController controller = Get.put(QuizController());
+    QuizController controller = Get.put(QuizController(), permanent: false);
 
     // Update controller arguments after initialization
     controller.updateArguments({

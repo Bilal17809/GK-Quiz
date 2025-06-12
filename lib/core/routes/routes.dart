@@ -29,6 +29,7 @@ import 'package:template/presentations/country/view/country_screen.dart';
 import 'package:template/presentations/country_levels/view/country_levels_screen.dart';
 import 'package:template/presentations/country_quiz/view/country_quiz_screen.dart';
 import 'package:template/presentations/country_result/view/country_result_screen.dart';
+import 'package:template/presentations/country_review/view/country_review_screen.dart';
 import 'package:template/presentations/customized_quiz/view/customized_quiz_screen.dart';
 import 'package:template/presentations/home/view/home_screen.dart';
 import 'package:template/presentations/lessons/view/lessons_screen.dart';
@@ -40,7 +41,6 @@ import 'package:template/presentations/quiz_levels/view/quiz_levels_screen.dart'
 import 'package:template/presentations/quiz_selection/view/quiz_selection_screen.dart';
 import 'package:template/presentations/result/view/result_screen.dart';
 import 'package:template/presentations/splash/view/splash_screen.dart';
-import 'package:template/presentations/take_test/view/take_test_screen.dart';
 
 class Routes {
   static final routes = [
@@ -74,18 +74,7 @@ class Routes {
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),
-    GetPage(
-      name: RoutesName.testScreen,
-      page: () => const TakeTestScreen(),
-      transition: Transition.downToUp,
-      transitionDuration: Duration(milliseconds: 250),
-    ),
-    GetPage(
-      name: RoutesName.takeATestScreen,
-      page: () => const QuizSelectionScreen(),
-      transition: Transition.downToUp,
-      transitionDuration: Duration(milliseconds: 250),
-    ),
+
     GetPage(
       name: RoutesName.quizLevelsScreen,
       page: () => const QuizLevelsScreen(),
@@ -137,6 +126,12 @@ class Routes {
     GetPage(
       name: RoutesName.countryResultScreen,
       page: () => CountryResultScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.countryReviewScreen,
+      page: () => CountryReviewScreen(),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/route_manager.dart';
+import 'package:get/get.dart';
 import 'package:template/core/theme/app_colors.dart';
 
 import '../../../core/common_widgets/custom_app_bar.dart';
@@ -28,7 +28,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                   children: [
                     Text(
                       'GK Quiz',
-                      style: Get.textTheme.headlineLarge?.copyWith(
+                      style: context.textTheme.headlineLarge?.copyWith(
                         color: kWhite,
                       ),
                     ),

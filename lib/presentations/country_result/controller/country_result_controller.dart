@@ -5,16 +5,13 @@ import '../../country_levels/controller/country_levels_controller.dart';
 import '../../country_quiz/controller/country_quiz_controller.dart';
 
 class CountryResultController extends GetxController {
-  // Observable variables
   final RxInt totalQuestions = 20.obs;
   final RxInt correctAnswers = 0.obs;
   final RxInt wrongAnswers = 0.obs;
   final RxInt currentStep = 0.obs;
 
-  /// Calculate results from the country quiz data
   void calculateResults(int topicIndex, int categoryIndex) {
     try {
-      // Get data from CountryQuizController
       final countryQuizController = Get.find<CountryQuizController>();
       final questions = countryQuizController.questionsList;
       final selectedAnswers = countryQuizController.selectedAnswers;
@@ -45,7 +42,6 @@ class CountryResultController extends GetxController {
         'Country Quiz Results: $correct/$totalQuestionsCount (${currentStep.value}%)',
       );
 
-      // Save the result
       Get.put(CountryLevelsController()).saveQuizResult(
         topicIndex: topicIndex,
         categoryIndex: categoryIndex,
@@ -55,7 +51,6 @@ class CountryResultController extends GetxController {
       );
     } catch (e) {
       debugPrint('Error calculating country quiz results: $e');
-      // Set default values in case of error
       totalQuestions.value = 0;
       correctAnswers.value = 0;
       wrongAnswers.value = 0;
@@ -65,7 +60,7 @@ class CountryResultController extends GetxController {
     }
   }
 
-  /// Get percentage string
+  // Get percentage string
   String get resultPercentage => '${currentStep.value}%';
 
   void resetQuiz() {

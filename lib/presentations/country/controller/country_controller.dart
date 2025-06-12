@@ -8,7 +8,6 @@ class CountryController extends GetxController
     with GetSingleTickerProviderStateMixin {
   late AnimationController animationController;
   late Animation<double> animation;
-  // Observable for topic counts
   final RxMap<String, int> topicCounts = <String, int>{}.obs;
 
   final double imageWidth = 1000;
@@ -29,7 +28,6 @@ class CountryController extends GetxController
     loadAllQuestions();
   }
 
-  // Load all questions and refresh topic counts
   void loadAllQuestions() {
     try {
       final quizController = Get.find<QuizController>();
@@ -40,7 +38,6 @@ class CountryController extends GetxController
     }
   }
 
-  // Load topic counts for all grid items
   void loadAllTopicCounts() {
     try {
       final quizController = Get.find<QuizController>();

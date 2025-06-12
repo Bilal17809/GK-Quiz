@@ -10,6 +10,7 @@ import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/navigation_drawer/view/navigation_drawer.dart';
 
 import '../../../core/common_widgets/bottom_nav_bar.dart';
+import '../../../core/common_widgets/round_image.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -23,10 +24,19 @@ class HomeScreen extends StatelessWidget {
       appBar: CustomAppBar(
         subtitle: 'Enrich your knowledge',
         useBackButton: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
+            child: RoundedButton(
+              onTap: () {},
+              child: Image.asset('assets/images/no-ads.png', color: kWhite),
+            ),
+          ),
+        ],
       ),
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
+          padding: const EdgeInsets.all(kBodyHp),
           child: Column(
             children: [
               Row(
@@ -52,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                           height: mobileWidth * 0.1,
                         ),
                       ),
-                      style: Get.textTheme.headlineSmall,
+                      style: context.textTheme.headlineSmall,
                     ),
                   ),
                   SizedBox(width: mobileWidth * 0.03),
@@ -77,7 +87,7 @@ class HomeScreen extends StatelessWidget {
                           height: mobileWidth * 0.1,
                         ),
                       ),
-                      style: Get.textTheme.headlineSmall,
+                      style: context.textTheme.headlineSmall,
                     ),
                   ),
                 ],
@@ -88,7 +98,7 @@ class HomeScreen extends StatelessWidget {
 
                 color: kYellow,
                 onPressed: () {
-                  Get.toNamed(RoutesName.testScreen);
+                  Get.toNamed(RoutesName.quizSelectionScreen);
                 },
                 text: 'Take a Test',
                 icon: Container(
@@ -103,7 +113,7 @@ class HomeScreen extends StatelessWidget {
                     height: mobileWidth * 0.1,
                   ),
                 ),
-                style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
+                style: context.textTheme.titleMedium?.copyWith(color: kWhite),
               ),
               SizedBox(height: 12),
               Row(
@@ -123,13 +133,13 @@ class HomeScreen extends StatelessWidget {
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Image.asset(
-                          'assets/images/reading-book.png',
+                          'assets/images/world_map.png',
                           color: kWhite,
                           width: mobileWidth * 0.1,
                           height: mobileWidth * 0.1,
                         ),
                       ),
-                      style: Get.textTheme.titleMedium,
+                      style: context.textTheme.titleMedium,
                     ),
                   ),
                   SizedBox(width: mobileWidth * 0.03),
@@ -139,20 +149,20 @@ class HomeScreen extends StatelessWidget {
                       width: mobileWidth * 0.40,
                       color: kMediumGreen2.withValues(alpha: 0.9),
                       onPressed: () {},
-                      text: 'Remove Ads',
+                      text: 'AI Quiz',
                       icon: Container(
                         decoration: roundedDecoration.copyWith(
                           color: kWhite.withValues(alpha: 0.2),
                         ),
                         padding: const EdgeInsets.all(8.0),
                         child: Image.asset(
-                          'assets/images/no-ads.png',
+                          'assets/images/ai-quiz.png',
                           color: kWhite,
                           width: mobileWidth * 0.1,
                           height: mobileWidth * 0.1,
                         ),
                       ),
-                      style: Get.textTheme.titleMedium,
+                      style: context.textTheme.titleMedium,
                     ),
                   ),
                 ],
@@ -177,7 +187,7 @@ class HomeScreen extends StatelessWidget {
                     size: mobileWidth * 0.1,
                   ),
                 ),
-                style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
+                style: context.textTheme.titleMedium?.copyWith(color: kWhite),
               ),
             ],
           ),

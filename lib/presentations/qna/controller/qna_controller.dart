@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:template/core/db_service/question_db_service.dart';
 import 'package:template/core/local_storage/shared_preferences_storage.dart';
@@ -12,7 +13,6 @@ class QnaController extends GetxController {
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
 
   String? _topic; // Arguments
-
   String? get topic => _topic;
 
   SharedPreferencesService get prefsService => _prefsService;
@@ -34,7 +34,6 @@ class QnaController extends GetxController {
     }
   }
 
-  // Load questions for specific topic
   Future<void> loadQuestionsForTopic(String topic) async {
     isLoading.value = true;
     try {
@@ -54,7 +53,6 @@ class QnaController extends GetxController {
     }
   }
 
-  // Load revealed answers from SharedPreferences
   Future<void> _loadRevealedAnswersFromPrefs(String topic) async {
     revealedAnswers.clear();
 
@@ -67,7 +65,6 @@ class QnaController extends GetxController {
     }
   }
 
-  // Method to reveal answer for a specific question
   Future<void> revealAnswer(int questionIndex) async {
     revealedAnswers[questionIndex] = true;
 
@@ -75,8 +72,6 @@ class QnaController extends GetxController {
     if (_topic != null) {
       String key = 'revealed_answer_${_topic}_$questionIndex';
       await _prefsService.setBool(key, true);
-
-      // Update learn progress - increment revealed answers count
       await _updateLearnProgress();
     }
   }
@@ -99,17 +94,15 @@ class QnaController extends GetxController {
         progressController.refreshLearnProgress();
       } catch (e) {
         // ProgressController might not be initialized yet
-        print('ProgressController not found: $e');
+        debugPrint('ProgressController not found: $e');
       }
     }
   }
 
-  // Method to check if answer is revealed for a specific question
   bool isAnswerRevealed(int questionIndex) {
     return revealedAnswers[questionIndex] ?? false;
   }
 
-  // Method to get the actual option text based on the correct answer
   String getCorrectOptionText(QuestionsModel question) {
     switch (question.answer.toUpperCase()) {
       case 'A':
@@ -125,17 +118,14 @@ class QnaController extends GetxController {
     }
   }
 
-  // Get total revealed answers for current topic
   int getTotalRevealedAnswers() {
     return revealedAnswers.length;
   }
 
-  // Get total questions for current topic
   int getTotalQuestions() {
     return questionsList.length;
   }
 
-  // Clear revealed answers (if needed for reset functionality)
   Future<void> clearRevealedAnswers() async {
     if (_topic == null) return;
 
@@ -149,11 +139,5 @@ class QnaController extends GetxController {
     await _prefsService.remove(progressKey);
 
     revealedAnswers.clear();
-  }
-
-  @override
-  void onClose() {
-    // Clean up resources if needed
-    super.onClose();
   }
 }

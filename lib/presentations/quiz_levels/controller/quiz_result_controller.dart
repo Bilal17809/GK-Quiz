@@ -11,27 +11,22 @@ class QuizResultController extends GetxController {
       <int, Map<String, dynamic>>{}.obs;
   final RxInt _refreshTrigger = 0.obs;
 
-  // Add getters
   int get refreshTrigger => _refreshTrigger.value;
   SharedPreferencesService get prefsService => _prefsService;
 
   @override
   void onInit() {
     super.onInit();
-    // Delay initialization to ensure QuizController is ready
     Future.microtask(() => loadAllCachedResults());
   }
 
   void loadAllCachedResults() {
     try {
       final quizController = Get.find<QuizController>();
-
-      // Ensure the list is not empty
       if (gridTexts.isEmpty) {
         debugPrint('gridTexts is empty, skipping cache load');
         return;
       }
-
       for (int topicIndex = 0; topicIndex < gridTexts.length; topicIndex++) {
         final topicName = gridTexts[topicIndex];
         final totalQuestionsInTopic =
@@ -77,7 +72,6 @@ class QuizResultController extends GetxController {
     _refreshTrigger.value++;
   }
 
-  // Make this return Future for FutureBuilder
   Future<Map<String, dynamic>> getQuizResult(
     int topicIndex,
     int categoryIndex,

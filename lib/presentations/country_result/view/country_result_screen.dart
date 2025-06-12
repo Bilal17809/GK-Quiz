@@ -6,8 +6,10 @@ import 'package:template/core/common_widgets/common_widgets.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
+import 'package:template/presentations/country_quiz/controller/country_quiz_controller.dart';
 import 'package:template/presentations/country_result/controller/country_result_controller.dart';
 
+import '../../../core/models/questions_data.dart';
 import '../../../core/theme/app_styles.dart';
 
 class CountryResultScreen extends StatelessWidget {
@@ -18,7 +20,6 @@ class CountryResultScreen extends StatelessWidget {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
 
-    // Safely get arguments with null checks and default values
     final arguments = Get.arguments as Map<String, dynamic>?;
 
     if (arguments == null) {
@@ -27,7 +28,6 @@ class CountryResultScreen extends StatelessWidget {
       return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // Extract values using topicIndex and categoryIndex
     final int topicIndex = arguments['topicIndex'] as int? ?? 1;
     final int categoryIndex = arguments['categoryIndex'] as int? ?? 1;
     final String topic = arguments['topic'] as String? ?? '';
@@ -75,14 +75,14 @@ class CountryResultScreen extends StatelessWidget {
           ),
           //Title
           Positioned(
-            top: mobileHeight * 0.1,
+            top: mobileHeight * 0.075,
             left: 0,
             right: 0,
             child: Center(
               child: Text(
                 'COUNTRY QUIZ\nRESULT',
                 textAlign: TextAlign.center,
-                style: Get.textTheme.titleLarge?.copyWith(
+                style: context.textTheme.titleLarge?.copyWith(
                   color: kWhite,
                   shadows: [
                     Shadow(
@@ -98,13 +98,13 @@ class CountryResultScreen extends StatelessWidget {
           ),
           //Percentage Circle
           Positioned(
-            top: mobileHeight * 0.2,
+            top: mobileHeight * 0.195,
             left: 0,
             right: 0,
             child: Center(
               child: Container(
-                width: mobileWidth * 0.38,
-                height: mobileWidth * 0.38,
+                width: mobileWidth * 0.33,
+                height: mobileWidth * 0.33,
                 decoration: BoxDecoration(
                   color: kWhite,
                   shape: BoxShape.circle,
@@ -141,7 +141,7 @@ class CountryResultScreen extends StatelessWidget {
                           padding: const EdgeInsets.all(16.0),
                           child: Text(
                             '${countryResultController.currentStep.value}%',
-                            style: Get.textTheme.displayMedium?.copyWith(
+                            style: context.textTheme.displaySmall?.copyWith(
                               color: kTealGreen1.withValues(alpha: 0.9),
                               fontWeight: FontWeight.bold,
                             ),
@@ -192,7 +192,7 @@ class CountryResultScreen extends StatelessWidget {
                                       SizedBox(width: 8),
                                       Text(
                                         '${countryResultController.currentStep}%',
-                                        style: Get.textTheme.displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
                                               color: kTealGreen1,
                                               fontSize: 28,
@@ -202,7 +202,7 @@ class CountryResultScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     'Percentage',
-                                    style: Get.textTheme.titleSmall,
+                                    style: context.textTheme.titleSmall,
                                   ),
                                 ],
                               ),
@@ -219,7 +219,7 @@ class CountryResultScreen extends StatelessWidget {
                                       SizedBox(width: 8),
                                       Text(
                                         '${countryResultController.totalQuestions}',
-                                        style: Get.textTheme.displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
                                               color: kCoral,
                                               fontSize: 28,
@@ -231,7 +231,7 @@ class CountryResultScreen extends StatelessWidget {
                                     fit: BoxFit.scaleDown,
                                     child: Text(
                                       'Total Questions',
-                                      style: Get.textTheme.titleSmall,
+                                      style: context.textTheme.titleSmall,
                                     ),
                                   ),
                                 ],
@@ -257,7 +257,7 @@ class CountryResultScreen extends StatelessWidget {
 
                                       Text(
                                         '${countryResultController.correctAnswers}',
-                                        style: Get.textTheme.displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
                                               color: kDarkGreen1,
                                               fontSize: 28,
@@ -267,7 +267,7 @@ class CountryResultScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     'Correct Answers',
-                                    style: Get.textTheme.titleSmall,
+                                    style: context.textTheme.titleSmall,
                                   ),
                                 ],
                               ),
@@ -284,7 +284,7 @@ class CountryResultScreen extends StatelessWidget {
                                       SizedBox(width: 8),
                                       Text(
                                         '${countryResultController.wrongAnswers}',
-                                        style: Get.textTheme.displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
                                               color: kRed,
                                               fontSize: 28,
@@ -296,7 +296,7 @@ class CountryResultScreen extends StatelessWidget {
                                     fit: BoxFit.scaleDown,
                                     child: Text(
                                       'Wrong Answers',
-                                      style: Get.textTheme.titleSmall,
+                                      style: context.textTheme.titleSmall,
                                     ),
                                   ),
                                 ],
@@ -311,6 +311,7 @@ class CountryResultScreen extends StatelessWidget {
               ),
             ],
           ),
+
           //Buttons
           Positioned(
             top: mobileHeight * 0.75,
@@ -327,13 +328,14 @@ class CountryResultScreen extends StatelessWidget {
                           width: mobileWidth * 0.15,
                           height: mobileWidth * 0.15,
                           onTap: () {
+                            Get.delete<CountryQuizController>();
                             Get.toNamed(
-                              RoutesName.countryScreen,
-                              // arguments: {
-                              //   'topic': topic,
-                              //   'topicIndex': topicIndex,
-                              //   'categoryIndex': categoryIndex,
-                              // },
+                              RoutesName.countryQuizScreen,
+                              arguments: {
+                                'topic': topic,
+                                'topicIndex': topicIndex,
+                                'categoryIndex': categoryIndex,
+                              },
                             );
                           },
                           backgroundColor: kTealGreen1,
@@ -342,7 +344,7 @@ class CountryResultScreen extends StatelessWidget {
                         SizedBox(height: 5),
                         Text(
                           'Retake Quiz',
-                          style: Get.textTheme.bodyMedium?.copyWith(
+                          style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -356,7 +358,22 @@ class CountryResultScreen extends StatelessWidget {
                           width: mobileWidth * 0.15,
                           height: mobileWidth * 0.15,
                           onTap: () {
-                            Get.toNamed(RoutesName.countryQuizScreen);
+                            final selectedAnswers =
+                                arguments['selectedAnswers']
+                                    as Map<int, String>? ??
+                                {};
+                            final questionsList =
+                                arguments['questionsList']
+                                    as List<QuestionsModel>? ??
+                                [];
+                            Get.toNamed(
+                              RoutesName.countryReviewScreen,
+                              arguments: {
+                                'questionsList': questionsList,
+                                'selectedAnswers': selectedAnswers,
+                                'topic': topic,
+                              },
+                            );
                           },
                           backgroundColor: kCoral,
                           child: Icon(Icons.remove_red_eye, color: kWhite),
@@ -364,7 +381,7 @@ class CountryResultScreen extends StatelessWidget {
                         SizedBox(height: 5),
                         Text(
                           'View Answers',
-                          style: Get.textTheme.bodyMedium?.copyWith(
+                          style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -386,7 +403,7 @@ class CountryResultScreen extends StatelessWidget {
                         SizedBox(height: 5),
                         Text(
                           'Exit',
-                          style: Get.textTheme.bodyMedium?.copyWith(
+                          style: context.textTheme.bodyMedium?.copyWith(
                             fontWeight: FontWeight.w500,
                           ),
                         ),

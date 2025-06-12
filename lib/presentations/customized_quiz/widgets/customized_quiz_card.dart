@@ -65,7 +65,7 @@ class CustomizedQuizCard extends StatelessWidget {
             Center(
               child: Text(
                 question.topicName,
-                style: Get.textTheme.headlineMedium?.copyWith(
+                style: context.textTheme.headlineMedium?.copyWith(
                   color: kRed,
                   fontSize: 22,
                 ),
@@ -79,7 +79,7 @@ class CustomizedQuizCard extends StatelessWidget {
                 children: [
                   Text(
                     question.question,
-                    style: Get.textTheme.titleMedium?.copyWith(
+                    style: context.textTheme.titleMedium?.copyWith(
                       fontSize: 17,
                       fontWeight: FontWeight.w500,
                     ),
@@ -125,7 +125,7 @@ class CustomizedQuestionHeader extends StatelessWidget {
           children: [
             Text(
               'Total Questions: $totalQuestions',
-              style: Get.textTheme.bodyMedium,
+              style: context.textTheme.bodyMedium,
             ),
             Container(
               margin: const EdgeInsets.only(left: 24),
@@ -269,7 +269,7 @@ class CustomizedOptionItem extends StatelessWidget {
               child: Center(
                 child: Text(
                   letter,
-                  style: Get.textTheme.titleMedium?.copyWith(
+                  style: context.textTheme.titleMedium?.copyWith(
                     fontSize: 16,
                     color:
                         showAnswer &&
@@ -290,7 +290,7 @@ class CustomizedOptionItem extends StatelessWidget {
                   children: [
                     Text(
                       option,
-                      style: Get.textTheme.bodyMedium?.copyWith(
+                      style: context.textTheme.bodyMedium?.copyWith(
                         fontWeight: FontWeight.w500,
                       ),
                     ),
