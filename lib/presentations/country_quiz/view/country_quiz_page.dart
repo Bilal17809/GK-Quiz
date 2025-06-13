@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
 import '../../../core/constant/constant.dart';
 import '../../../core/models/questions_data.dart';
@@ -182,6 +183,8 @@ class CountryQuizPage extends StatelessWidget {
                       selectedOption: controller.selectedAnswers[currentIndex],
                       onOptionSelected:
                           (option) => onAnswerSelected(currentIndex, option),
+                      currentIndex: currentIndex,
+                      controller: QuizController(),
                     ),
                   ),
                 ),

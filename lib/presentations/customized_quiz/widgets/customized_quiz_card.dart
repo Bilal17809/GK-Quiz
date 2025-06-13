@@ -5,9 +5,11 @@ import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/customized_quiz/controller/cutomized_quiz_controller.dart';
+import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
+import '../../../core/common_widgets/elongated_button.dart';
+import '../../../core/common_widgets/round_image.dart';
 import '../../../core/utils/ui_helpers.dart';
-import 'customized_bottom_buttons.dart';
 
 class CustomizedQuizCard extends StatelessWidget {
   final QuestionsModel question;
@@ -29,9 +31,9 @@ class CustomizedQuizCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
     final controller = Get.find<CustomizedQuizController>();
+    final quizController = Get.find<QuizController>();
 
     return Card(
       elevation: 2,
@@ -41,68 +43,131 @@ class CustomizedQuizCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 36,
-              decoration: roundedDecoration.copyWith(color: kWhite),
-              padding: const EdgeInsets.all(12),
-              child: Obx(
-                () => StepProgressIndicator(
-                  totalSteps: 100,
-                  currentStep: controller.getProgressPercentage(),
-                  size: 12,
-                  padding: 0,
-                  roundedEdges: const Radius.circular(10),
-                  selectedGradientColor: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [kCoral.withValues(alpha: 0.2), kOrange],
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 36,
+                    decoration: roundedDecoration.copyWith(color: kWhite),
+                    padding: const EdgeInsets.all(12),
+                    child: Obx(
+                      () => StepProgressIndicator(
+                        totalSteps: 100,
+                        currentStep: controller.getProgressPercentage(),
+                        size: 12,
+                        padding: 0,
+                        roundedEdges: const Radius.circular(10),
+                        selectedGradientColor: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [skyColor.withValues(alpha: 0.2), skyColor],
+                        ),
+                        unselectedColor: greyColor.withValues(alpha: 0.2),
+                      ),
+                    ),
                   ),
-                  unselectedColor: greyColor.withValues(alpha: 0.2),
                 ),
-              ),
+                SizedBox(width: 8),
+                RoundedButton(
+                  onTap: quizController.toggleFontSize,
+                  backgroundColor: skyColor,
+                  child: Icon(Icons.text_fields, color: kWhite),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             Center(
               child: Text(
                 question.topicName,
                 style: context.textTheme.headlineMedium?.copyWith(
-                  color: kRed,
+                  color: skyColor,
                   fontSize: 22,
                 ),
               ),
             ),
             CustomizedQuestionHeader(totalQuestions: totalQuestions),
             const SizedBox(height: 12),
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    question.question,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(
+                      () => Text(
+                        question.question,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontSize: quizController.getQuestionFontSize(),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: mobileHeight * 0.03),
-                  Obx(
-                    () => CustomizedQuestionOptions(
-                      question: question,
-                      showAnswer: showAnswers[currentIndex] ?? false,
-                      selectedOption: selectedAnswers[currentIndex],
-                      onOptionSelected:
-                          (option) => onOptionSelected(currentIndex, option),
+                    SizedBox(height: 12),
+                    Obx(
+                      () => CustomizedQuestionOptions(
+                        question: question,
+                        currentIndex: currentIndex,
+                        showAnswer: showAnswers[currentIndex] ?? false,
+                        selectedOption: selectedAnswers[currentIndex],
+                        onOptionSelected:
+                            (option) => onOptionSelected(currentIndex, option),
+                        controller: controller,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            const Spacer(),
-            CustomizedBottomButtons(
-              height: mobileHeight,
-              width: mobileWidth,
-              currentIndex: currentIndex,
-              totalQuestions: totalQuestions,
+            SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Obx(() {
+                  bool is5050Used = controller.is5050UsedForCurrentQuestion();
+                  bool isAnswered = selectedAnswers.containsKey(currentIndex);
+                  return ElongatedButton(
+                    height: 50,
+                    width: mobileWidth * 0.3,
+                    color:
+                        is5050Used
+                            ? greyColor.withValues(alpha: 0.5)
+                            : isAnswered
+                            ? greyColor.withValues(alpha: 0.5)
+                            : skyColor.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(25),
+                    onTap:
+                        (is5050Used || isAnswered)
+                            ? null
+                            : controller.use5050Hint,
+                    child: Text(
+                      '50:50',
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: kWhite,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }),
+                Obx(() {
+                  bool isAnswered = selectedAnswers.containsKey(currentIndex);
+                  return ElongatedButton(
+                    onTap: isAnswered ? controller.goToNextQuestion : null,
+                    height: 70,
+                    width: 70,
+                    color:
+                        isAnswered
+                            ? skyColor
+                            : greyColor.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(28),
+                    child: Image.asset(
+                      'assets/images/next.png',
+                      color: kWhite,
+                      height: 20,
+                      width: 20,
+                    ),
+                  );
+                }),
+              ],
             ),
           ],
         ),
@@ -118,98 +183,89 @@ class CustomizedQuestionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Total Questions: $totalQuestions',
-              style: context.textTheme.bodyMedium,
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 24),
-              height: 28,
-              width: 28,
-              decoration: roundedDecoration.copyWith(
-                color: kOrange,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              padding: const EdgeInsets.all(8),
-              child: Image.asset('assets/images/forward.png', color: kWhite),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 16),
-              height: 28,
-              width: 28,
-              decoration: roundedDecoration.copyWith(
-                color: kOrange,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              padding: const EdgeInsets.all(8),
-              child: Image.asset('assets/images/share.png', color: kWhite),
-            ),
-          ],
-        ),
-      ],
+    return Center(
+      child: Text(
+        'Total Questions: $totalQuestions',
+        style: context.textTheme.bodyMedium,
+      ),
     );
   }
 }
 
 class CustomizedQuestionOptions extends StatelessWidget {
   final QuestionsModel question;
+  final int currentIndex;
   final bool showAnswer;
   final String? selectedOption;
   final Function(String) onOptionSelected;
+  final CustomizedQuizController controller;
 
   const CustomizedQuestionOptions({
     super.key,
     required this.question,
+    required this.currentIndex,
     required this.showAnswer,
     this.selectedOption,
     required this.onOptionSelected,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CustomizedOptionItem(
-          letter: 'A',
-          option: question.option1,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
+    return Obx(
+      () => SingleChildScrollView(
+        child: Column(
+          children: [
+            // Option A
+            if (!controller.isOptionHidden(currentIndex, 'A')) ...[
+              CustomizedOptionItem(
+                letter: 'A',
+                option: question.option1,
+                showAnswer: showAnswer,
+                correctAnswer: question.answer,
+                selectedOption: selectedOption,
+                onOptionSelected: onOptionSelected,
+              ),
+              const SizedBox(height: 12),
+            ],
+            // Option B
+            if (!controller.isOptionHidden(currentIndex, 'B')) ...[
+              CustomizedOptionItem(
+                letter: 'B',
+                option: question.option2,
+                showAnswer: showAnswer,
+                correctAnswer: question.answer,
+                selectedOption: selectedOption,
+                onOptionSelected: onOptionSelected,
+              ),
+              const SizedBox(height: 12),
+            ],
+            // Option C
+            if (!controller.isOptionHidden(currentIndex, 'C')) ...[
+              CustomizedOptionItem(
+                letter: 'C',
+                option: question.option3,
+                showAnswer: showAnswer,
+                correctAnswer: question.answer,
+                selectedOption: selectedOption,
+                onOptionSelected: onOptionSelected,
+              ),
+              const SizedBox(height: 12),
+            ],
+            // Option D
+            if (!controller.isOptionHidden(currentIndex, 'D')) ...[
+              CustomizedOptionItem(
+                letter: 'D',
+                option: question.option4,
+                showAnswer: showAnswer,
+                correctAnswer: question.answer,
+                selectedOption: selectedOption,
+                onOptionSelected: onOptionSelected,
+              ),
+            ],
+          ],
         ),
-        const SizedBox(height: 12),
-        CustomizedOptionItem(
-          letter: 'B',
-          option: question.option2,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
-        ),
-        const SizedBox(height: 12),
-        CustomizedOptionItem(
-          letter: 'C',
-          option: question.option3,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
-        ),
-        const SizedBox(height: 12),
-        CustomizedOptionItem(
-          letter: 'D',
-          option: question.option4,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
-        ),
-      ],
+      ),
     );
   }
 }
@@ -234,12 +290,11 @@ class CustomizedOptionItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final quizController = Get.find<QuizController>();
     return InkWell(
       onTap: showAnswer ? null : () => onOptionSelected(letter),
       child: Container(
-        constraints: BoxConstraints(
-          minHeight: 56, // minimum height for the container
-        ),
+        constraints: BoxConstraints(minHeight: 56),
         decoration: BoxDecoration(
           border: Border.all(color: kBlack.withValues(alpha: 0.15)),
           color: getOptionBackgroundColor(
@@ -288,10 +343,13 @@ class CustomizedOptionItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      option,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
+                    Obx(
+                      () => Text(
+                        option,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: quizController.getOptionFontSize(),
+                        ),
                       ),
                     ),
                   ],

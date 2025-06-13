@@ -1,13 +1,13 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:template/core/db_service/question_db_service.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
-import 'package:toastification/toastification.dart';
 
 import '../../../core/common_audios/quiz_sounds.dart';
 import '../../../core/routes/routes_name.dart';
-import '../../../core/theme/app_colors.dart';
 
 class CustomizedQuizController extends GetxController {
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;
@@ -17,6 +17,9 @@ class CustomizedQuizController extends GetxController {
   final RxInt currentQuestionIndex = 0.obs;
   final RxMap<int, String> selectedAnswers = <int, String>{}.obs;
   final RxMap<int, bool> shouldShowAnswerResults = <int, bool>{}.obs;
+
+  final RxMap<int, bool> is5050Used = <int, bool>{}.obs;
+  final RxMap<int, List<String>> hiddenOptions = <int, List<String>>{}.obs;
 
   // Arguments
   String? _topic;
@@ -106,6 +109,8 @@ class CustomizedQuizController extends GetxController {
   void onPageChanged(int index) {
     currentQuestionIndex.value = index;
     QuizSounds.clearSound();
+    hiddenOptions.refresh();
+    is5050Used.refresh();
   }
 
   void goToNextQuestion() {
@@ -116,7 +121,6 @@ class CustomizedQuizController extends GetxController {
           curve: Curves.easeInOut,
         );
       } else {
-        // Navigate to result screen
         QuizSounds.playCompletionSound();
         Get.toNamed(
           RoutesName.resultScreen,
@@ -128,20 +132,6 @@ class CustomizedQuizController extends GetxController {
           },
         );
       }
-    } else {
-      toastification.show(
-        type: ToastificationType.warning,
-        title: Text('Select an Option'),
-        description: Text(
-          'Please select an answer before moving to the next question.',
-        ),
-        style: ToastificationStyle.flatColored,
-        autoCloseDuration: const Duration(seconds: 2),
-        primaryColor: kCoral,
-        margin: EdgeInsets.all(8),
-        closeOnClick: true,
-        alignment: Alignment.bottomCenter,
-      );
     }
   }
 
@@ -155,10 +145,35 @@ class CustomizedQuizController extends GetxController {
   }
 
   void use5050Hint() {
-    Get.snackbar(
-      'Hint Used',
-      '50:50 hint activated!',
-      snackPosition: SnackPosition.TOP,
-    );
+    final currentIndex = currentQuestionIndex.value;
+
+    if (currentIndex < questionsList.length) {
+      final question = questionsList[currentIndex];
+      final correctAnswer = question.answer;
+      final allOptions = ['A', 'B', 'C', 'D'];
+      final incorrectOptions =
+          allOptions.where((option) => option != correctAnswer).toList();
+      final random = Random();
+      final keepIncorrectOption =
+          incorrectOptions[random.nextInt(incorrectOptions.length)];
+      final optionsToHide =
+          incorrectOptions
+              .where((option) => option != keepIncorrectOption)
+              .toList();
+
+      hiddenOptions[currentIndex] = optionsToHide;
+      is5050Used[currentIndex] = true;
+
+      hiddenOptions.refresh();
+      is5050Used.refresh();
+    }
+  }
+
+  bool isOptionHidden(int questionIndex, String option) {
+    return hiddenOptions[questionIndex]?.contains(option) ?? false;
+  }
+
+  bool is5050UsedForCurrentQuestion() {
+    return is5050Used[currentQuestionIndex.value] ?? false;
   }
 }

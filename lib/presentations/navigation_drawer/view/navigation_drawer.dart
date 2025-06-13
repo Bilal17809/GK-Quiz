@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:template/core/theme/app_colors.dart';
 
 import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/common_widgets/round_image.dart';
+import '../../../core/constant/constant.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({super.key});
@@ -13,6 +15,19 @@ class NavigationDrawerWidget extends StatelessWidget {
       appBar: CustomAppBar(
         subtitle: 'Enrich your knowledge',
         useBackButton: false,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
+            child: RoundedButton(
+              onTap: () {},
+              child: Image.asset(
+                'assets/images/no-ads.png',
+                color: kWhite,
+                width: 24,
+              ),
+            ),
+          ),
+        ],
       ),
       backgroundColor: Colors.transparent,
       body: SafeArea(

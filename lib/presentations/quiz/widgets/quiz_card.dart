@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:template/core/common_widgets/common_widgets.dart';
+import 'package:template/core/common_widgets/elongated_button.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
-import 'package:template/presentations/quiz/widgets/bottom_buttons.dart';
 
 import '../../../core/utils/ui_helpers.dart';
 
@@ -29,7 +30,6 @@ class QuizCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
     final controller = Get.find<QuizController>();
 
@@ -41,68 +41,135 @@ class QuizCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              height: 36,
-              decoration: roundedDecoration.copyWith(color: kWhite),
-              padding: const EdgeInsets.all(12),
-              child: Obx(
-                () => StepProgressIndicator(
-                  totalSteps: 100,
-                  currentStep: controller.getProgressPercentage(),
-                  size: 12,
-                  padding: 0,
-                  roundedEdges: const Radius.circular(10),
-                  selectedGradientColor: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [kCoral.withValues(alpha: 0.2), kOrange],
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 36,
+                    width: double.infinity,
+                    decoration: roundedDecoration.copyWith(color: kWhite),
+                    padding: const EdgeInsets.all(12),
+                    child: Obx(() {
+                      return StepProgressIndicator(
+                        totalSteps: 100,
+                        currentStep: controller.getProgressPercentage(),
+                        size: 12,
+                        padding: 0,
+                        roundedEdges: const Radius.circular(10),
+                        selectedGradientColor: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [skyColor.withValues(alpha: 0.2), skyColor],
+                        ),
+                        unselectedColor: greyColor.withValues(alpha: 0.2),
+                      );
+                    }),
                   ),
-                  unselectedColor: greyColor.withValues(alpha: 0.2),
                 ),
-              ),
+                SizedBox(width: 8),
+                RoundedButton(
+                  onTap: controller.toggleFontSize,
+                  backgroundColor: skyColor,
+                  child: Icon(Icons.text_fields, color: kWhite),
+                ),
+              ],
             ),
             const SizedBox(height: 12),
             Center(
               child: Text(
                 question.topicName,
                 style: context.textTheme.headlineMedium?.copyWith(
-                  color: kRed,
+                  color: skyColor,
                   fontSize: 22,
                 ),
               ),
             ),
-            QuestionHeader(totalQuestions: totalQuestions),
+            QuestionHeader(
+              totalQuestions: totalQuestions,
+              currentIndex: currentIndex,
+            ),
             const SizedBox(height: 12),
-            SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    question.question,
-                    style: context.textTheme.titleMedium?.copyWith(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w500,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Obx(
+                      () => Text(
+                        question.question,
+                        style: context.textTheme.titleMedium?.copyWith(
+                          fontSize: controller.getQuestionFontSize(),
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(height: mobileHeight * 0.03),
-                  Obx(
-                    () => QuestionOptions(
-                      question: question,
-                      showAnswer: showAnswers[currentIndex] ?? false,
-                      selectedOption: selectedAnswers[currentIndex],
-                      onOptionSelected:
-                          (option) => onOptionSelected(currentIndex, option),
+                    SizedBox(height: 12),
+                    Obx(
+                      () => QuestionOptions(
+                        question: question,
+                        currentIndex: currentIndex,
+                        showAnswer: showAnswers[currentIndex] ?? false,
+                        selectedOption: selectedAnswers[currentIndex],
+                        onOptionSelected:
+                            (option) => onOptionSelected(currentIndex, option),
+                        controller: controller,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-            const Spacer(),
-            BottomButtons(
-              height: mobileHeight,
-              width: mobileWidth,
-              currentIndex: currentIndex,
-              totalQuestions: totalQuestions,
+            SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Obx(() {
+                  bool is5050Used = controller.is5050UsedForCurrentQuestion();
+                  bool isAnswered = selectedAnswers.containsKey(currentIndex);
+                  return ElongatedButton(
+                    height: 50,
+                    width: mobileWidth * 0.3,
+                    color:
+                        is5050Used
+                            ? greyColor.withValues(alpha: 0.5)
+                            : isAnswered
+                            ? greyColor.withValues(alpha: 0.5)
+                            : skyColor.withValues(alpha: 0.8),
+                    borderRadius: BorderRadius.circular(25),
+                    onTap:
+                        (is5050Used || isAnswered)
+                            ? null
+                            : controller.use5050Hint,
+                    child: Text(
+                      '50:50',
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: kWhite,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }),
+                Obx(() {
+                  bool isAnswered = selectedAnswers.containsKey(currentIndex);
+                  return ElongatedButton(
+                    onTap: isAnswered ? controller.goToNextQuestion : null,
+                    height: 70,
+                    width: 70,
+                    color:
+                        isAnswered
+                            ? skyColor
+                            : greyColor.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(28),
+                    child: Image.asset(
+                      'assets/images/next.png',
+                      color: kWhite,
+                      height: 20,
+                      width: 20,
+                    ),
+                  );
+                }),
+              ],
             ),
           ],
         ),
@@ -113,103 +180,101 @@ class QuizCard extends StatelessWidget {
 
 class QuestionHeader extends StatelessWidget {
   final int totalQuestions;
+  final int currentIndex;
 
-  const QuestionHeader({super.key, required this.totalQuestions});
+  const QuestionHeader({
+    super.key,
+    required this.totalQuestions,
+    required this.currentIndex,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        Row(
-          children: [
-            Text(
-              'Total Questions: $totalQuestions',
-              style: context.textTheme.bodyMedium,
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 24),
-              height: 28,
-              width: 28,
-              decoration: roundedDecoration.copyWith(
-                color: kOrange,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              padding: const EdgeInsets.all(8),
-              child: Image.asset('assets/images/forward.png', color: kWhite),
-            ),
-            Container(
-              margin: const EdgeInsets.only(left: 16),
-              height: 28,
-              width: 28,
-              decoration: roundedDecoration.copyWith(
-                color: kOrange,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              padding: const EdgeInsets.all(8),
-              child: Image.asset('assets/images/share.png', color: kWhite),
-            ),
-          ],
-        ),
-      ],
+    return Center(
+      child: Text(
+        'Question: ${currentIndex + 1} / $totalQuestions',
+        style: context.textTheme.bodyMedium,
+      ),
     );
   }
 }
 
 class QuestionOptions extends StatelessWidget {
   final QuestionsModel question;
+  final int currentIndex;
   final bool showAnswer;
   final String? selectedOption;
   final Function(String) onOptionSelected;
+  final QuizController controller;
 
   const QuestionOptions({
     super.key,
     required this.question,
+    required this.currentIndex,
     required this.showAnswer,
     this.selectedOption,
     required this.onOptionSelected,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        OptionItem(
-          letter: 'A',
-          option: question.option1,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
-        ),
-        const SizedBox(height: 12),
-        OptionItem(
-          letter: 'B',
-          option: question.option2,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
-        ),
-        const SizedBox(height: 12),
-        OptionItem(
-          letter: 'C',
-          option: question.option3,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
-        ),
-        const SizedBox(height: 12),
-        OptionItem(
-          letter: 'D',
-          option: question.option4,
-          showAnswer: showAnswer,
-          correctAnswer: question.answer,
-          selectedOption: selectedOption,
-          onOptionSelected: onOptionSelected,
-        ),
-      ],
+    return Obx(
+      () => Column(
+        children: [
+          // Option A
+          if (!controller.isOptionHidden(currentIndex, 'A')) ...[
+            OptionItem(
+              letter: 'A',
+              option: question.option1,
+              showAnswer: showAnswer,
+              correctAnswer: question.answer,
+              selectedOption: selectedOption,
+              onOptionSelected: onOptionSelected,
+              controller: controller,
+            ),
+            const SizedBox(height: 12),
+          ],
+          // Option B
+          if (!controller.isOptionHidden(currentIndex, 'B')) ...[
+            OptionItem(
+              letter: 'B',
+              option: question.option2,
+              showAnswer: showAnswer,
+              correctAnswer: question.answer,
+              selectedOption: selectedOption,
+              onOptionSelected: onOptionSelected,
+              controller: controller,
+            ),
+            const SizedBox(height: 12),
+          ],
+          // Option C
+          if (!controller.isOptionHidden(currentIndex, 'C')) ...[
+            OptionItem(
+              letter: 'C',
+              option: question.option3,
+              showAnswer: showAnswer,
+              correctAnswer: question.answer,
+              selectedOption: selectedOption,
+              onOptionSelected: onOptionSelected,
+              controller: controller,
+            ),
+            const SizedBox(height: 12),
+          ],
+          // Option D
+          if (!controller.isOptionHidden(currentIndex, 'D')) ...[
+            OptionItem(
+              letter: 'D',
+              option: question.option4,
+              showAnswer: showAnswer,
+              correctAnswer: question.answer,
+              selectedOption: selectedOption,
+              onOptionSelected: onOptionSelected,
+              controller: controller,
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -221,6 +286,7 @@ class OptionItem extends StatelessWidget {
   final String correctAnswer;
   final String? selectedOption;
   final Function(String) onOptionSelected;
+  final QuizController controller;
 
   const OptionItem({
     super.key,
@@ -230,6 +296,7 @@ class OptionItem extends StatelessWidget {
     required this.correctAnswer,
     this.selectedOption,
     required this.onOptionSelected,
+    required this.controller,
   });
 
   @override
@@ -288,10 +355,13 @@ class OptionItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      option,
-                      style: context.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
+                    Obx(
+                      () => Text(
+                        option,
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                          fontSize: controller.getOptionFontSize(),
+                        ),
                       ),
                     ),
                   ],

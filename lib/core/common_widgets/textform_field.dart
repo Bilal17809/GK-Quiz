@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:template/core/constant/constant.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String hintText;
@@ -54,6 +55,7 @@ class CustomTextFormField extends StatelessWidget {
         hintText: hintText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        contentPadding: EdgeInsets.symmetric(horizontal: kBodyHp),
         border: border ?? InputBorder.none,
         focusedBorder: focusedBorder ?? InputBorder.none,
         enabledBorder: enabledBorder ?? InputBorder.none,

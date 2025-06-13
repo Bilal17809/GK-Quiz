@@ -44,7 +44,9 @@ class QuizLevelsScreen extends StatelessWidget {
                 margin: const EdgeInsets.all(kBodyHp),
                 padding: const EdgeInsets.all(kBodyHp),
                 decoration: roundedDecoration.copyWith(
-                  color: gridColors[gridTexts.indexOf(topic) %
+                  color: gridColors[(gridTexts.contains(topic)
+                              ? gridTexts.indexOf(topic)
+                              : 0) %
                           gridColors.length]
                       .withValues(alpha: 0.9),
                   border: Border.all(color: greyBorderColor),

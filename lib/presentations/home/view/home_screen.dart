@@ -29,7 +29,11 @@ class HomeScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
             child: RoundedButton(
               onTap: () {},
-              child: Image.asset('assets/images/no-ads.png', color: kWhite),
+              child: Image.asset(
+                'assets/images/no-ads.png',
+                color: kWhite,
+                width: 24,
+              ),
             ),
           ),
         ],
