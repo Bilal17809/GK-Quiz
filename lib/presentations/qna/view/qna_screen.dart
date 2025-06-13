@@ -17,22 +17,7 @@ class QnaScreen extends StatelessWidget {
     final topic = (Get.arguments as Map<String, dynamic>)['topic'] ?? '';
 
     return Scaffold(
-      appBar: CustomAppBar(
-        subtitle: 'Learn - $topic',
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 24),
-            height: 35,
-            width: 35,
-            decoration: roundedDecoration.copyWith(
-              color: kOrange,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            padding: const EdgeInsets.all(8),
-            child: Image.asset('assets/images/share.png', color: kWhite),
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(subtitle: 'Learn - $topic'),
       body: Obx(() {
         if (qnaController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

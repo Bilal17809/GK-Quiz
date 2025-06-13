@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_widgets/common_widgets.dart';
-import 'package:template/core/constant/constant.dart';
 
 import '../theme/app_colors.dart';
 
@@ -33,20 +32,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       backgroundColor: Colors.transparent,
       centerTitle: true,
-      leading: Padding(
-        padding: kAppBarPadding,
-        child:
-            useBackButton
-                ? BackIconButton()
-                : Builder(
-                  builder: (context) {
-                    return RoundedButton(
-                      onTap: () => Scaffold.of(context).openDrawer(),
-                      child: Icon(Icons.menu, color: kWhite, size: 30),
-                    );
-                  },
-                ),
-      ),
+      leading:
+          useBackButton
+              ? BackIconButton()
+              : Builder(
+                builder: (context) {
+                  return RoundedButton(
+                    onTap: () => Scaffold.of(context).openDrawer(),
+                    child: Icon(Icons.menu, color: kWhite, size: 30),
+                  );
+                },
+              ),
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [

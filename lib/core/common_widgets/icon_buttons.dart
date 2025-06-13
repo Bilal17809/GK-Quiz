@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
 
 import '../theme/app_styles.dart';
@@ -12,10 +13,16 @@ class BackIconButton extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
-      child: Container(
-        decoration: const BoxDecoration(shape: BoxShape.circle, color: kWhite),
-        alignment: Alignment.center,
-        child: Icon(Icons.arrow_back_ios, color: skyColor, size: 16),
+      child: Padding(
+        padding: kAppBarPadding,
+        child: Container(
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            color: kWhite,
+          ),
+          alignment: Alignment.center,
+          child: Icon(Icons.arrow_back_ios, color: skyColor, size: 16),
+        ),
       ),
     );
   }

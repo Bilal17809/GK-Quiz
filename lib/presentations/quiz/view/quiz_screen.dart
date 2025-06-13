@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/theme/app_colors.dart';
-import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz/widgets/quiz_content.dart';
 
@@ -50,22 +49,7 @@ class QuizScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: kWhite,
-      appBar: CustomAppBar(
-        subtitle: '$topic - Level $categoryIndex',
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 24),
-            height: 35,
-            width: 35,
-            decoration: roundedDecoration.copyWith(
-              color: kOrange,
-              borderRadius: BorderRadius.circular(50),
-            ),
-            padding: const EdgeInsets.all(8),
-            child: Image.asset('assets/images/notes.png', color: kWhite),
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(subtitle: '$topic - Level $categoryIndex'),
       body: Obx(
         () => QuizContent(
           isLoading: controller.isLoadingQuestions.value,

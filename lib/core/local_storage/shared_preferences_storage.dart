@@ -8,9 +8,35 @@ class SharedPreferencesService extends GetxService {
   SharedPreferences? _prefs;
   SharedPreferences get prefs => _prefs!;
 
+  static const String _fontSizeLevelKey = 'font_size_level';
+  static const String _fontSizeDirectionKey = 'font_size_direction';
+
   Future<SharedPreferencesService> init() async {
     _prefs = await SharedPreferences.getInstance();
     return this;
+  }
+
+  Future<void> saveFontSizeLevel(int level) async {
+    await prefs.setInt(_fontSizeLevelKey, level);
+  }
+
+  Future<void> saveFontSizeDirection(bool isIncreasing) async {
+    await prefs.setBool(_fontSizeDirectionKey, isIncreasing);
+  }
+
+  int getFontSizeLevel() {
+    return prefs.getInt(_fontSizeLevelKey) ?? 0;
+  }
+
+  bool getFontSizeDirection() {
+    return prefs.getBool(_fontSizeDirectionKey) ?? true;
+  }
+
+  Future<void> saveFontSizeSettings(int level, bool isIncreasing) async {
+    await Future.wait([
+      saveFontSizeLevel(level),
+      saveFontSizeDirection(isIncreasing),
+    ]);
   }
 
   Future<void> saveQuizResult({
