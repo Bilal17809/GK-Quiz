@@ -11,7 +11,6 @@ import 'package:toastification/toastification.dart';
 import '../../../core/common_widgets/grid_data.dart';
 
 class QuizController extends GetxController {
-  // Observable collections and state
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;
   final RxBool isLoadingQuestions = true.obs;
   final RxInt currentQuestionIndex = 0.obs;
@@ -182,7 +181,6 @@ class QuizController extends GetxController {
         final topicName = currentTopic.value;
         int topicIndex = gridTexts.indexOf(topicName);
         if (topicIndex == -1) topicIndex = 0;
-        // final catIndex = _categoryIndex ?? 1;
         QuizSounds.playCompletionSound();
         Get.toNamed(
           RoutesName.resultScreen,

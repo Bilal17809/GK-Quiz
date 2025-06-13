@@ -78,7 +78,7 @@ class QuizSelectionScreen extends StatelessWidget {
                                     fit: BoxFit.scaleDown,
                                     child: Text(
                                       topic,
-                                      style: Get.textTheme.titleSmall,
+                                      style: context.textTheme.titleSmall,
                                     ),
                                   ),
                                   subtitle: FittedBox(
@@ -86,7 +86,7 @@ class QuizSelectionScreen extends StatelessWidget {
                                     fit: BoxFit.scaleDown,
                                     child: Text(
                                       'Total Questions: $questionCount',
-                                      style: Get.textTheme.bodySmall,
+                                      style: context.textTheme.bodySmall,
                                     ),
                                   ),
                                   trailing: Obx(
@@ -129,7 +129,9 @@ class QuizSelectionScreen extends StatelessWidget {
                   children: [
                     Text(
                       current.toString(),
-                      style: Get.textTheme.bodyLarge?.copyWith(color: kWhite),
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: kWhite,
+                      ),
                     ),
                     Expanded(
                       child: Slider(
@@ -144,7 +146,9 @@ class QuizSelectionScreen extends StatelessWidget {
 
                     Text(
                       max.toString(),
-                      style: Get.textTheme.bodyLarge?.copyWith(color: kWhite),
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: kWhite,
+                      ),
                     ),
                     const SizedBox(width: 16),
                     SimpleTextButton(
@@ -160,7 +164,7 @@ class QuizSelectionScreen extends StatelessWidget {
                                 'Please select a topic',
                               ),
                       text: 'Start',
-                      style: Get.textTheme.titleMedium,
+                      style: context.textTheme.titleMedium,
                       foregroundColor: kWhite,
                       color:
                           quizSelectionController.canStart()

@@ -4,8 +4,6 @@ abstract class RoutesName {
   static const String lessonsScreen = '/lessons_screen';
   static const String practiceScreen = '/practice_screen';
   static const String quizScreen = '/quiz_screen';
-  static const String testScreen = '/test_screen';
-  static const String takeATestScreen = '/take_a_test_screen';
   static const String quizLevelsScreen = '/quiz_levels_screen';
   static const String resultScreen = '/result_screen';
   static const String qnaScreen = '/qna_screen';
@@ -16,4 +14,5 @@ abstract class RoutesName {
   static const String countryQuizScreen = '/country_quiz_screen';
   static const String countryResultScreen = '/country_result_screen';
   static const String progressScreen = '/progress_screen';
+  static const String countryReviewScreen = '/country_review_screen';
 }

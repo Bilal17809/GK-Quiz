@@ -6,23 +6,19 @@ import '../../customized_quiz/controller/cutomized_quiz_controller.dart';
 import '../../quiz_levels/controller/quiz_result_controller.dart';
 
 class ResultController extends GetxController {
-  // Observable variables
   final RxInt totalQuestions = 20.obs;
   final RxInt correctAnswers = 0.obs;
   final RxInt wrongAnswers = 0.obs;
   final RxInt currentStep = 0.obs;
+  final RxBool isInitialized = false.obs;
 
-  /// Calculate results from the quiz data - auto-detects quiz type
   void calculateResults(int topicIndex, int categoryIndex) {
-    // Auto-detect which controller exists
     bool isCustomizedQuiz = Get.isRegistered<CustomizedQuizController>();
-
     List<dynamic> questions;
     Map<int, String> selectedAnswers;
     int totalQuestionsCount;
 
     if (isCustomizedQuiz) {
-      // Handle customized quiz
       try {
         final customizedController = Get.find<CustomizedQuizController>();
         questions = customizedController.questionsList;
@@ -32,7 +28,6 @@ class ResultController extends GetxController {
         throw Exception('Error accessing CustomizedQuizController: $e');
       }
     } else {
-      // Handle regular quiz
       try {
         final questionsController = Get.find<QuizController>();
         questions = questionsController.questionsList;
@@ -43,7 +38,6 @@ class ResultController extends GetxController {
       }
     }
 
-    // Update total questions count
     totalQuestions.value = totalQuestionsCount;
 
     // Calculate correct answers
@@ -68,7 +62,6 @@ class ResultController extends GetxController {
       'Results: $correct/$totalQuestionsCount (${currentStep.value}%)',
     );
 
-    // Save the result
     Get.put(QuizResultController()).saveQuizResult(
       topicIndex: topicIndex,
       categoryIndex: categoryIndex,
@@ -78,7 +71,6 @@ class ResultController extends GetxController {
     );
   }
 
-  /// Get percentage string
   String get resultPercentage => '${currentStep.value}%';
 
   void resetQuiz() {
@@ -86,8 +78,8 @@ class ResultController extends GetxController {
     wrongAnswers.value = 0;
     currentStep.value = 0;
     totalQuestions.value = 20;
+    isInitialized.value = false;
 
-    // Reset whichever controller exists
     if (Get.isRegistered<CustomizedQuizController>()) {
       try {
         final customizedController = Get.find<CustomizedQuizController>();
@@ -103,5 +95,11 @@ class ResultController extends GetxController {
         throw Exception('Error resetting QuizController: $e');
       }
     }
+  }
+
+  @override
+  void onClose() {
+    isInitialized.value = false;
+    super.onClose();
   }
 }

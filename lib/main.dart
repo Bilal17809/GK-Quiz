@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart'; // ← Add this
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/local_storage/shared_preferences_storage.dart';
@@ -16,7 +17,13 @@ Future<void> main() async {
   Get.put(QuizController());
   Get.put(QuizResultController());
   Get.put(CountryLevelsController());
-  runApp(const MyApp());
+
+  runApp(
+    DevicePreview(
+      enabled: false, // Set to false before production release
+      builder: (context) => const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -31,6 +38,10 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.themeData,
         initialRoute: RoutesName.homeScreen,
         getPages: Routes.routes,
+
+        useInheritedMediaQuery: true,
+        locale: DevicePreview.locale(context),
+        builder: DevicePreview.appBuilder,
       ),
     );
   }

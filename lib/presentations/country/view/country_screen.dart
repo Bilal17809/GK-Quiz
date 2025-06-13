@@ -22,7 +22,6 @@ class CountryScreen extends StatefulWidget {
 }
 
 class _CountryScreenState extends State<CountryScreen> {
-  //Initialize controllers
   final CountryController countryController = Get.put(CountryController());
   final quizController = Get.put(QuizController());
   final CountryLevelsController levelsController = Get.put(
@@ -36,7 +35,6 @@ class _CountryScreenState extends State<CountryScreen> {
     super.initState();
     _refreshTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
       countryController.loadAllQuestions();
-      // Also refresh the levels controller results
       levelsController.refreshAllResults();
     });
   }
@@ -131,7 +129,7 @@ class _CountryScreenState extends State<CountryScreen> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   topic,
-                                  style: Get.textTheme.titleSmall?.copyWith(
+                                  style: context.textTheme.titleSmall?.copyWith(
                                     color: textWhiteColor,
                                     fontSize: 14,
                                   ),
@@ -154,7 +152,7 @@ class _CountryScreenState extends State<CountryScreen> {
                             padding: EdgeInsets.all(6),
                             child: Text(
                               '${countryController.topicCounts[topic] ?? 0}',
-                              style: Get.textTheme.bodyMedium?.copyWith(
+                              style: context.textTheme.bodyMedium?.copyWith(
                                 color: textWhiteColor,
                                 fontSize: 10,
                                 fontWeight: FontWeight.w500,
@@ -164,7 +162,7 @@ class _CountryScreenState extends State<CountryScreen> {
                           ),
                         ),
                       ),
-                      // Dynamic Progress Indicator
+                      // Progress Indicator
                       Positioned(
                         bottom: 8,
                         left: 8,
@@ -177,7 +175,7 @@ class _CountryScreenState extends State<CountryScreen> {
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: Obx(() {
-                            // Get dynamic progress data
+                            // Get progress data
                             final result = levelsController
                                 .getOverallResultSync(index);
                             final totalQuestions =

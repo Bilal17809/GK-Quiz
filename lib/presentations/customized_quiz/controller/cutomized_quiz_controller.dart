@@ -10,7 +10,6 @@ import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_colors.dart';
 
 class CustomizedQuizController extends GetxController {
-  // Observable collections and state
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;
   final RxBool isLoading = true.obs;
   final RxString currentTopic = ''.obs;
@@ -56,13 +55,10 @@ class CustomizedQuizController extends GetxController {
     }
   }
 
-  // Load limited questions for specific topic
   Future<void> loadQuestionsForTopic(String topic, int count) async {
     isLoading.value = true;
     try {
       final allQuestionsFromDb = await DBService.getQuestionsByTopic(topic);
-
-      // Shuffle and take only the requested number of questions
       allQuestionsFromDb.shuffle();
       final limitedQuestions = allQuestionsFromDb.take(count).toList();
 

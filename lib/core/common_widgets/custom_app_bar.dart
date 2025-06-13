@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/round_image.dart';
+import 'package:template/core/common_widgets/common_widgets.dart';
 import 'package:template/core/constant/constant.dart';
 
 import '../theme/app_colors.dart';
@@ -22,35 +22,45 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [skyColor, kBlue],
+            begin: Alignment.topLeft,
+            end: Alignment.centerRight,
+          ),
+        ),
+      ),
+      backgroundColor: Colors.transparent,
+      centerTitle: true,
       leading: Padding(
         padding: kAppBarPadding,
         child:
             useBackButton
-                ? RoundedButton(
-                  backgroundColor: kRed,
-                  onTap: onBackTap ?? () => Get.back(),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/images/back.png', color: kWhite),
-                  ),
-                )
+                ? BackIconButton()
                 : Builder(
                   builder: (context) {
                     return RoundedButton(
                       onTap: () => Scaffold.of(context).openDrawer(),
-                      child: Image.asset('assets/images/menu.png', color: kRed),
+                      child: Icon(Icons.menu, color: kWhite, size: 30),
                     );
                   },
                 ),
       ),
       title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
             'GK Quiz',
-            style: Get.textTheme.titleMedium?.copyWith(color: kRed),
+            style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
           ),
-          Text(subtitle, style: Get.textTheme.bodyLarge),
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Text(
+              subtitle,
+              style: Get.textTheme.bodyLarge?.copyWith(color: kWhite),
+            ),
+          ),
         ],
       ),
       actions: actions,

@@ -56,7 +56,7 @@ class ProgressChart extends StatelessWidget {
                               .map(
                                 (percent) => Text(
                                   percent,
-                                  style: Get.textTheme.bodySmall?.copyWith(
+                                  style: context.textTheme.bodySmall?.copyWith(
                                     fontSize: 10,
                                     fontWeight: FontWeight.w500,
                                   ),
@@ -87,10 +87,11 @@ class ProgressChart extends StatelessWidget {
                                   padding: EdgeInsets.only(right: 8),
                                   child: Text(
                                     value.toString(),
-                                    style: Get.textTheme.bodySmall?.copyWith(
-                                      fontSize: 10,
-                                      color: Colors.grey[600],
-                                    ),
+                                    style: context.textTheme.bodySmall
+                                        ?.copyWith(
+                                          fontSize: 10,
+                                          color: Colors.grey[600],
+                                        ),
                                   ),
                                 ),
                               )
@@ -190,8 +191,10 @@ class ProgressChart extends StatelessWidget {
                     children:
                         dayLabels
                             .map(
-                              (label) =>
-                                  Text(label, style: Get.textTheme.bodySmall),
+                              (label) => Text(
+                                label,
+                                style: context.textTheme.bodySmall,
+                              ),
                             )
                             .toList(),
                   ),

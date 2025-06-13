@@ -33,7 +33,7 @@ class BottomButtons extends StatelessWidget {
           onTap: controller.use5050Hint,
           child: Text(
             '50:50',
-            style: Get.textTheme.bodyMedium?.copyWith(
+            style: context.textTheme.bodyMedium?.copyWith(
               color: kWhite,
               fontWeight: FontWeight.bold,
             ),
@@ -62,7 +62,7 @@ class BottomButtons extends StatelessWidget {
               ),
               Text(
                 '${currentIndex + 1}',
-                style: Get.textTheme.bodyLarge?.copyWith(
+                style: context.textTheme.bodyLarge?.copyWith(
                   color: kWhite,
                   fontWeight: FontWeight.bold,
                 ),

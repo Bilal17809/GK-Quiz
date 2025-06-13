@@ -65,7 +65,7 @@ class LessonsScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           text,
-                          style: Get.textTheme.titleSmall!.copyWith(
+                          style: context.textTheme.titleSmall!.copyWith(
                             color: textWhiteColor,
                           ),
                         ),

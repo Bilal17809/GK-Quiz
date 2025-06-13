@@ -53,7 +53,7 @@ class QuizLevelsScreen extends StatelessWidget {
                   children: [
                     Text(
                       topic,
-                      style: Get.textTheme.titleLarge?.copyWith(
+                      style: context.textTheme.titleLarge?.copyWith(
                         color: kWhite,
                         fontWeight: FontWeight.bold,
                       ),
@@ -63,7 +63,7 @@ class QuizLevelsScreen extends StatelessWidget {
                     Obx(
                       () => Text(
                         'Total Questions: ${controller.topicCounts[topic] ?? 0}',
-                        style: Get.textTheme.bodyMedium?.copyWith(
+                        style: context.textTheme.bodyMedium?.copyWith(
                           color: kWhite,
                           fontWeight: FontWeight.w500,
                         ),

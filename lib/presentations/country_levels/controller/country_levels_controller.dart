@@ -93,7 +93,7 @@ class CountryLevelsController extends GetxController {
   }
 
   Map<String, dynamic> getOverallResultSync(int topicIndex) {
-    _refreshTrigger.value; // Make reactive
+    _refreshTrigger.value;
     return _cachedResults[topicIndex] ??
         {'correct': 0, 'wrong': 0, 'percentage': 0.0};
   }

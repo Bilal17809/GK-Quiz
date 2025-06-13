@@ -57,7 +57,7 @@ class LevelsCard extends StatelessWidget {
                     child: Center(
                       child: Text(
                         '${category.categoryIndex}',
-                        style: Get.textTheme.titleSmall?.copyWith(
+                        style: context.textTheme.titleSmall?.copyWith(
                           color: kWhite,
                           fontWeight: FontWeight.bold,
                         ),
@@ -72,7 +72,7 @@ class LevelsCard extends StatelessWidget {
                       children: [
                         Text(
                           'Level: ${category.categoryIndex}',
-                          style: Get.textTheme.titleMedium?.copyWith(
+                          style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: kWhite,
                           ),
@@ -80,7 +80,7 @@ class LevelsCard extends StatelessWidget {
                         const SizedBox(height: 4),
                         Text(
                           'Total: ${category.totalQuestions} Questions',
-                          style: Get.textTheme.bodySmall?.copyWith(
+                          style: context.textTheme.bodySmall?.copyWith(
                             color: kWhite,
                             fontWeight: FontWeight.w500,
                           ),
@@ -154,10 +154,11 @@ class LevelsCard extends StatelessWidget {
                                     const SizedBox(width: 2),
                                     Text(
                                       '${data['correct'] ?? 0}',
-                                      style: Get.textTheme.bodySmall?.copyWith(
-                                        color: kDarkGreen1,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: kDarkGreen1,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -172,10 +173,11 @@ class LevelsCard extends StatelessWidget {
                                     const SizedBox(width: 2),
                                     Text(
                                       '${data['wrong'] ?? 0}',
-                                      style: Get.textTheme.bodySmall?.copyWith(
-                                        color: kRed.withValues(alpha: 0.7),
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                      style: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: kRed.withValues(alpha: 0.7),
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -194,14 +196,15 @@ class LevelsCard extends StatelessWidget {
                                     const SizedBox(width: 2),
                                     Text(
                                       '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
-                                      style: Get.textTheme.bodySmall?.copyWith(
-                                        color: gridColors[gridTexts.indexOf(
-                                                  topic,
-                                                ) %
-                                                gridColors.length]
-                                            .withValues(alpha: 0.9),
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                      style: context.textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: gridColors[gridTexts.indexOf(
+                                                      topic,
+                                                    ) %
+                                                    gridColors.length]
+                                                .withValues(alpha: 0.9),
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                     ),
                                   ],
                                 ),
