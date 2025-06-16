@@ -39,7 +39,10 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 builder: (context) {
                   return RoundedButton(
                     onTap: () => Scaffold.of(context).openDrawer(),
-                    child: Icon(Icons.menu, color: kWhite, size: 30),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: Icon(Icons.menu, color: kWhite, size: 30),
+                    ),
                   );
                 },
               ),

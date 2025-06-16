@@ -123,7 +123,7 @@ class QuizSelectionDialog extends StatelessWidget {
                       description: Text(errorMessage),
                       style: ToastificationStyle.flatColored,
                       autoCloseDuration: const Duration(seconds: 2),
-                      primaryColor: kCoral,
+                      primaryColor: skyColor,
                       margin: const EdgeInsets.all(8),
                       closeOnClick: true,
                       alignment: Alignment.bottomCenter,

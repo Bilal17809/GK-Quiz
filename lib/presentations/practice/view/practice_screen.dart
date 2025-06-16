@@ -104,7 +104,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                             vertical: 2,
                           ),
                           decoration: roundedDecoration.copyWith(
-                            color: kWhite.withValues(alpha: 0.25),
+                            color: kWhite.withValues(alpha: 0.75),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -170,7 +170,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                                 Icons.star,
                                 color:
                                     isActive
-                                        ? kCoral
+                                        ? kYellow
                                         : kWhite.withValues(alpha: 0.3),
                                 size: 12,
                               );

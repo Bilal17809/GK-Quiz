@@ -18,6 +18,7 @@ class QuizSelectionScreen extends StatelessWidget {
     final quizSelectionController = Get.put(QuizSelectionController());
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: bgColor,
       appBar: CustomAppBar(subtitle: 'Take a Test'),
       body: Obx(() {

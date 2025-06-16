@@ -139,7 +139,7 @@ class LevelsCard extends StatelessWidget {
                               vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: kWhite.withValues(alpha: 0.25),
+                              color: kWhite.withValues(alpha: 0.75),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: Row(

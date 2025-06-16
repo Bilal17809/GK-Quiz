@@ -18,7 +18,7 @@ class CountryLevelsScreen extends StatelessWidget {
     final arguments = Get.arguments as Map<String, dynamic>;
     final topic = arguments['topic'];
     final topicIndex =
-        arguments['index']; // This is the grid index from country screen
+        arguments['index'];
     final QuizController quizController = Get.put(QuizController());
     Get.put(CountryLevelsController());
 

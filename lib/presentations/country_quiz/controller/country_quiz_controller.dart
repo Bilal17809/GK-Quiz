@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../../core/common_audios/quiz_sounds.dart';
-import '../../../core/db_service/question_db_service.dart';
+import '../../../core/service/question_db_service.dart';
 import '../../../core/models/category_model.dart';
 import '../../../core/models/questions_data.dart';
 
