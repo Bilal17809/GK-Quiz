@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../routes/routes_name.dart';
-import '../theme/app_colors.dart'; // Adjust the path as needed
+import '../theme/app_colors.dart';
 
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
@@ -12,7 +12,7 @@ class BottomNavBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BottomNavigationBar(
-      backgroundColor: skyColor,
+      backgroundColor: kSkyBlueColor,
       currentIndex: currentIndex,
       selectedItemColor: kWhite,
       unselectedItemColor: kWhite.withValues(alpha: 0.5),

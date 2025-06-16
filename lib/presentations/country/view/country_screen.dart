@@ -57,6 +57,7 @@ class _CountryScreenState extends State<CountryScreen> {
               return Stack(
                 children: [
                   Positioned(
+                    top: 5,
                     left: -countryController.shift.value,
                     child: Image.asset(
                       'assets/images/world_map.png',
@@ -66,6 +67,7 @@ class _CountryScreenState extends State<CountryScreen> {
                     ),
                   ),
                   Positioned(
+                    top: 5,
                     left:
                         countryController.imageWidth -
                         countryController.shift.value,
@@ -171,7 +173,7 @@ class _CountryScreenState extends State<CountryScreen> {
                           height: 24,
                           margin: const EdgeInsets.only(top: 4),
                           decoration: roundedDecoration.copyWith(
-                            color: kWhite.withValues(alpha: 0.7),
+                            color: kWhite.withValues(alpha: 0.75),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 6),
                           child: Obx(() {

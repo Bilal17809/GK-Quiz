@@ -23,8 +23,8 @@ class ProgressCircle extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: mobileWidth * 0.22,
-          height: mobileWidth * 0.22,
+          width: mobileWidth * 0.2,
+          height: mobileWidth * 0.2,
           decoration: BoxDecoration(
             color: kTealGreen1.withValues(alpha: 0.25),
             shape: BoxShape.circle,

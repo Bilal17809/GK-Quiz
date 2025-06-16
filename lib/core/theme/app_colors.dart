@@ -29,6 +29,7 @@ const kCoral = Color(0xffFF7F50);
 const kSilver = Color(0xff999898);
 const kGold = Color(0xffCEA247);
 const skyColor = Color(0xFF569CD4);
+const kSkyBlueColor = Color(0xFF437DD9);
 
 //text color
 const Color blackTextColor = Color(0xFF000000);

@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:template/core/db_service/question_db_service.dart';
+import 'package:template/core/service/question_db_service.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 

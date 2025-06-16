@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_audios/quiz_sounds.dart';
-import 'package:template/core/db_service/question_db_service.dart';
+import 'package:template/core/service/question_db_service.dart';
 import 'package:template/core/models/category_model.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/core/routes/routes_name.dart';

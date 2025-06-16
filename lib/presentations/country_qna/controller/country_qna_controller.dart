@@ -5,7 +5,7 @@ import 'package:template/core/local_storage/shared_preferences_storage.dart';
 import 'package:template/core/models/questions_data.dart';
 import 'package:template/presentations/progress/controller/progress_controller.dart';
 
-class QnaController extends GetxController {
+class CountryQnaController extends GetxController {
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;
   final RxBool isLoading = true.obs;
   final RxString currentTopic = ''.obs;
@@ -13,8 +13,8 @@ class QnaController extends GetxController {
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
 
   String? _topic; // Arguments
-  String? get topic => _topic;
 
+  String? get topic => _topic;
   SharedPreferencesService get prefsService => _prefsService;
 
   @override
@@ -39,8 +39,6 @@ class QnaController extends GetxController {
     try {
       final questionsFromDb = await DBService.getQuestionsByTopic(topic);
       questionsList.assignAll(questionsFromDb);
-
-      // Load previously revealed answers from SharedPreferences
       await _loadRevealedAnswersFromPrefs(topic);
     } catch (e) {
       Get.snackbar(
@@ -55,7 +53,6 @@ class QnaController extends GetxController {
 
   Future<void> _loadRevealedAnswersFromPrefs(String topic) async {
     revealedAnswers.clear();
-
     for (int i = 0; i < questionsList.length; i++) {
       String key = 'revealed_answer_${topic}_$i';
       bool isRevealed = _prefsService.getBool(key, defaultValue: false);
@@ -66,13 +63,19 @@ class QnaController extends GetxController {
   }
 
   Future<void> revealAnswer(int questionIndex) async {
+    bool wasAlreadyRevealed = revealedAnswers[questionIndex] ?? false;
+
     revealedAnswers[questionIndex] = true;
 
     // Save to SharedPreferences
     if (_topic != null) {
       String key = 'revealed_answer_${_topic}_$questionIndex';
       await _prefsService.setBool(key, true);
-      await _updateLearnProgress();
+
+      // Only update progress if this is a new reveal
+      if (!wasAlreadyRevealed) {
+        await _updateLearnProgress();
+      }
     }
   }
 
@@ -82,20 +85,16 @@ class QnaController extends GetxController {
 
     String progressKey = 'learn_progress_${_topic}';
     int currentProgress = _prefsService.getInt(progressKey, defaultValue: 0);
-    int newProgress = revealedAnswers.length;
 
-    // Only update if progress has increased
-    if (newProgress > currentProgress) {
-      await _prefsService.setInt(progressKey, newProgress);
+    int newProgress = currentProgress + 1;
 
-      // Trigger refresh in ProgressController if it exists
-      try {
-        final progressController = Get.find<ProgressController>();
-        progressController.refreshLearnProgress();
-      } catch (e) {
-        // ProgressController might not be initialized yet
-        debugPrint('ProgressController not found: $e');
-      }
+    await _prefsService.setInt(progressKey, newProgress);
+
+    try {
+      final progressController = Get.find<ProgressController>();
+      progressController.refreshLearnProgress();
+    } catch (e) {
+      debugPrint('ProgressController not found: $e');
     }
   }
 
@@ -114,7 +113,7 @@ class QnaController extends GetxController {
       case 'D':
         return question.option4;
       default:
-        return question.answer; // fallback to answer field if it's not A,B,C,D
+        return question.answer;
     }
   }
 

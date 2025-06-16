@@ -25,8 +25,12 @@
 
 import 'package:get/get.dart';
 import 'package:template/core/routes/routes_name.dart';
+import 'package:template/presentations/ai_quiz/view/ai_quiz_screen.dart';
+import 'package:template/presentations/ai_quiz/view/context_selection_screen.dart';
 import 'package:template/presentations/country/view/country_screen.dart';
+import 'package:template/presentations/country_lessons/view/country_lessons_screen.dart';
 import 'package:template/presentations/country_levels/view/country_levels_screen.dart';
+import 'package:template/presentations/country_qna/view/country_qna_screen.dart';
 import 'package:template/presentations/country_quiz/view/country_quiz_screen.dart';
 import 'package:template/presentations/country_result/view/country_result_screen.dart';
 import 'package:template/presentations/country_review/view/country_review_screen.dart';
@@ -132,6 +136,30 @@ class Routes {
     GetPage(
       name: RoutesName.countryReviewScreen,
       page: () => CountryReviewScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.aiQuizScreen,
+      page: () => AiQuizScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.contextSelectionScreen,
+      page: () => ContextSelectionScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.countryLessonsScreen,
+      page: () => CountryLessonsScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.countryQnaScreen,
+      page: () => CountryQnaScreen(),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),

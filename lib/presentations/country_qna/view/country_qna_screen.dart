@@ -1,33 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/common_widgets/long_icon_text_button.dart';
+import 'package:template/presentations/country_qna/controller/country_qna_controller.dart';
 
+import '../../../core/common_widgets/long_icon_text_button.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
-import '../controller/qna_controller.dart';
 
-class QnaScreen extends StatelessWidget {
-  const QnaScreen({super.key});
+class CountryQnaScreen extends StatelessWidget {
+  const CountryQnaScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final qnaController = Get.put(QnaController());
+    final countryQnaController = Get.put(CountryQnaController());
     final topic = (Get.arguments as Map<String, dynamic>)['topic'] ?? '';
 
     return Scaffold(
       appBar: CustomAppBar(subtitle: 'Learn - $topic'),
       body: Obx(() {
-        if (qnaController.isLoading.value) {
+        if (countryQnaController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
         }
 
         return ListView.builder(
-          itemCount: qnaController.questionsList.length,
+          itemCount: countryQnaController.questionsList.length,
           padding: const EdgeInsets.all(kBodyHp),
           itemBuilder: (context, index) {
-            final question = qnaController.questionsList[index];
+            final question = countryQnaController.questionsList[index];
             return Card(
               margin: const EdgeInsets.only(bottom: 12),
               color: kWhite,
@@ -45,7 +45,7 @@ class QnaScreen extends StatelessWidget {
                           width: 25,
                           padding: EdgeInsets.all(2),
                           decoration: roundedDecoration.copyWith(
-                            color: skyColor,
+                            color: kRed.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(50),
                           ),
                           child: Center(
@@ -80,7 +80,7 @@ class QnaScreen extends StatelessWidget {
                     const SizedBox(height: 12),
 
                     Obx(() {
-                      final isAnswerRevealed = qnaController.isAnswerRevealed(
+                      final isAnswerRevealed = countryQnaController.isAnswerRevealed(
                         index,
                       );
 
@@ -89,7 +89,7 @@ class QnaScreen extends StatelessWidget {
                           width: double.infinity,
                           padding: EdgeInsets.all(12),
                           decoration: roundedDecorationWithShadow.copyWith(
-                            color: skyColor.withValues(alpha: 0.2),
+                            color: kRed.withValues(alpha: 0.2),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,12 +98,12 @@ class QnaScreen extends StatelessWidget {
                                 'Answer:',
                                 style: context.textTheme.titleSmall?.copyWith(
                                   fontWeight: FontWeight.w600,
-                                  color: skyColor,
+                                  color: kRed.withValues(alpha: 0.7),
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                qnaController.getCorrectOptionText(question),
+                                countryQnaController.getCorrectOptionText(question),
                                 style: context.textTheme.bodyMedium?.copyWith(
                                   color: kBlack,
                                 ),
@@ -132,10 +132,10 @@ class QnaScreen extends StatelessWidget {
                                 color: kWhite,
                               ),
                               onPressed:
-                                  () => qnaController.revealAnswer(index),
+                                  () => countryQnaController.revealAnswer(index),
                               text: 'Answer',
                               icon: Icon(Icons.remove_red_eye, size: 16),
-                              color: skyColor,
+                              color: kRed.withValues(alpha: 0.7),
                             ),
                           ),
                         );

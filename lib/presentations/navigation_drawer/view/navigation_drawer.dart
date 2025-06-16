@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/local_storage/shared_preferences_storage.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
+import 'package:toastification/toastification.dart';
 
 import '../../../core/common_widgets/custom_app_bar.dart';
 import '../../../core/common_widgets/round_image.dart';
@@ -51,9 +54,24 @@ class NavigationDrawerWidget extends StatelessWidget {
                 ),
               ),
               DrawerTile(
-                icon: Icons.favorite_rounded,
-                title: 'Bookmarks',
-                onTap: () {},
+                icon: Icons.restart_alt,
+                title: 'Reset App',
+                onTap: () async{
+                  await SharedPreferencesService.to.clear();
+                  Get.offAllNamed(RoutesName.homeScreen);
+                  toastification.show(
+                    type: ToastificationType.custom('Reset App', kSkyBlueColor, Icons.restart_alt),
+                    title: const Text('Reset App'),
+                    description: const Text('App has been reset successfully'),
+                    style: ToastificationStyle.minimal,
+                    autoCloseDuration: const Duration(seconds: 2),
+                    primaryColor: skyColor,
+                    margin: const EdgeInsets.all(8),
+                    closeOnClick: true,
+                    alignment: Alignment.bottomCenter,
+                  );
+
+                },
               ),
               DrawerTile(
                 icon: Icons.notifications_rounded,
@@ -70,6 +88,7 @@ class NavigationDrawerWidget extends StatelessWidget {
                 title: 'Rate Us',
                 onTap: () {},
               ),
+              ListTile(leading: Image.asset('assets/images/no-ads.png', color: textGreyColor, width: 24,), title: Text('Remove Ads'), onTap: (){}),
               DrawerTile(
                 icon: Icons.message_rounded,
                 title: 'Feedback',
@@ -107,6 +126,6 @@ class DrawerTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(leading: Icon(icon), title: Text(title), onTap: onTap);
+    return ListTile(leading: Icon(icon, size: 24, color: textGreyColor,), title: Text(title), onTap: onTap);
   }
 }

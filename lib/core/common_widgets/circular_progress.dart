@@ -21,8 +21,8 @@ class CircularProgressWidget extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: mobileWidth * 0.2,
-          height: mobileWidth * 0.2,
+          width: mobileWidth * 0.15,
+          height: mobileWidth * 0.15,
           decoration: BoxDecoration(color: kWhite, shape: BoxShape.circle),
           child: Stack(
             children: [
@@ -30,11 +30,11 @@ class CircularProgressWidget extends StatelessWidget {
               CircularStepProgressIndicator(
                 totalSteps: 100,
                 currentStep: percentage.round(),
-                stepSize: mobileWidth * 0.02,
+                stepSize: mobileWidth * 0.016,
                 selectedColor: progressColor.withValues(alpha: 0.9),
                 unselectedColor: progressColor.withValues(alpha: 0.1),
                 padding: 0,
-                selectedStepSize: mobileWidth * 0.02,
+                selectedStepSize: mobileWidth * 0.016,
                 roundedCap: (_, __) => true,
               ),
 

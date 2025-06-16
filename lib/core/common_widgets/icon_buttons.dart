@@ -13,15 +13,18 @@ class BackIconButton extends StatelessWidget {
       onTap: () {
         Navigator.pop(context);
       },
-      child: Padding(
-        padding: kAppBarPadding,
-        child: Container(
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: kWhite,
+      child: Transform.translate(
+        offset: const Offset (6, 0),
+        child: Padding(
+          padding: kAppBarPadding,
+          child: Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: kWhite,
+            ),
+            alignment: Alignment.center,
+            child: Icon(Icons.arrow_back_ios, color: skyColor, size: 16),
           ),
-          alignment: Alignment.center,
-          child: Icon(Icons.arrow_back_ios, color: skyColor, size: 16),
         ),
       ),
     );
