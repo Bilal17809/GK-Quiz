@@ -19,6 +19,9 @@ class CustomTextFormField extends StatelessWidget {
   final Function(String)? onChanged;
   final Function(String?)? onSaved;
   final String? Function(String?)? validator;
+  final int? minLines;
+  final int? maxLines;
+  final EdgeInsetsGeometry? contentPadding;
 
   const CustomTextFormField({
     super.key,
@@ -37,6 +40,9 @@ class CustomTextFormField extends StatelessWidget {
     this.onChanged,
     this.onSaved,
     this.validator,
+    this.minLines,
+    this.maxLines,
+    this.contentPadding,
   });
 
   @override
@@ -55,7 +61,7 @@ class CustomTextFormField extends StatelessWidget {
         hintText: hintText,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        contentPadding: EdgeInsets.symmetric(horizontal: kBodyHp),
+        contentPadding: contentPadding ?? EdgeInsets.symmetric(horizontal: kBodyHp),
         border: border ?? InputBorder.none,
         focusedBorder: focusedBorder ?? InputBorder.none,
         enabledBorder: enabledBorder ?? InputBorder.none,

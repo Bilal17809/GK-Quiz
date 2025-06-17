@@ -26,7 +26,7 @@ Color getLetterContainerColor(
   String letter,
   String? selectedOption,
 ) {
-  if (!showAnswer) return greyColor.withOpacity(0.1);
+  if (!showAnswer) return greyColor.withValues(alpha: 0.05);
 
   final isCorrect = correctAnswer == letter;
   final isSelected = selectedOption == letter;
@@ -36,5 +36,5 @@ Color getLetterContainerColor(
   } else if (isSelected) {
     return kRed;
   }
-  return greyColor.withOpacity(0.1);
+  return greyColor.withValues(alpha: 0.05);
 }

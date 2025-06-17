@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/textform_field.dart';
 import 'package:template/core/common_widgets/elongated_button.dart';
-import 'package:template/core/service/ai_service.dart';
+import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
+import 'package:template/core/theme/app_styles.dart';
+import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
 import 'package:toastification/toastification.dart';
-
 import 'ai_quiz_screen.dart';
 
 class ContextSelectionScreen extends StatefulWidget {
@@ -24,20 +25,13 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
 
   final List<String> suggestedContexts = [
     "You're an AI that creates fun, educational quizzes. Keep answers short, age-friendly, and ask one question at a time without giving direct answers.",
-
     "Help users enhance their storytelling with feedback on plot, characters, and writing style. Be practical, supportive, and encouraging.",
-
     "Provide safe, personalised workouts, nutrition tips, and wellness advice. Focus on sustainable habits and motivation.",
-
     "Teach coding concepts clearly with examples and debugging help. Guide users step-by-step through various programming languages.",
-
     "Help users learn languages through conversation, grammar tips, vocabulary, and culture. Keep it fun and interactive.",
-
     "Support users with homework, study plans, and exam prep. Simplify tough topics and adapt to different learning styles.",
-
     "Offer resume help, interview practice, and career advice. Guide users toward achieving professional goals.",
-
-    "Provide calm, supportive advice on stress, meditation, and mental wellness. Encourage positive thinking and emotional balance."
+    "Provide calm, supportive advice on stress, meditation, and mental wellness. Encourage positive thinking and emotional balance.",
   ];
 
   @override
@@ -77,8 +71,8 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
       return;
     }
 
-    final aiService = Get.put(AiService());
-    aiService.setContext(context);
+    final aiController = Get.put(AiQuizController());
+    aiController.setContext(context);
     Get.to(() => const AiQuizScreen());
   }
 
@@ -91,61 +85,50 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(subtitle: 'Set AI Context'),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Choose AI Personality',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: kBlack,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(kBodyHp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Choose AI Personality',
+                style: context.textTheme.titleLarge,
               ),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Define how the AI should behave and respond to your messages',
-              style: TextStyle(
-                fontSize: 16,
-                color: greyColor,
+              const SizedBox(height: 8),
+              Text(
+                'Define how the AI should behave and respond to your messages',
+                style: context.textTheme.bodyMedium,
               ),
-            ),
-            const SizedBox(height: 30),
-
-            // Suggested Contexts Container
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: kSkyBlueColor.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: kSkyBlueColor.withValues(alpha: 0.3)),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Icon(Icons.lightbulb_outline, color: kSkyBlueColor),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Suggested Context',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+              const SizedBox(height: 28),
+              // Suggested Contexts
+              Container(
+                padding: const EdgeInsets.all(kBodyHp),
+                decoration: roundedSkyBlueBorderDecoration,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.lightbulb_outline,
                           color: kSkyBlueColor,
                         ),
-                      ),
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: _useSuggestedContext,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                          decoration: BoxDecoration(
+                        const SizedBox(width: 8),
+                        Text(
+                          'Suggested Context',
+                          style: context.textTheme.titleSmall?.copyWith(
                             color: kSkyBlueColor,
-                            borderRadius: BorderRadius.circular(20),
+                            fontWeight: FontWeight.w600,
                           ),
+                        ),
+                        const Spacer(),
+                        ElongatedButton(
+                          height: 32,
+                          width: 80,
+                          color: kSkyBlueColor,
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: _useSuggestedContext,
                           child: const Text(
                             'Use This',
                             style: TextStyle(
@@ -155,69 +138,61 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  Obx(() => Text(
-                    suggestedContexts[currentSuggestionIndex.value],
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: kBlack,
-                      height: 1.4,
+                      ],
                     ),
-                  )),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            // Custom Context Input
-            const Text(
-              'Or Create Your Own Context',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: kBlack,
-              ),
-            ),
-            const SizedBox(height: 12),
-
-            Container(
-              decoration: BoxDecoration(
-                color: kWhite,
-                borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: greyColor.withValues(alpha: 0.3)),
-              ),
-              child: CustomTextFormField(
-                hintText: 'Describe how you want the AI to behave...',
-                controller: contextController,
-                keyboardType: TextInputType.multiline,
-              ),
-            ),
-
-            const Spacer(),
-
-            // Start Chat Button
-            ElongatedButton(
-              height: 50,
-              width: double.infinity,
-              color: kSkyBlueColor,
-              borderRadius: BorderRadius.circular(12),
-              onTap: _startChat,
-              child: const Text(
-                'Start Chat',
-                style: TextStyle(
-                  color: kWhite,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+                    const SizedBox(height: 12),
+                    Obx(
+                      () => Text(
+                        suggestedContexts[currentSuggestionIndex.value],
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: kBlack,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-
-            const SizedBox(height: 20),
-          ],
+              const SizedBox(height: 30),
+              // Custom Context Input
+              Text(
+                'Or Create Your Own Context',
+                style: context.textTheme.titleMedium,
+              ),
+              const SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: kWhite,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: greyColor.withValues(alpha: 0.3)),
+                ),
+                child: CustomTextFormField(
+                  hintText: 'Describe how you want the AI to behave...',
+                  controller: contextController,
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              const Spacer(),
+              // Start Chat Button
+              ElongatedButton(
+                height: 50,
+                width: double.infinity,
+                color: kSkyBlueColor,
+                borderRadius: BorderRadius.circular(12),
+                onTap: _startChat,
+                child: const Text(
+                  'Start Chat',
+                  style: TextStyle(
+                    color: kWhite,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+            ],
+          ),
         ),
       ),
     );

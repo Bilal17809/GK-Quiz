@@ -4,7 +4,8 @@ import 'package:get/get.dart';
 import 'package:template/core/local_storage/shared_preferences_storage.dart';
 import 'package:template/core/routes/routes.dart';
 import 'package:template/core/routes/routes_name.dart';
-import 'package:template/core/service/ai_service.dart';
+import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
+import 'package:template/presentations/ai_quiz/controller/speech_controller.dart';
 import 'package:template/presentations/country_levels/controller/country_levels_controller.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz_levels/controller/quiz_result_controller.dart';
@@ -18,7 +19,8 @@ Future<void> main() async {
   Get.put(QuizController());
   Get.put(QuizResultController());
   Get.put(CountryLevelsController());
-  Get.put(AiService());
+  Get.put(AiQuizController());
+  Get.put(SpeechController());
 
   runApp(
     DevicePreview(
