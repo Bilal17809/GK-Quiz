@@ -23,10 +23,11 @@ const TextStyle titleLargeStyle = TextStyle(
 );
 
 const TextStyle titleMediumStyle = TextStyle(
-    fontFamily: fontFamily,
-    fontSize: 20,
-    fontWeight: FontWeight.w500,
-    color: blackTextColor);
+  fontFamily: fontFamily,
+  fontSize: 20,
+  fontWeight: FontWeight.w500,
+  color: blackTextColor,
+);
 
 const TextStyle titleSmallStyle = TextStyle(
   fontFamily: fontFamily,
@@ -99,18 +100,19 @@ final BoxDecoration roundedDecoration = BoxDecoration(
 final BoxDecoration roundedGreenBorderDecoration = BoxDecoration(
   color: greenColor.withValues(alpha: 0.3),
   borderRadius: BorderRadius.circular(10),
-  border: Border.all(
-    color: greenColor,
-    width: 1.0,
-  ),
+  border: Border.all(color: greenColor, width: 1.0),
+);
+
+final BoxDecoration roundedSkyBlueBorderDecoration = BoxDecoration(
+  color: kSkyBlueColor.withValues(alpha: 0.1),
+  borderRadius: BorderRadius.circular(10),
+  border: Border.all(color: kSkyBlueColor.withValues(alpha: 0.3), width: 1.0),
 );
 
 final BoxDecoration rounderGreyBorderDecoration = BoxDecoration(
   color: kWhite,
   borderRadius: BorderRadius.circular(12),
-  border: Border.all(
-    color: greyBorderColor,
-  ),
+  border: Border.all(color: greyBorderColor),
 );
 
 final boxShadow = BoxShadow(
