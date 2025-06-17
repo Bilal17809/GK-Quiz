@@ -1,52 +1,14 @@
 import 'dart:convert';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
-class AiService extends GetxController {
-  final RxList<Map<String, String>> chatHistory = <Map<String, String>>[].obs;
-  final RxBool isLoading = false.obs;
-  final RxString currentContext = ''.obs;
+class AiService {
   final String _apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
   final String _model = 'deepseek/deepseek-r1-0528-qwen3-8b:free';
-  final String _apiKey = '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';
+  final String _apiKey =
+      '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';
 
-  // final String systemContext = """
-  // You are an AI assistant specialized in creating educational quizzes and learning materials.
-  // Always follow these guidelines:
-  // - Keep responses educational and engaging
-  // - Always reply with answers that are short and concise
-  // - Your tone must be so simple and friendly that a person of any age group can understand
-  // - You are here only to generate quiz questions and provide information related to that
-  // - Do not provide answers directly plus, ask single question at a time
-  // """;
-
-  void setContext(String context) {
-    currentContext.value = context;
-    clearChat();
-  }
-
-  Future<void> sendMessage(String message) async {
-    if (message.trim().isEmpty || currentContext.value.isEmpty) return;
-
-    chatHistory.add({
-      "role": "user",
-      "content": message.trim(),
-    });
-
-    isLoading.value = true;
-
+  Future<String> sendMessage(List<Map<String, String>> messages) async {
     try {
-      final List<Map<String, String>> messages = [
-        {
-          "role": "system",
-          "content": currentContext.value,
-        },
-        ...chatHistory.map((msg) => {
-          "role": msg["role"]!,
-          "content": msg["content"]!,
-        })
-      ];
-
       final response = await http.post(
         Uri.parse(_apiUrl),
         headers: {
@@ -67,48 +29,26 @@ class AiService extends GetxController {
             data['choices'].isNotEmpty &&
             data['choices'][0]['message'] != null) {
           final reply = data['choices'][0]['message']['content'];
-          chatHistory.add({
-            "role": "assistant",
-            "content": reply?.toString().trim() ?? "No response received",
-          });
+          return reply?.toString().trim() ?? "No response received";
         } else {
-          chatHistory.add({
-            "role": "assistant",
-            "content": "Error: Invalid response format from API",
-          });
+          return "Error: Invalid response format from API";
         }
       } else {
-        String errorMessage = "Error ${response.statusCode}: ${response.reasonPhrase}";
+        String errorMessage =
+            "Error ${response.statusCode}: ${response.reasonPhrase}";
         try {
           final errorData = jsonDecode(response.body);
           if (errorData['error'] != null) {
-            errorMessage += "\nDetails: ${errorData['error']['message'] ?? errorData['error']}";
+            errorMessage +=
+                "\nDetails: ${errorData['error']['message'] ?? errorData['error']}";
           }
         } catch (e) {
           errorMessage += "\nResponse: ${response.body}";
         }
-        chatHistory.add({
-          "role": "assistant",
-          "content": errorMessage,
-        });
+        return errorMessage;
       }
     } catch (e) {
-      chatHistory.add({
-        "role": "assistant",
-        "content": "Connection error: ${e.toString()}",
-      });
-    } finally {
-      isLoading.value = false;
+      return "Connection error: ${e.toString()}";
     }
-  }
-
-  void clearChat() {
-    chatHistory.clear();
-  }
-
-  @override
-  void onClose() {
-    clearChat();
-    super.onClose();
   }
 }

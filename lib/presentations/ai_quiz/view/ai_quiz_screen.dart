@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/service/ai_service.dart';
+import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
-import '../../../core/common_widgets/textform_field.dart';
+import 'package:template/core/theme/app_styles.dart';
+import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
+import 'package:template/presentations/ai_quiz/view/speech_dialog.dart';
+import '../../../core/common_widgets/common_text_field.dart';
+import '../../../core/common_widgets/elongated_button.dart';
+import '../../../core/common_widgets/icon_buttons.dart';
+import '../controller/speech_controller.dart';
 
 class AiQuizScreen extends StatefulWidget {
   const AiQuizScreen({super.key});
@@ -13,14 +19,16 @@ class AiQuizScreen extends StatefulWidget {
 }
 
 class _AiQuizScreenState extends State<AiQuizScreen> {
-  late final AiService controller;
+  late final AiQuizController controller;
+  late final SpeechController speechController;
   final TextEditingController inputController = TextEditingController();
   final ScrollController scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
-    controller = Get.find<AiService>();
+    controller = Get.find<AiQuizController>();
+    speechController = Get.put(SpeechController());
   }
 
   void scrollToBottom() {
@@ -35,37 +43,56 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
     });
   }
 
+  void _copyToClipboard(String text) {
+    controller.copyToClipboard(text);
+  }
+
+  void _handleSpeechInput() async {
+    if (!speechController.isAvailable.value) {
+      Get.snackbar("Speech Unavailable", "Speech recognition is not ready.");
+      return;
+    }
+
+    try {
+      // Show the speech dialog and wait for result
+      final result = await Get.dialog<String>(
+        SpeechDialog(),
+        barrierDismissible: true,
+      );
+
+      // If we got translated text, put it in the input field
+      if (result != null && result.isNotEmpty) {
+        inputController.text = result;
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Failed to process speech input: $e");
+    }
+  }
+
   @override
   void dispose() {
     inputController.dispose();
     scrollController.dispose();
+    Get.delete<SpeechController>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        subtitle: 'AI Chat',
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh, color: kWhite,),
-            onPressed: () {
-              Get.back();
-            },
-
-          ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          Center(child: Image.asset('assets/images/chatbot.png', color: kSkyBlueColor,width: MediaQuery.of(context).size.width * 0.1,),),
-          Column(
-            children: [
-              // Context Display Banner
-              Obx(() => Container(
+      resizeToAvoidBottomInset: false,
+      appBar: CustomAppBar(subtitle: 'AI Chat'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Context Display Banner
+            Obx(
+              () => Container(
                 width: double.infinity,
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: kSkyBlueColor.withValues(alpha: 0.1),
                   border: Border(
@@ -77,7 +104,11 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.psychology, color: kSkyBlueColor, size: 20),
+                    const Icon(
+                      Icons.psychology,
+                      color: kSkyBlueColor,
+                      size: 20,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -93,19 +124,184 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                     ),
                   ],
                 ),
-              )),
-          
-              Expanded(
+              ),
+            ),
+            // Input Container
+            Container(
+              margin: const EdgeInsets.all(kBodyHp),
+              padding: const EdgeInsets.all(kBodyHp),
+              decoration: roundedDecorationWithShadow,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // Limit Section
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: roundedDecoration.copyWith(
+                      color: greyColor.withValues(alpha: 0.05),
+                      border: Border.all(
+                        color: greyColor.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      'Daily Limit: 5',
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        color: greyColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                  // Input Container
+                  Container(
+                    decoration: roundedDecoration.copyWith(
+                      color: greyColor.withValues(alpha: 0.05),
+                      border: Border.all(
+                        color: greyColor.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        // Input Field
+                        CommonTextField(
+                          controller: inputController,
+                          minLines: 3,
+                          maxLines: 4,
+                          hintText:
+                              'Write your message here or tap the mic to speak...',
+                          hintStyle: const TextStyle(
+                            color: greyColor,
+                            fontSize: 16,
+                          ),
+                          textStyle: const TextStyle(
+                            fontSize: 16,
+                            color: kBlack,
+                          ),
+                          contentPadding: const EdgeInsets.all(16),
+                          border: InputBorder.none,
+                        ),
+                        // Bottom Icons Row
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          child: Row(
+                            children: [
+                              // Speech Button
+                              Obx(
+                                () => IconActionButton(
+                                  onTap: _handleSpeechInput,
+                                  icon: Icons.mic,
+                                  color:
+                                      speechController.isAvailable.value
+                                          ? kSkyBlueColor
+                                          : greyColor,
+                                ),
+                              ),
+                              const SizedBox(width: 16),
+                              IconActionButton(
+                                onTap: () {
+                                  inputController.clear();
+                                },
+                                icon: Icons.cancel,
+                                color: kSkyBlueColor,
+                              ),
+                              const SizedBox(width: 16),
+                              IconActionButton(
+                                onTap: () {
+                                  final text = inputController.text.trim();
+                                  if (text.isNotEmpty) {
+                                    _copyToClipboard(text);
+                                  }
+                                },
+                                icon: Icons.copy,
+                                color: kSkyBlueColor,
+                              ),
+                              const Spacer(),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  // Generate Button
+                  Obx(
+                    () => ElongatedButton(
+                      height: 54,
+                      width: double.infinity,
+                      color:
+                          controller.isLoading.value
+                              ? kSkyBlueColor.withValues(alpha: 0.6)
+                              : kSkyBlueColor,
+                      borderRadius: BorderRadius.circular(12),
+                      onTap:
+                          controller.isLoading.value
+                              ? null
+                              : () {
+                                final text = inputController.text.trim();
+                                if (text.isNotEmpty) {
+                                  controller.sendMessage(text);
+                                  controller.clearChat();
+                                }
+                              },
+                      child:
+                          controller.isLoading.value
+                              ? const SizedBox(
+                                width: 20,
+                                height: 20,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    kWhite,
+                                  ),
+                                ),
+                              )
+                              : const Text(
+                                'Generate',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: kWhite,
+                                ),
+                              ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Chat
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.all(kBodyHp),
+                padding: const EdgeInsets.all(12),
+                decoration: roundedDecorationWithShadow.copyWith(
+                  border: Border.all(color: greyColor.withValues(alpha: 0.3)),
+                ),
                 child: Obx(() {
-                  if (controller.chatHistory.isNotEmpty) {
-                    scrollToBottom();
+                  if (controller.chatHistory.isEmpty) {
+                    return Center(
+                      child: Image.asset(
+                        'assets/images/chatbot.png',
+                        color: kSkyBlueColor,
+                        width: MediaQuery.of(context).size.width * 0.3,
+                      ),
+                    );
                   }
+                  scrollToBottom();
                   return ListView.builder(
                     controller: scrollController,
                     padding: const EdgeInsets.all(8.0),
-                    itemCount: controller.chatHistory.length + (controller.isLoading.value ? 1 : 0),
+                    itemCount:
+                        controller.chatHistory.length +
+                        (controller.isLoading.value ? 1 : 0),
                     itemBuilder: (context, index) {
-                      if (index == controller.chatHistory.length && controller.isLoading.value) {
+                      if (index == controller.chatHistory.length &&
+                          controller.isLoading.value) {
                         return const Padding(
                           padding: EdgeInsets.all(16.0),
                           child: Row(
@@ -117,46 +313,80 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                           ),
                         );
                       }
-                      final msg = controller.chatHistory[index];
-                      final isUser = msg['role'] == 'user';
+                      final response = controller.chatHistory[index];
+                      final content = response['content']!;
+                      final isUser = response['role'] == 'user';
+                      // Only show AI responses, not user messages
+                      if (isUser) return const SizedBox.shrink();
                       return Container(
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         child: Row(
-                          mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (!isUser) ...[
-                              CircleAvatar(
-                                radius: 16,
-                                backgroundColor: greyColor.withValues(alpha: 0.2),
-                                child: const Icon(Icons.smart_toy, size: 16),
-                              ),
-                              const SizedBox(width: 8),
-                            ],
-                            Flexible(
+                            CircleAvatar(
+                              radius: 16,
+                              backgroundColor: greyColor.withValues(alpha: 0.2),
+                              child: const Icon(Icons.smart_toy, size: 16),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                decoration: BoxDecoration(
-                                  color: isUser ? kSkyBlueColor : greyColor.withValues(alpha: 0.2),
-                                  borderRadius: BorderRadius.circular(18),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 12,
                                 ),
-                                child: Text(
-                                  msg['content']!,
-                                  style: TextStyle(
-                                    color: isUser ? kWhite : kBlack,
-                                    fontSize: 16,
+                                decoration: roundedDecoration.copyWith(
+                                  color: greyColor.withValues(alpha: 0.1),
+                                  border: Border.all(
+                                    color: greyColor.withValues(alpha: 0.2),
+                                    width: 1,
                                   ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      content,
+                                      style: context.textTheme.bodyMedium,
+                                    ),
+                                    const SizedBox(height: 12),
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: ElongatedButton(
+                                        height: 32,
+                                        width: 80,
+                                        onTap: () => _copyToClipboard(content),
+                                        color: kSkyBlueColor.withValues(
+                                          alpha: 0.1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(20),
+                                        child: const Row(
+                                          mainAxisSize: MainAxisSize.min,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(
+                                              Icons.copy,
+                                              size: 14,
+                                              color: kSkyBlueColor,
+                                            ),
+                                            SizedBox(width: 4),
+                                            Text(
+                                              'Copy',
+                                              style: TextStyle(
+                                                color: kSkyBlueColor,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            if (isUser) ...[
-                              const SizedBox(width: 8),
-                              CircleAvatar(
-                                radius: 16,
-                                backgroundColor: kSkyBlueColor,
-                                child: const Icon(Icons.person, size: 16, color: kWhite),
-                              ),
-                            ],
                           ],
                         ),
                       );
@@ -164,67 +394,9 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                   );
                 }),
               ),
-              Container(
-                padding: const EdgeInsets.all(16.0),
-                decoration: BoxDecoration(
-                  color: kWhite,
-                  boxShadow: [
-                    BoxShadow(
-                      offset: const Offset(0, -2),
-                      blurRadius: 6,
-                      color: kBlack.withValues(alpha: 0.01),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: CustomTextFormField(
-                        hintText: 'Type your message...',
-                        controller: inputController,
-                        onChanged: (value) {
-                          if (value.trim().endsWith('\n')) {
-                            final text = value.trim();
-                            if (text.isNotEmpty) {
-                              controller.sendMessage(text);
-                              inputController.clear();
-                            }
-                          }
-                        },
-                        keyboardType: TextInputType.multiline,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Obx(() => CircleAvatar(
-                      backgroundColor: kSkyBlueColor,
-                      child: IconButton(
-                        icon: controller.isLoading.value
-                            ? const SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(kWhite),
-                          ),
-                        )
-                            : const Icon(Icons.send, color: kWhite),
-                        onPressed: controller.isLoading.value
-                            ? null
-                            : () {
-                          final text = inputController.text.trim();
-                          if (text.isNotEmpty) {
-                            controller.sendMessage(text);
-                            inputController.clear();
-                          }
-                        },
-                      ),
-                    )),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
+            ),
+          ],
+        ),
       ),
     );
   }

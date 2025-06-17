@@ -14,7 +14,7 @@ class BackIconButton extends StatelessWidget {
         Navigator.pop(context);
       },
       child: Transform.translate(
-        offset: const Offset (6, 0),
+        offset: const Offset(6, 0),
         child: Padding(
           padding: kAppBarPadding,
           child: Container(
@@ -99,6 +99,34 @@ class CardIcon extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Center(
         child: Image.asset(icon, height: 40, width: 40, fit: BoxFit.contain),
+      ),
+    );
+  }
+}
+
+class IconActionButton extends StatelessWidget {
+  final VoidCallback onTap;
+  final IconData icon;
+  final Color color;
+  final double size;
+  final EdgeInsetsGeometry padding;
+
+  const IconActionButton({
+    super.key,
+    required this.onTap,
+    required this.icon,
+    required this.color,
+    this.size = 24,
+    this.padding = const EdgeInsets.all(8),
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: padding,
+        child: Icon(icon, color: color, size: size),
       ),
     );
   }
