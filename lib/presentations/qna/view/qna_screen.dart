@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/long_icon_text_button.dart';
 
@@ -15,9 +16,10 @@ class QnaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final qnaController = Get.put(QnaController());
     final topic = (Get.arguments as Map<String, dynamic>)['topic'] ?? '';
-
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('Qna');
     return Scaffold(
-      appBar: CustomAppBar(subtitle: 'Learn - $topic'),
+      appBar: CustomAppBar(subtitle: 'Topic - $topic'),
       body: Obx(() {
         if (qnaController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

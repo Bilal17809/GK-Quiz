@@ -1,6 +1,7 @@
 import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:template/core/local_storage/shared_preferences_storage.dart';
 import 'package:template/core/routes/routes.dart';
 import 'package:template/core/routes/routes_name.dart';
@@ -12,15 +13,18 @@ import 'package:template/presentations/quiz_levels/controller/quiz_result_contro
 import 'package:toastification/toastification.dart';
 
 import '/core/theme/app_theme.dart';
+import 'core/ad_controllers/interstitial_ad_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  MobileAds.instance.initialize();
   await Get.putAsync(() => SharedPreferencesService().init());
   Get.put(QuizController());
   Get.put(QuizResultController());
   Get.put(CountryLevelsController());
   Get.put(AiQuizController());
   Get.put(SpeechController());
+  Get.put(InterstitialAdController());
 
   runApp(
     DevicePreview(

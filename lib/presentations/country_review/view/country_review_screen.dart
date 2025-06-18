@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/presentations/country_review/controller/country_review_controller.dart';
 
 import '../../../core/models/questions_data.dart';
@@ -11,6 +12,8 @@ class CountryReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('CountryReview');
     final CountryReviewController countryReviewController = Get.put(
       CountryReviewController(),
       permanent: false,

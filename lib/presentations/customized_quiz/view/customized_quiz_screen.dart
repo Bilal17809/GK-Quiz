@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/presentations/customized_quiz/controller/cutomized_quiz_controller.dart';
 
@@ -11,6 +12,8 @@ class CustomizedQuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('CustomQuiz');
     final customizedQuizController = Get.put(CustomizedQuizController());
     final args = Get.arguments as Map<String, dynamic>;
     final topic = args['topic'] ?? '';

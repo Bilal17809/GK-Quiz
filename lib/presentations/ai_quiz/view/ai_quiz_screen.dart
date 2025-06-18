@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
 import 'package:template/presentations/ai_quiz/view/speech_dialog.dart';
+import '../../../core/ad_controllers/banner_ad/view/banner_ad.dart';
 import '../../../core/common_widgets/common_text_field.dart';
 import '../../../core/common_widgets/elongated_button.dart';
 import '../../../core/common_widgets/icon_buttons.dart';
@@ -79,6 +82,8 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('AiQuizScreen');
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: CustomAppBar(subtitle: 'AI Chat'),
@@ -397,6 +402,10 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: BannerAdWidget(adSize: AdSize.banner),
       ),
     );
   }

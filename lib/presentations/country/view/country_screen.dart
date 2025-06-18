@@ -2,13 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/country/controller/country_controller.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
+import '../../../core/ad_controllers/banner_ad/view/banner_ad.dart';
 import '../../../core/common_widgets/country_grid.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
@@ -47,8 +50,10 @@ class _CountryScreenState extends State<CountryScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('CountryScreen');
     return Scaffold(
-      appBar: CustomAppBar(subtitle: 'Country Quiz'),
+      appBar: CustomAppBar(subtitle: 'Global Challenge'),
       body: SafeArea(
         child: Stack(
           children: [
@@ -212,6 +217,10 @@ class _CountryScreenState extends State<CountryScreen> {
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: BannerAdWidget(adSize: AdSize.banner),
       ),
     );
   }
