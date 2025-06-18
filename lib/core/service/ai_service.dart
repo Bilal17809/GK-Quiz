@@ -5,7 +5,7 @@ class AiService {
   final String _apiUrl = 'https://openrouter.ai/api/v1/chat/completions';
   final String _model = 'deepseek/deepseek-r1-0528-qwen3-8b:free';
   final String _apiKey =
-      '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';
+      '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';
 
   Future<String> sendMessage(List<Map<String, String>> messages) async {
     try {

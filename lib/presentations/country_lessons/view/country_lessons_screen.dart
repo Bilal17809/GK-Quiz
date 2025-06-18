@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/country_grid.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
@@ -12,59 +13,60 @@ import '../../country/controller/country_controller.dart';
 class CountryLessonsScreen extends StatelessWidget {
   const CountryLessonsScreen({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
     final CountryController countryController = Get.put(CountryController());
-
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('WorldFacts');
     return Scaffold(
-      appBar: CustomAppBar(subtitle: 'Country Lessons'),
-      body: SafeArea(child: Stack(
-        children: [
-          Obx(() {
-            return Stack(
-              children: [
-                Positioned(
-                  top: 5,
-                  left: -countryController.shift.value,
-                  child: Image.asset(
-                    'assets/images/world_map.png',
-                    color: kRed.withValues(alpha: 0.5),
-                    width: countryController.imageWidth,
-                    fit: BoxFit.cover,
+      appBar: CustomAppBar(subtitle: 'World Facts'),
+      body: SafeArea(
+        child: Stack(
+          children: [
+            Obx(() {
+              return Stack(
+                children: [
+                  Positioned(
+                    top: 5,
+                    left: -countryController.shift.value,
+                    child: Image.asset(
+                      'assets/images/world_map.png',
+                      color: kRed.withValues(alpha: 0.5),
+                      width: countryController.imageWidth,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                Positioned(
-                  top: 5,
-                  left:
-                  countryController.imageWidth -
-                      countryController.shift.value,
-                  child: Image.asset(
-                    'assets/images/world_map.png',
-                    color: kRed.withValues(alpha: 0.5),
-                    width: countryController.imageWidth,
-                    fit: BoxFit.cover,
+                  Positioned(
+                    top: 5,
+                    left:
+                        countryController.imageWidth -
+                        countryController.shift.value,
+                    child: Image.asset(
+                      'assets/images/world_map.png',
+                      color: kRed.withValues(alpha: 0.5),
+                      width: countryController.imageWidth,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-              ],
-            );
-          }),
+                ],
+              );
+            }),
 
-          GridView.builder(
+            GridView.builder(
               padding: kGridPadding,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
                 childAspectRatio: 1 / 1,
               ),
               itemCount: countryIcons.length,
-              itemBuilder: (context, index){
+              itemBuilder: (context, index) {
                 final icon = countryIcons[index % countryIcons.length];
                 final topic = countryTexts[index % countryTexts.length];
 
                 return InkWell(
-                  onTap: (){
+                  onTap: () {
                     Get.toNamed(
                       RoutesName.countryQnaScreen,
                       arguments: {'topic': topic, 'index': index},
@@ -106,12 +108,12 @@ class CountryLessonsScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                 );
-
-              }),
-        ],
-      ))
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

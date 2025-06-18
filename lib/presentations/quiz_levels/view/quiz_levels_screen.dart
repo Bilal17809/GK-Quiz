@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
@@ -16,10 +17,11 @@ class QuizLevelsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('QuizLevels');
     final arguments = Get.arguments as Map<String, dynamic>;
     final topic = arguments['topic'];
-    final topicIndex =
-        arguments['index']; // This is the grid index from practice screen
+    final topicIndex = arguments['index'];
     final QuizController controller = Get.put(QuizController());
     Get.put(QuizResultController());
 

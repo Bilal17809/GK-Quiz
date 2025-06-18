@@ -1,28 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class Routes {
-//   static Route<dynamic> generateRoute(RouteSettings settings) {
-//     // final arguments = settings.arguments;
-
-//     switch (settings.name) {
-//       // case RoutesName.splashPage:
-//       //   return MaterialPageRoute(builder: (_) => const SplashPage());
-//       // case RoutesName.homePage:
-//       //   return MaterialPageRoute(builder: (_) => const HomePage());
-//       // case RoutesName.aiDictionaryPage:
-//       //   return MaterialPageRoute(builder: (_) => const AiDictionaryPage());
-//       default:
-//         return MaterialPageRoute(
-//           builder: (_) => Scaffold(
-//             body: Center(
-//               child: Text('No route defined for "${settings.name}"'),
-//             ),
-//           ),
-//         );
-//     }
-//   }
-// }
-
 import 'package:get/get.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/presentations/ai_quiz/view/ai_quiz_screen.dart';
@@ -36,7 +11,6 @@ import 'package:template/presentations/country_result/view/country_result_screen
 import 'package:template/presentations/country_review/view/country_review_screen.dart';
 import 'package:template/presentations/customized_quiz/view/customized_quiz_screen.dart';
 import 'package:template/presentations/home/view/home_screen.dart';
-import 'package:template/presentations/lessons/view/lessons_screen.dart';
 import 'package:template/presentations/practice/view/practice_screen.dart';
 import 'package:template/presentations/progress/view/progress_screen.dart';
 import 'package:template/presentations/qna/view/qna_screen.dart';
@@ -45,6 +19,8 @@ import 'package:template/presentations/quiz_levels/view/quiz_levels_screen.dart'
 import 'package:template/presentations/quiz_selection/view/quiz_selection_screen.dart';
 import 'package:template/presentations/result/view/result_screen.dart';
 import 'package:template/presentations/splash/view/splash_screen.dart';
+
+import '../../presentations/learning_hub/view/learning_hub_screen.dart';
 
 class Routes {
   static final routes = [
@@ -61,8 +37,8 @@ class Routes {
       transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
-      name: RoutesName.lessonsScreen,
-      page: () => const LessonsScreen(),
+      name: RoutesName.learningHubScreen,
+      page: () => const LearningHubScreen(),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),

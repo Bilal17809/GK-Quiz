@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/text_icon_button.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
@@ -19,7 +20,8 @@ class ResultScreen extends StatelessWidget {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
     bool isCustomizedQuiz = Get.isRegistered<CustomizedQuizController>();
-
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('Res');
     final arguments = Get.arguments as Map<String, dynamic>?;
     final bool fromCustomQuiz = arguments?['fromCustomQuiz'] as bool? ?? false;
 
@@ -76,10 +78,14 @@ class ResultScreen extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          if (isCustomizedQuiz){
-            Get.until((route) => route.settings.name == RoutesName.quizSelectionScreen);
+          if (isCustomizedQuiz) {
+            Get.until(
+              (route) => route.settings.name == RoutesName.quizSelectionScreen,
+            );
           } else {
-            Get.until((route) => route.settings.name == RoutesName.quizLevelsScreen);
+            Get.until(
+              (route) => route.settings.name == RoutesName.quizLevelsScreen,
+            );
           }
         }
       },
@@ -339,10 +345,19 @@ class ResultScreen extends StatelessWidget {
                                     Expanded(
                                       child: TextIconButton(
                                         onPressed: () {
-                                          if (isCustomizedQuiz){
-                                            Get.until((route) => route.settings.name == RoutesName.quizSelectionScreen);
+                                          if (isCustomizedQuiz) {
+                                            Get.until(
+                                              (route) =>
+                                                  route.settings.name ==
+                                                  RoutesName
+                                                      .quizSelectionScreen,
+                                            );
                                           } else {
-                                            Get.until((route) => route.settings.name == RoutesName.quizLevelsScreen);
+                                            Get.until(
+                                              (route) =>
+                                                  route.settings.name ==
+                                                  RoutesName.quizLevelsScreen,
+                                            );
                                           }
                                         },
                                         text: 'Exit',

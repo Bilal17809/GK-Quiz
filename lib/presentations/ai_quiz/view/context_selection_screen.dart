@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/textform_field.dart';
 import 'package:template/core/common_widgets/elongated_button.dart';
@@ -9,6 +11,7 @@ import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
 import 'package:toastification/toastification.dart';
+import '../../../core/ad_controllers/banner_ad/view/banner_ad.dart';
 import 'ai_quiz_screen.dart';
 
 class ContextSelectionScreen extends StatefulWidget {
@@ -82,9 +85,11 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('ContextSelectionScreen');
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: CustomAppBar(subtitle: 'Set AI Context'),
+      appBar: CustomAppBar(subtitle: 'Smart Quiz'),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(kBodyHp),
@@ -190,10 +195,13 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8),
+        child: BannerAdWidget(adSize: AdSize.banner),
       ),
     );
   }
