@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
@@ -16,11 +17,12 @@ class QuizSelectionScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final quizSelectionController = Get.put(QuizSelectionController());
-
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('QuizSelection');
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: bgColor,
-      appBar: CustomAppBar(subtitle: 'Take a Test'),
+      appBar: CustomAppBar(subtitle: 'Quiz Builder'),
       body: Obx(() {
         if (quizSelectionController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());

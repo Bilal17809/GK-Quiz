@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
@@ -43,8 +44,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('QuizScreen');
     return Scaffold(
-      appBar: CustomAppBar(subtitle: 'Practice'),
+      appBar: CustomAppBar(subtitle: 'Quiz'),
       body: SafeArea(
         child: ListView.builder(
           itemCount: practiceController.gridItemCount,

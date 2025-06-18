@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/bottom_nav_bar.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/progress_circle.dart';
@@ -45,6 +46,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     final mobileWidth = MediaQuery.of(context).size.width;
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('Progress');
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
@@ -53,16 +56,16 @@ class _ProgressScreenState extends State<ProgressScreen> {
         }
       },
       child: Scaffold(
-        appBar: CustomAppBar(subtitle: 'Progress', ),
+        appBar: CustomAppBar(subtitle: 'Progress'),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.all(kBodyHp),
             child: Column(
               children: [
-                //Learn Progress
+                // Your Learning Journey
                 SectionCard(
                   image: AssetImage('assets/images/progress_meter.png'),
-                  title: 'Learn Progress',
+                  title: 'Your Learning Journey',
                   child: Column(
                     children: [
                       SizedBox(height: 12),
@@ -115,10 +118,10 @@ class _ProgressScreenState extends State<ProgressScreen> {
                   ),
                 ),
                 SizedBox(height: 12),
-                //Overall Test
+                //Quiz Insights
                 SectionCard(
                   image: AssetImage('assets/images/progress_result.png'),
-                  title: 'Overall Test',
+                  title: 'Quiz Insights',
                   child: Column(
                     children: [
                       SizedBox(height: 12),
@@ -130,7 +133,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                               icon: Icons.file_copy_rounded,
                               label: 'Attempt/Total',
                               value: progressController.totalAttempted.value,
-                              totalValue: progressController.totalAvailable.value,
+                              totalValue:
+                                  progressController.totalAvailable.value,
                             ),
                           ),
                           SizedBox(width: mobileWidth * 0.1),
@@ -153,7 +157,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           Obx(
                             () => CircularProgressWidget(
                               label: 'Weak',
-                              percentage: progressController.weakPercentage.value,
+                              percentage:
+                                  progressController.weakPercentage.value,
                               progressColor: kRed,
                             ),
                           ),
@@ -161,7 +166,8 @@ class _ProgressScreenState extends State<ProgressScreen> {
                           Obx(
                             () => CircularProgressWidget(
                               label: 'Good',
-                              percentage: progressController.goodPercentage.value,
+                              percentage:
+                                  progressController.goodPercentage.value,
                               progressColor: kTealGreen1,
                             ),
                           ),

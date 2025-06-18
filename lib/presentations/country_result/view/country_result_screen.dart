@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/common_widgets.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/routes/routes_name.dart';
@@ -19,9 +20,9 @@ class CountryResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
-
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('CountryResult');
     final arguments = Get.arguments as Map<String, dynamic>?;
-
     if (arguments == null) {
       debugPrint('ERROR: No arguments passed to Country Result Screen');
 
@@ -63,7 +64,9 @@ class CountryResultScreen extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
         if (!didPop) {
-          Get.until((route) => route.settings.name == RoutesName.countryLevelsScreen);
+          Get.until(
+            (route) => route.settings.name == RoutesName.countryLevelsScreen,
+          );
         }
       },
       child: Scaffold(
@@ -129,7 +132,8 @@ class CountryResultScreen extends StatelessWidget {
                       Positioned.fill(
                         child: CircularStepProgressIndicator(
                           totalSteps: 100,
-                          currentStep: countryResultController.currentStep.value,
+                          currentStep:
+                              countryResultController.currentStep.value,
                           stepSize: mobileWidth * 0.02,
                           selectedColor: kTealGreen1.withValues(alpha: 0.9),
                           unselectedColor: greyBorderColor.withAlpha(25),
@@ -402,7 +406,11 @@ class CountryResultScreen extends StatelessWidget {
                             width: mobileWidth * 0.15,
                             height: mobileWidth * 0.15,
                             onTap: () async {
-                              Get.until((route) => route.settings.name == RoutesName.countryLevelsScreen);
+                              Get.until(
+                                (route) =>
+                                    route.settings.name ==
+                                    RoutesName.countryLevelsScreen,
+                              );
                             },
                             backgroundColor: kRed,
                             child: Icon(Icons.exit_to_app, color: kWhite),

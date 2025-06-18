@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/presentations/country_quiz/controller/country_quiz_controller.dart';
 
 import '../../../core/common_audios/quiz_sounds.dart';
@@ -92,7 +93,8 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final mobileSize = MediaQuery.of(context).size;
-
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('CountryQuizScreen');
     return Scaffold(
       body: Obx(() {
         if (countryQuizController.isLoadingQuestions.value) {

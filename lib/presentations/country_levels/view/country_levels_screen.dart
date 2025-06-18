@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/presentations/country_levels/widgets/country_levels_card.dart';
@@ -15,10 +16,11 @@ class CountryLevelsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('CountryLevels');
     final arguments = Get.arguments as Map<String, dynamic>;
     final topic = arguments['topic'];
-    final topicIndex =
-        arguments['index'];
+    final topicIndex = arguments['index'];
     final QuizController quizController = Get.put(QuizController());
     Get.put(CountryLevelsController());
 

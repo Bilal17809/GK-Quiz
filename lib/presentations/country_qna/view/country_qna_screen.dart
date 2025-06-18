@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/presentations/country_qna/controller/country_qna_controller.dart';
 
@@ -15,9 +16,10 @@ class CountryQnaScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final countryQnaController = Get.put(CountryQnaController());
     final topic = (Get.arguments as Map<String, dynamic>)['topic'] ?? '';
-
+    final adManager = Get.find<InterstitialAdController>();
+    adManager.maybeShowAdForScreen('CountryQna');
     return Scaffold(
-      appBar: CustomAppBar(subtitle: 'Learn - $topic'),
+      appBar: CustomAppBar(subtitle: 'Topic - $topic'),
       body: Obx(() {
         if (countryQnaController.isLoading.value) {
           return const Center(child: CircularProgressIndicator());
@@ -80,9 +82,8 @@ class CountryQnaScreen extends StatelessWidget {
                     const SizedBox(height: 12),
 
                     Obx(() {
-                      final isAnswerRevealed = countryQnaController.isAnswerRevealed(
-                        index,
-                      );
+                      final isAnswerRevealed = countryQnaController
+                          .isAnswerRevealed(index);
 
                       if (isAnswerRevealed) {
                         return Container(
@@ -103,7 +104,9 @@ class CountryQnaScreen extends StatelessWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                countryQnaController.getCorrectOptionText(question),
+                                countryQnaController.getCorrectOptionText(
+                                  question,
+                                ),
                                 style: context.textTheme.bodyMedium?.copyWith(
                                   color: kBlack,
                                 ),
@@ -132,7 +135,8 @@ class CountryQnaScreen extends StatelessWidget {
                                 color: kWhite,
                               ),
                               onPressed:
-                                  () => countryQnaController.revealAnswer(index),
+                                  () =>
+                                      countryQnaController.revealAnswer(index),
                               text: 'Answer',
                               icon: Icon(Icons.remove_red_eye, size: 16),
                               color: kRed.withValues(alpha: 0.7),

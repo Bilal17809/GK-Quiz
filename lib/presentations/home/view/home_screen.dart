@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:template/core/common_widgets/big_icon_text_button.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/long_icon_text_button.dart';
@@ -9,9 +10,10 @@ import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/navigation_drawer/view/navigation_drawer.dart';
-
+import '../../../core/ad_controllers/banner_ad/view/banner_ad.dart';
 import '../../../core/common_widgets/bottom_nav_bar.dart';
 import '../../../core/common_widgets/round_image.dart';
+import '../../example_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -30,7 +32,7 @@ class HomeScreen extends StatelessWidget {
       child: Scaffold(
         drawer: const NavigationDrawerWidget(),
         appBar: CustomAppBar(
-          subtitle: 'Enrich your knowledge',
+          subtitle: 'Level Up Your Learning',
           useBackButton: false,
           actions: [
             Padding(
@@ -59,9 +61,9 @@ class HomeScreen extends StatelessWidget {
                         width: mobileWidth * 0.40,
                         color: kBlue.withValues(alpha: 0.9),
                         onPressed: () {
-                          Get.toNamed(RoutesName.lessonsScreen);
+                          Get.toNamed(RoutesName.learningHubScreen);
                         },
-                        text: 'Lesson to Study',
+                        text: 'Learning Hub',
                         icon: Container(
                           decoration: roundedDecoration.copyWith(
                             color: kWhite.withValues(alpha: 0.2),
@@ -86,7 +88,7 @@ class HomeScreen extends StatelessWidget {
                         onPressed: () {
                           Get.toNamed(RoutesName.practiceScreen);
                         },
-                        text: 'Practice',
+                        text: 'Quiz',
                         icon: Container(
                           decoration: roundedDecoration.copyWith(
                             color: kWhite.withValues(alpha: 0.2),
@@ -104,15 +106,15 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
+
                 LongIconTextButton(
                   height: mobileWidth * 0.30,
-
                   color: kYellow,
                   onPressed: () {
                     Get.toNamed(RoutesName.quizSelectionScreen);
                   },
-                  text: 'Take a Test',
+                  text: 'Quiz Builder',
                   icon: Container(
                     decoration: roundedDecoration.copyWith(
                       color: kWhite.withValues(alpha: 0.2),
@@ -127,33 +129,33 @@ class HomeScreen extends StatelessWidget {
                   ),
                   style: context.textTheme.titleMedium?.copyWith(color: kWhite),
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
                 Row(
                   children: [
                     Expanded(
-                        child: BigIconTextButton(
-                          height: mobileWidth * 0.40,
-                          width: mobileWidth * 0.40,
-                          color: kRed.withValues(alpha: 0.7),
-                          onPressed: () {
-                            Get.toNamed(RoutesName.countryLessonsScreen);
-                          },
-                          text: 'Country Lessons',
-                          icon: Container(
-                            decoration: roundedDecoration.copyWith(
-                              color: kWhite.withValues(alpha: 0.2),
-                            ),
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.asset(
-                              'assets/images/globe.png',
-                              color: kWhite,
-                              width: mobileWidth * 0.1,
-                              height: mobileWidth * 0.1,
-                            ),
+                      child: BigIconTextButton(
+                        height: mobileWidth * 0.40,
+                        width: mobileWidth * 0.40,
+                        color: kRed.withValues(alpha: 0.7),
+                        onPressed: () {
+                          Get.toNamed(RoutesName.countryLessonsScreen);
+                        },
+                        text: 'World Facts',
+                        icon: Container(
+                          decoration: roundedDecoration.copyWith(
+                            color: kWhite.withValues(alpha: 0.2),
                           ),
-                          style: context.textTheme.titleMedium,
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            'assets/images/globe.png',
+                            color: kWhite,
+                            width: mobileWidth * 0.1,
+                            height: mobileWidth * 0.1,
+                          ),
                         ),
+                        style: context.textTheme.titleMedium,
                       ),
+                    ),
                     SizedBox(width: mobileWidth * 0.03),
                     Expanded(
                       child: BigIconTextButton(
@@ -163,7 +165,7 @@ class HomeScreen extends StatelessWidget {
                         onPressed: () {
                           Get.toNamed(RoutesName.countryScreen);
                         },
-                        text: 'Country Quiz',
+                        text: 'Global Challenge',
                         icon: Container(
                           decoration: roundedDecoration.copyWith(
                             color: kWhite.withValues(alpha: 0.2),
@@ -179,38 +181,42 @@ class HomeScreen extends StatelessWidget {
                         style: context.textTheme.titleMedium,
                       ),
                     ),
-
                   ],
                 ),
-                SizedBox(height: 12),
+                const SizedBox(height: 12),
+
                 LongIconTextButton(
                   height: mobileWidth * 0.3,
-
                   color: kMediumGreen2.withValues(alpha: 0.9),
                   onPressed: () {
                     Get.toNamed(RoutesName.contextSelectionScreen);
                   },
-                  text: 'AI Quiz',
+                  text: 'Smart Quiz',
                   icon: Container(
                     decoration: roundedDecoration.copyWith(
                       color: kWhite.withValues(alpha: 0.2),
                     ),
                     padding: const EdgeInsets.all(8.0),
                     child: Image.asset(
-                              'assets/images/ai-quiz.png',
-                              color: kWhite,
-                              width: mobileWidth * 0.1,
-                              height: mobileWidth * 0.1,
-                            ),
-                          ),
+                      'assets/images/ai-quiz.png',
+                      color: kWhite,
+                      width: mobileWidth * 0.1,
+                      height: mobileWidth * 0.1,
+                    ),
+                  ),
                   style: context.textTheme.titleMedium?.copyWith(color: kWhite),
                 ),
+                const SizedBox(height: 12),
+                ElevatedButton(onPressed:(){
+                  Get.to(SpeechInputScreen());
+                }, child:Text("Gooogle dialog")),
+                const SizedBox(height: 12),
+                const BannerAdWidget(adSize: AdSize.banner),
               ],
             ),
           ),
         ),
-        bottomNavigationBar: BottomNavBar(currentIndex: 0),
-
+        bottomNavigationBar: const BottomNavBar(currentIndex: 0),
       ),
     );
   }
