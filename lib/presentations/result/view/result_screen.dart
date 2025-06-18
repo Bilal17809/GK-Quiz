@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
+import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/core/common_widgets/text_icon_button.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
@@ -10,6 +11,8 @@ import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/result/controller/result_controller.dart';
 
+import '../../../core/ads/banner_ad/view/banner_ad.dart';
+import '../../../core/constant/constant.dart';
 import '../../customized_quiz/controller/cutomized_quiz_controller.dart';
 
 class ResultScreen extends StatelessWidget {
@@ -20,24 +23,24 @@ class ResultScreen extends StatelessWidget {
     final mobileHeight = MediaQuery.of(context).size.height;
     final mobileWidth = MediaQuery.of(context).size.width;
     bool isCustomizedQuiz = Get.isRegistered<CustomizedQuizController>();
-    final adManager = Get.find<InterstitialAdController>();
-    adManager.maybeShowAdForScreen('Res');
     final arguments = Get.arguments as Map<String, dynamic>?;
     final bool fromCustomQuiz = arguments?['fromCustomQuiz'] as bool? ?? false;
 
     if (arguments == null) {
       debugPrint('ERROR: No arguments passed to ResultScreen');
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Error: No quiz data found'),
-              ElevatedButton(
-                onPressed: () => Get.offAllNamed(RoutesName.homeScreen),
-                child: Text('Go Home'),
-              ),
-            ],
+      return InterstitialAdWidget(
+        child: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Error: No quiz data found'),
+                ElevatedButton(
+                  onPressed: () => Get.offAllNamed(RoutesName.homeScreen),
+                  child: Text('Go Home'),
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -446,6 +449,10 @@ class ResultScreen extends StatelessWidget {
               ],
             ),
           ),
+        ),
+        bottomNavigationBar: const Padding(
+          padding: kBottomNav,
+          child: BannerAdWidget(adSize: AdSize.banner),
         ),
       ),
     );

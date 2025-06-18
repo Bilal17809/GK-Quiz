@@ -1,102 +1,50 @@
-import 'package:get/get.dart';
-import 'package:speech_to_text/speech_to_text.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 class SpeechController extends GetxController {
-  final SpeechToText _speech = SpeechToText();
-  var isListening = false.obs;
-  var isAvailable = false.obs;
-  var recognizedText = ''.obs;
+  RxBool isListening = false.obs;
+  RxString recognizedText = "".obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    initSpeech();
-  }
+  TextEditingController controller = TextEditingController();
 
   @override
   void onClose() {
-    if (isListening.value) {
-      stopListening();
-    }
+    controller.dispose();
     super.onClose();
   }
 
-  Future<void> initSpeech() async {
+  static const MethodChannel _methodChannel = MethodChannel(
+    'com.teramob.gk_quiz',
+  );
+
+  Future<void> startSpeechToText({String languageISO = 'en'}) async {
+    print("Starting speech recognition for language: $languageISO");
     try {
-      isAvailable.value = await _speech.initialize(
-        onError: (error) {
-          print('Speech recognition error: $error');
-          isListening.value = false;
-        },
-        onStatus: (status) {
-          print('Speech recognition status: $status');
-          if (status == 'done' || status == 'notListening') {
-            isListening.value = false;
-          }
-        },
-      );
-    } catch (e) {
-      print('Failed to initialize speech recognition: $e');
-      isAvailable.value = false;
+      isListening.value = true;
+      final result = await _methodChannel.invokeMethod('getTextFromSpeech', {
+        'languageISO': languageISO,
+      });
+
+      if (result != null && result.isNotEmpty) {
+        controller.text = result;
+        recognizedText.value = result;
+      }
+    } on PlatformException catch (e) {
+      print("Error in Speech-to-Text: ${e.message}");
+      recognizedText.value = "Speech recognition failed: ${e.message}";
+    } finally {
+      isListening.value = false;
     }
   }
 
-  void startListening() {
-    if (!isAvailable.value) return;
-
-    isListening.value = true;
-    recognizedText.value = '';
-
-    _speech.listen(
-      onResult: (result) {
-        if (result.finalResult && result.recognizedWords.isNotEmpty) {
-          recognizedText.value = result.recognizedWords;
-          stopListening();
-        }
-      },
-      listenFor: const Duration(seconds: 30),
-      pauseFor: const Duration(seconds: 3),
-      localeId: 'en_US',
-      listenOptions: SpeechListenOptions(partialResults: false),
-    );
+  void clearData() {
+    controller.clear();
+    recognizedText.value = "";
   }
 
-  void stopListening() {
-    if (_speech.isListening) {
-      _speech.stop();
-    }
-    isListening.value = false;
-  }
-
-  void toggleListening() {
-    if (isListening.value) {
-      stopListening();
-    } else {
-      startListening();
-    }
-  }
-
-  void startListeningWithDialog() {
-    if (!isAvailable.value) {
-      Get.snackbar("Speech Unavailable", "Speech recognition is not ready.");
-      return;
-    }
-
-    isListening.value = true;
-    recognizedText.value = '';
-
-    _speech.listen(
-      onResult: (result) {
-        if (result.finalResult && result.recognizedWords.isNotEmpty) {
-          // Directly use the recognized words without translation
-          recognizedText.value = result.recognizedWords;
-          stopListening();
-        }
-      },
-      listenFor: const Duration(seconds: 30),
-      pauseFor: const Duration(seconds: 3),
-      localeId: 'en_US',
-      listenOptions: SpeechListenOptions(partialResults: false),
-    );
+  String getRecognizedText() {
+    return recognizedText.value;
   }
 }

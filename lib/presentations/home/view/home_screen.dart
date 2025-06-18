@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:template/core/common_widgets/big_icon_text_button.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/long_icon_text_button.dart';
@@ -10,10 +9,8 @@ import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/navigation_drawer/view/navigation_drawer.dart';
-import '../../../core/ad_controllers/banner_ad/view/banner_ad.dart';
 import '../../../core/common_widgets/bottom_nav_bar.dart';
 import '../../../core/common_widgets/round_image.dart';
-import '../../example_page.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -207,11 +204,6 @@ class HomeScreen extends StatelessWidget {
                   style: context.textTheme.titleMedium?.copyWith(color: kWhite),
                 ),
                 const SizedBox(height: 12),
-                ElevatedButton(onPressed:(){
-                  Get.to(SpeechInputScreen());
-                }, child:Text("Gooogle dialog")),
-                const SizedBox(height: 12),
-                const BannerAdWidget(adSize: AdSize.banner),
               ],
             ),
           ),

@@ -12,10 +12,13 @@ class BannerAdWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Inject controller with passed adSize
+    // Generate unique ID based on current route and ad size
+    final String currentRoute = Get.currentRoute;
+    final String uniqueId = '${currentRoute}_${adSize.width}x${adSize.height}';
+
     final BannerAdController controller = Get.put(
-      BannerAdController(adSize: adSize),
-      tag: adSize.toString(), // ensures multiple sizes don't conflict
+      BannerAdController(adSize: adSize, uniqueId: uniqueId),
+      tag: uniqueId,
       permanent: false,
     );
 

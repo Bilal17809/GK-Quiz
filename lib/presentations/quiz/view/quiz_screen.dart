@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
+import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
@@ -11,22 +11,22 @@ class QuizScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final adManager = Get.find<InterstitialAdController>();
-    adManager.maybeShowAdForScreen('Quiz');
     final arguments = Get.arguments as Map<String, dynamic>?;
 
     if (arguments == null) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Error: Missing quiz parameters'),
-              ElevatedButton(
-                onPressed: () => Get.back(),
-                child: Text('Go Back'),
-              ),
-            ],
+      return InterstitialAdWidget(
+        child: Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Error: Missing quiz parameters'),
+                ElevatedButton(
+                  onPressed: () => Get.back(),
+                  child: Text('Go Back'),
+                ),
+              ],
+            ),
           ),
         ),
       );

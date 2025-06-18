@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/presentations/country_quiz/controller/country_quiz_controller.dart';
 
+import '../../../core/ads/banner_ad/view/banner_ad.dart';
 import '../../../core/common_audios/quiz_sounds.dart';
+import '../../../core/constant/constant.dart';
 import '../../../core/routes/routes_name.dart';
 import 'country_quiz_page.dart';
 
@@ -93,34 +96,38 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final mobileSize = MediaQuery.of(context).size;
-    final adManager = Get.find<InterstitialAdController>();
-    adManager.maybeShowAdForScreen('CountryQuizScreen');
-    return Scaffold(
-      body: Obx(() {
-        if (countryQuizController.isLoadingQuestions.value) {
-          return Center(child: CircularProgressIndicator());
-        }
+    return InterstitialAdWidget(
+      child: Scaffold(
+        body: Obx(() {
+          if (countryQuizController.isLoadingQuestions.value) {
+            return Center(child: CircularProgressIndicator());
+          }
 
-        return PageView.builder(
-          controller: countryQuizController.questionsPageController,
-          physics: NeverScrollableScrollPhysics(), // Disable manual scrolling
-          onPageChanged: countryQuizController.onPageChanged,
-          itemCount: countryQuizController.questionsList.length,
-          itemBuilder: (context, pageIndex) {
-            final question = countryQuizController.questionsList[pageIndex];
-            return CountryQuizPage(
-              question: question,
-              currentIndex: pageIndex,
-              totalQuestions: countryQuizController.questionsList.length,
-              controller: countryQuizController,
-              mobileSize: mobileSize,
-              onAnswerSelected: _handleAnswerSelection,
-              topicIndex: topicIndex,
-              topic: topic,
-            );
-          },
-        );
-      }),
+          return PageView.builder(
+            controller: countryQuizController.questionsPageController,
+            physics: NeverScrollableScrollPhysics(), // Disable manual scrolling
+            onPageChanged: countryQuizController.onPageChanged,
+            itemCount: countryQuizController.questionsList.length,
+            itemBuilder: (context, pageIndex) {
+              final question = countryQuizController.questionsList[pageIndex];
+              return CountryQuizPage(
+                question: question,
+                currentIndex: pageIndex,
+                totalQuestions: countryQuizController.questionsList.length,
+                controller: countryQuizController,
+                mobileSize: mobileSize,
+                onAnswerSelected: _handleAnswerSelection,
+                topicIndex: topicIndex,
+                topic: topic,
+              );
+            },
+          );
+        }),
+        bottomNavigationBar: const Padding(
+          padding: kBottomNav,
+          child: BannerAdWidget(adSize: AdSize.banner),
+        ),
+      ),
     );
   }
 }

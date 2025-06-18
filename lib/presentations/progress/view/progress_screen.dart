@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
 import 'package:template/core/common_widgets/bottom_nav_bar.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/progress_circle.dart';
@@ -46,8 +45,6 @@ class _ProgressScreenState extends State<ProgressScreen> {
   @override
   Widget build(BuildContext context) {
     final mobileWidth = MediaQuery.of(context).size.width;
-    final adManager = Get.find<InterstitialAdController>();
-    adManager.maybeShowAdForScreen('Progress');
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {

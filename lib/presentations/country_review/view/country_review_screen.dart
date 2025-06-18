@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/ad_controllers/interstitial_ad_controller.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/presentations/country_review/controller/country_review_controller.dart';
 
+import '../../../core/ads/banner_ad/view/banner_ad.dart';
+import '../../../core/constant/constant.dart';
 import '../../../core/models/questions_data.dart';
 import '../../home/view/home_screen.dart';
 import 'country_review_page.dart';
@@ -12,8 +15,6 @@ class CountryReviewScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final adManager = Get.find<InterstitialAdController>();
-    adManager.maybeShowAdForScreen('CountryReview');
     final CountryReviewController countryReviewController = Get.put(
       CountryReviewController(),
       permanent: false,
@@ -33,38 +34,44 @@ class CountryReviewScreen extends StatelessWidget {
 
     final mobileSize = MediaQuery.of(context).size;
 
-    return Scaffold(
-      body: Obx(() {
-        return PageView.builder(
-          controller: countryReviewController.pageController,
-          onPageChanged: (index) {
-            if (index >= countryReviewController.questionsList.length) {
-              Get.offAll(
-                () => const HomeScreen(),
-                transition: Transition.rightToLeft,
-                duration: Duration(milliseconds: 300),
+    return InterstitialAdWidget(
+      child: Scaffold(
+        body: Obx(() {
+          return PageView.builder(
+            controller: countryReviewController.pageController,
+            onPageChanged: (index) {
+              if (index >= countryReviewController.questionsList.length) {
+                Get.offAll(
+                  () => const HomeScreen(),
+                  transition: Transition.rightToLeft,
+                  duration: Duration(milliseconds: 300),
+                );
+                return;
+              }
+              countryReviewController.onPageChanged(index);
+            },
+            itemCount: countryReviewController.questionsList.length + 1,
+            itemBuilder: (context, pageIndex) {
+              if (pageIndex >= countryReviewController.questionsList.length) {
+                return Container();
+              }
+              final question = countryReviewController.questionsList[pageIndex];
+              return CountryReviewPage(
+                question: question,
+                currentIndex: pageIndex,
+                totalQuestions: countryReviewController.questionsList.length,
+                controller: countryReviewController,
+                mobileSize: mobileSize,
+                topic: topic,
               );
-              return;
-            }
-            countryReviewController.onPageChanged(index);
-          },
-          itemCount: countryReviewController.questionsList.length + 1,
-          itemBuilder: (context, pageIndex) {
-            if (pageIndex >= countryReviewController.questionsList.length) {
-              return Container();
-            }
-            final question = countryReviewController.questionsList[pageIndex];
-            return CountryReviewPage(
-              question: question,
-              currentIndex: pageIndex,
-              totalQuestions: countryReviewController.questionsList.length,
-              controller: countryReviewController,
-              mobileSize: mobileSize,
-              topic: topic,
-            );
-          },
-        );
-      }),
+            },
+          );
+        }),
+        bottomNavigationBar: const Padding(
+          padding: kBottomNav,
+          child: BannerAdWidget(adSize: AdSize.banner),
+        ),
+      ),
     );
   }
 }

@@ -13,18 +13,18 @@ import 'package:template/presentations/quiz_levels/controller/quiz_result_contro
 import 'package:toastification/toastification.dart';
 
 import '/core/theme/app_theme.dart';
-import 'core/ad_controllers/interstitial_ad_controller.dart';
+import 'core/ads/global_ads_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
+  Get.put(GlobalAdManager(), permanent: true);
   await Get.putAsync(() => SharedPreferencesService().init());
   Get.put(QuizController());
   Get.put(QuizResultController());
   Get.put(CountryLevelsController());
   Get.put(AiQuizController());
   Get.put(SpeechController());
-  Get.put(InterstitialAdController());
 
   runApp(
     DevicePreview(
