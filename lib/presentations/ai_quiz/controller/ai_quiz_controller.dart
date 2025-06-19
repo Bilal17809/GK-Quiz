@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:toastification/toastification.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
+import '../../../core/routes/routes_name.dart';
 import '../../../core/service/ai_service.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
 
@@ -31,26 +32,11 @@ class AiQuizController extends GetxController {
         Get.back();
       },
       onTapConfirm: () {
-        Get.back();
-        purchasePremium();
+        Get.offNamed(RoutesName.purchaseScreen);
       },
       panaraDialogType: PanaraDialogType.custom,
       color: kSkyBlueColor,
       barrierDismissible: false,
-    );
-  }
-
-  void purchasePremium() {
-    toastification.show(
-      type: ToastificationType.info,
-      title: const Text('Premium Purchase'),
-      description: const Text('Redirecting to premium purchase...'),
-      style: ToastificationStyle.flatColored,
-      autoCloseDuration: const Duration(seconds: 2),
-      primaryColor: kSkyBlueColor,
-      margin: const EdgeInsets.all(8),
-      closeOnClick: true,
-      alignment: Alignment.bottomCenter,
     );
   }
 

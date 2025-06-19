@@ -34,7 +34,7 @@ Future<void> main() async {
 
   runApp(
     DevicePreview(
-      enabled: false, // Set to false before production release
+      enabled: true, // Set to false before production release
       builder: (context) => const MyApp(),
     ),
   );

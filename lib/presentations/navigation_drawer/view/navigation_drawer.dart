@@ -55,77 +55,86 @@ class NavigationDrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        subtitle: 'Enrich your knowledge',
-        useBackButton: false,
-        hideTitle: false,
-        actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
-            child: RoundedButton(
-              onTap: () {},
-              child: Image.asset(
-                'assets/images/no-ads.png',
-                color: kWhite,
-                width: 24,
+      // appBar: CustomAppBar(
+      //   subtitle: 'Enrich your knowledge',
+      //   useBackButton: false,
+      //   hideTitle: false,
+      //   actions: [
+      //     Padding(
+      //       padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
+      //       child: RoundedButton(
+      //         onTap: () {
+      //           Get.toNamed(RoutesName.purchaseScreen);
+      //         },
+      //         child: Image.asset(
+      //           'assets/images/no-ads.png',
+      //           color: kWhite,
+      //           width: 24,
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
+      backgroundColor: Colors.transparent,
+      body: Drawer(
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [skyColor, kBlue],
+                  begin: Alignment.topLeft,
+                  end: Alignment.centerRight,
+                ),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Image.asset('assets/icon.png', height: 60),
+                  Text(
+                    'GK Quiz',
+                    style: context.textTheme.headlineLarge?.copyWith(
+                      color: kWhite,
+                    ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
-      ),
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                decoration: const BoxDecoration(color: kSkyBlueColor),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset('assets/icon.png', height: 60),
-                    Text(
-                      'GK Quiz',
-                      style: context.textTheme.headlineLarge?.copyWith(
-                        color: kWhite,
-                      ),
-                    ),
-                  ],
-                ),
+            DrawerTile(
+              icon: Icons.restart_alt,
+              title: 'Reset App',
+              onTap: _showResetConfirmation,
+            ),
+            DrawerTile(
+              icon: Icons.settings_rounded,
+              title: 'Settings',
+              onTap: () {},
+            ),
+            DrawerTile(
+              icon: Icons.star_rounded,
+              title: 'Rate Us',
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Image.asset(
+                'assets/images/no-ads.png',
+                color: textGreyColor,
+                width: 24,
               ),
-              DrawerTile(
-                icon: Icons.restart_alt,
-                title: 'Reset App',
-                onTap: _showResetConfirmation, // Changed to show dialog first
-              ),
-              DrawerTile(
-                icon: Icons.settings_rounded,
-                title: 'Settings',
-                onTap: () {},
-              ),
-              DrawerTile(
-                icon: Icons.star_rounded,
-                title: 'Rate Us',
-                onTap: () {},
-              ),
-              ListTile(
-                leading: Image.asset(
-                  'assets/images/no-ads.png',
-                  color: textGreyColor,
-                  width: 24,
-                ),
-                title: Text('Remove Ads'),
-                onTap: () {},
-              ),
-              DrawerTile(
-                icon: Icons.privacy_tip_rounded,
-                title: 'Privacy Policy',
-                onTap: () {},
-              ),
-            ],
-          ),
+              title: Text('Remove Ads'),
+              onTap: () {
+                Get.toNamed(RoutesName.purchaseScreen);
+              },
+            ),
+            DrawerTile(
+              icon: Icons.privacy_tip_rounded,
+              title: 'Privacy Policy',
+              onTap: () {},
+            ),
+          ],
         ),
       ),
     );

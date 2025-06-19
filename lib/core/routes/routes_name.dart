@@ -19,4 +19,5 @@ abstract class RoutesName {
   static const String aiQuizScreen = '/ai-quiz-screen';
   static const String countryLessonsScreen = '/country_lessons_screen';
   static const String countryQnaScreen = '/country_qna_screen';
+  static const String purchaseScreen = '/purchase_screen';
 }

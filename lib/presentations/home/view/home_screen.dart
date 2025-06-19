@@ -36,7 +36,9 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
               child: RoundedButton(
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(RoutesName.purchaseScreen);
+                },
                 child: Image.asset(
                   'assets/images/no-ads.png',
                   color: kWhite,

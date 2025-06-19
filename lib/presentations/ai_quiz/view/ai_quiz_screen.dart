@@ -9,6 +9,7 @@ import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
 import '../../../core/common_widgets/common_text_field.dart';
 import '../../../core/common_widgets/icon_buttons.dart';
+import '../../../core/routes/routes_name.dart';
 import '../controller/speech_controller.dart';
 import 'package:toastification/toastification.dart';
 
@@ -155,8 +156,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                         Get.back();
                       },
                       onTapConfirm: () {
-                        Get.back();
-                        controller.purchasePremium();
+                        Get.offNamed(RoutesName.purchaseScreen);
                       },
                       panaraDialogType: PanaraDialogType.custom,
                       color: kSkyBlueColor,

@@ -13,6 +13,7 @@ import 'package:template/presentations/customized_quiz/view/customized_quiz_scre
 import 'package:template/presentations/home/view/home_screen.dart';
 import 'package:template/presentations/practice/view/practice_screen.dart';
 import 'package:template/presentations/progress/view/progress_screen.dart';
+import 'package:template/presentations/purchase/view/purchase_screen.dart';
 import 'package:template/presentations/qna/view/qna_screen.dart';
 import 'package:template/presentations/quiz/view/quiz_screen.dart';
 import 'package:template/presentations/quiz_levels/view/quiz_levels_screen.dart';
@@ -142,6 +143,12 @@ class Routes {
     GetPage(
       name: RoutesName.progressScreen,
       page: () => ProgressScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.purchaseScreen,
+      page: () => PurchaseScreen(),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),
