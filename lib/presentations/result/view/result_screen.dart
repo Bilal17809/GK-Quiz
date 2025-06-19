@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
@@ -452,7 +451,7 @@ class ResultScreen extends StatelessWidget {
         ),
         bottomNavigationBar: const Padding(
           padding: kBottomNav,
-          child: BannerAdWidget(adSize: AdSize.banner),
+          child: BannerAdWidget(),
         ),
       ),
     );

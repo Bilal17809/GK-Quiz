@@ -16,7 +16,7 @@ class SpeechController extends GetxController {
   }
 
   static const MethodChannel _methodChannel = MethodChannel(
-    'com.teramob.gk_quiz',
+    'com.teramob.gk_quiz/MainActivity',
   );
 
   Future<void> startSpeechToText({String languageISO = 'en'}) async {

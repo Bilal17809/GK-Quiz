@@ -6,18 +6,15 @@ import 'package:template/core/theme/app_colors.dart';
 import '../controller/banner_ad_controller.dart';
 
 class BannerAdWidget extends StatelessWidget {
-  final AdSize adSize;
-
-  const BannerAdWidget({super.key, this.adSize = AdSize.banner});
+  const BannerAdWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Generate unique ID based on current route and ad size
     final String currentRoute = Get.currentRoute;
-    final String uniqueId = '${currentRoute}_${adSize.width}x${adSize.height}';
+    final String uniqueId = '${currentRoute}_banner';
 
     final BannerAdController controller = Get.put(
-      BannerAdController(adSize: adSize, uniqueId: uniqueId),
+      BannerAdController(uniqueId: uniqueId),
       tag: uniqueId,
       permanent: false,
     );
@@ -25,18 +22,18 @@ class BannerAdWidget extends StatelessWidget {
     return Obx(() {
       if (controller.isLoaded.value && controller.bannerAd.value != null) {
         return SizedBox(
-          width: adSize.width.toDouble(),
-          height: adSize.height.toDouble(),
+          width: AdSize.banner.width.toDouble(),
+          height: AdSize.banner.height.toDouble(),
           child: AdWidget(ad: controller.bannerAd.value!),
         );
       } else {
         return Shimmer.fromColors(
-          baseColor: greyColor.withOpacity(0.3),
-          highlightColor: Colors.white.withOpacity(0.6),
+          baseColor: greyColor..withValues(alpha: 0.03),
+          highlightColor: Colors.white.withValues(alpha: 0.06),
           child: Container(
-            width: adSize.width.toDouble(),
-            height: adSize.height.toDouble(),
-            color: greyColor.withOpacity(0.4),
+            width: AdSize.banner.width.toDouble(),
+            height: AdSize.banner.height.toDouble(),
+            color: greyColor.withValues(alpha: 0.2),
           ),
         );
       }

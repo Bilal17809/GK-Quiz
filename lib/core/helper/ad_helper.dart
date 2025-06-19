@@ -7,7 +7,7 @@ class AdHelper {
     return 'ca-app-pub-3940256099942544/1033173712';
   }
 
-  static String get appOpenAdUnitId {
+  static String get openAppAdUnitId {
     return 'ca-app-pub-3940256099942544/9257395921';
   }
 }

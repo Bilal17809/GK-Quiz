@@ -4,12 +4,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPreferencesService extends GetxService {
   static SharedPreferencesService get to => Get.find();
-
   SharedPreferences? _prefs;
   SharedPreferences get prefs => _prefs!;
 
   static const String _fontSizeLevelKey = 'font_size_level';
   static const String _fontSizeDirectionKey = 'font_size_direction';
+  static const String _limitKey = 'ai_chat_limit'; // Added limit key
 
   Future<SharedPreferencesService> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -17,19 +17,19 @@ class SharedPreferencesService extends GetxService {
   }
 
   Future<void> saveFontSizeLevel(int level) async {
-    await prefs.setInt(_fontSizeLevelKey, level);
+    await setInt(_fontSizeLevelKey, level);
   }
 
   Future<void> saveFontSizeDirection(bool isIncreasing) async {
-    await prefs.setBool(_fontSizeDirectionKey, isIncreasing);
+    await setBool(_fontSizeDirectionKey, isIncreasing);
   }
 
   int getFontSizeLevel() {
-    return prefs.getInt(_fontSizeLevelKey) ?? 0;
+    return getInt(_fontSizeLevelKey);
   }
 
   bool getFontSizeDirection() {
-    return prefs.getBool(_fontSizeDirectionKey) ?? true;
+    return getBool(_fontSizeDirectionKey, defaultValue: true);
   }
 
   Future<void> saveFontSizeSettings(int level, bool isIncreasing) async {
@@ -49,10 +49,10 @@ class SharedPreferencesService extends GetxService {
   }) async {
     String baseKey = '${keyPrefix}_${topicIndex}_$categoryIndex';
     await Future.wait([
-      prefs.setInt('${baseKey}_correct', correctAnswers),
-      prefs.setInt('${baseKey}_wrong', wrongAnswers),
-      prefs.setDouble('${baseKey}_percentage', percentage),
-      prefs.setString('${baseKey}_date', DateTime.now().toIso8601String()),
+      setInt('${baseKey}_correct', correctAnswers),
+      setInt('${baseKey}_wrong', wrongAnswers),
+      setDouble('${baseKey}_percentage', percentage),
+      setString('${baseKey}_date', DateTime.now().toIso8601String()),
     ]);
   }
 
@@ -63,10 +63,10 @@ class SharedPreferencesService extends GetxService {
   }) {
     String baseKey = '${keyPrefix}_${topicIndex}_$categoryIndex';
     return {
-      'correct': prefs.getInt('${baseKey}_correct') ?? 0,
-      'wrong': prefs.getInt('${baseKey}_wrong') ?? 0,
-      'percentage': prefs.getDouble('${baseKey}_percentage') ?? 0.0,
-      'date': prefs.getString('${baseKey}_date') ?? '',
+      'correct': getInt('${baseKey}_correct'),
+      'wrong': getInt('${baseKey}_wrong'),
+      'percentage': getDouble('${baseKey}_percentage'),
+      'date': getString('${baseKey}_date'),
     };
   }
 
@@ -77,27 +77,23 @@ class SharedPreferencesService extends GetxService {
     int maxCategories = 10,
   }) {
     int totalCorrect = 0, totalWrong = 0;
-
     for (
       int categoryIndex = 1;
       categoryIndex <= maxCategories;
       categoryIndex++
     ) {
       String baseKey = '${keyPrefix}_${topicIndex}_$categoryIndex';
-      int correct = prefs.getInt('${baseKey}_correct') ?? 0;
-      int wrong = prefs.getInt('${baseKey}_wrong') ?? 0;
-
+      int correct = getInt('${baseKey}_correct');
+      int wrong = getInt('${baseKey}_wrong');
       if (correct > 0 || wrong > 0) {
         totalCorrect += correct;
         totalWrong += wrong;
       }
     }
-
     double overallPercentage = 0.0;
     if (totalCorrect + totalWrong > 0 && totalQuestionsInTopic > 0) {
       overallPercentage = (totalCorrect / totalQuestionsInTopic) * 100;
     }
-
     return {
       'correct': totalCorrect,
       'wrong': totalWrong,
@@ -123,17 +119,16 @@ class SharedPreferencesService extends GetxService {
     Map<String, List<double>> dailyPercentages = {
       for (String day in daysOfWeek) day: [],
     };
-
     Set<String> allKeys = prefs.getKeys();
     for (String key in allKeys) {
       if (key.startsWith('${keyPrefix}_') && key.endsWith('_date')) {
-        String dateString = prefs.getString(key) ?? '';
+        String dateString = getString(key);
         if (dateString.isNotEmpty) {
           try {
             DateTime quizDate = DateTime.parse(dateString);
             String dayName = _getDayName(quizDate.weekday);
             String resultKey = key.replaceAll('_date', '_percentage');
-            double percentage = prefs.getDouble(resultKey) ?? 0.0;
+            double percentage = getDouble(resultKey);
             if (percentage > 0) dailyPercentages[dayName]?.add(percentage);
           } catch (e) {
             debugPrint('Error parsing date: $e');
@@ -141,7 +136,6 @@ class SharedPreferencesService extends GetxService {
         }
       }
     }
-
     Map<String, double> dailyAverages = {};
     for (String day in daysOfWeek) {
       List<double> percentages = dailyPercentages[day] ?? [];
@@ -150,7 +144,6 @@ class SharedPreferencesService extends GetxService {
               ? percentages.reduce((a, b) => a + b) / percentages.length
               : 0.0;
     }
-
     return dailyAverages;
   }
 
@@ -174,17 +167,14 @@ class SharedPreferencesService extends GetxService {
   }) {
     int allCorrect = 0, allWrong = 0, allAvailable = 0;
     List<double> allQuizPercentages = [];
-
     for (int topicIndex = 0; topicIndex < topicNames.length; topicIndex++) {
       final topicName = topicNames[topicIndex];
       allAvailable += topicCounts[topicName] ?? 0;
-
       for (int catIndex = 1; catIndex <= 10; catIndex++) {
         String baseKey = '${keyPrefix}_${topicIndex}_$catIndex';
-        int correct = prefs.getInt('${baseKey}_correct') ?? 0;
-        int wrong = prefs.getInt('${baseKey}_wrong') ?? 0;
-        double percentage = prefs.getDouble('${baseKey}_percentage') ?? 0.0;
-
+        int correct = getInt('${baseKey}_correct');
+        int wrong = getInt('${baseKey}_wrong');
+        double percentage = getDouble('${baseKey}_percentage');
         if (correct > 0 || wrong > 0) {
           allCorrect += correct;
           allWrong += wrong;
@@ -192,7 +182,6 @@ class SharedPreferencesService extends GetxService {
         }
       }
     }
-
     return {
       'totalCorrect': allCorrect,
       'totalWrong': allWrong,
@@ -202,12 +191,11 @@ class SharedPreferencesService extends GetxService {
     };
   }
 
-  // Learn Progress Methods
+  // Learn Progress Methods - Updated to use generic methods
   Future<void> saveLearnProgress(String topic, int revealedCount) =>
-      prefs.setInt('learn_progress_$topic', revealedCount);
+      setInt('learn_progress_$topic', revealedCount);
 
-  int getLearnProgress(String topic) =>
-      prefs.getInt('learn_progress_$topic') ?? 0;
+  int getLearnProgress(String topic) => getInt('learn_progress_$topic');
 
   Map<String, int> getAllLearnProgress(List<String> topics) => {
     for (String topic in topics) topic: getLearnProgress(topic),
@@ -217,12 +205,26 @@ class SharedPreferencesService extends GetxService {
       topics.fold(0, (total, topic) => total + getLearnProgress(topic));
 
   Future<void> clearLearnProgress(String topic) =>
-      prefs.remove('learn_progress_$topic');
+      remove('learn_progress_$topic');
 
   Future<void> clearAllLearnProgress(List<String> topics) =>
       Future.wait(topics.map(clearLearnProgress));
 
-  // Generic Methods
+  // Limit Methods
+  Future<void> saveLimit(int limit) => setInt(_limitKey, limit);
+
+  int getLimit({int defaultValue = 5}) =>
+      getInt(_limitKey, defaultValue: defaultValue);
+
+  Future<void> decrementLimit() async {
+    int currentLimit = getLimit();
+    if (currentLimit > 0) {
+      await saveLimit(currentLimit - 1);
+    }
+  }
+
+  Future<void> resetLimit({int resetValue = 5}) => saveLimit(resetValue);
+
   Future<void> setInt(String key, int value) => prefs.setInt(key, value);
   Future<void> setDouble(String key, double value) =>
       prefs.setDouble(key, value);
@@ -240,6 +242,14 @@ class SharedPreferencesService extends GetxService {
       prefs.getBool(key) ?? defaultValue;
 
   Future<void> remove(String key) => prefs.remove(key);
-  Future<void> clear() => prefs.clear();
+
+  Future<void> clear() async {
+    int currentLimit = getLimit();
+
+    await prefs.clear();
+
+    await saveLimit(currentLimit);
+  }
+
   bool containsKey(String key) => prefs.containsKey(key);
 }

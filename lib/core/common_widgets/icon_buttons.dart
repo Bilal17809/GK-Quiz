@@ -131,3 +131,36 @@ class IconActionButton extends StatelessWidget {
     );
   }
 }
+
+class SendButton extends StatelessWidget {
+  final VoidCallback? onTap;
+  final bool isLoading;
+
+  const SendButton({super.key, required this.onTap, this.isLoading = false});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: isLoading ? null : onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 4),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: isLoading ? greyColor.withValues(alpha: 0.3) : kSkyBlueColor,
+          shape: BoxShape.circle,
+        ),
+        child:
+            isLoading
+                ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(kWhite),
+                  ),
+                )
+                : const Icon(Icons.send, color: kWhite, size: 20),
+      ),
+    );
+  }
+}

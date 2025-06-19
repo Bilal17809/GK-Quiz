@@ -11,15 +11,21 @@ import 'package:template/presentations/country_levels/controller/country_levels_
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz_levels/controller/quiz_result_controller.dart';
 import 'package:toastification/toastification.dart';
-
 import '/core/theme/app_theme.dart';
-import 'core/ads/global_ads_manager.dart';
+import 'core/ads/open_app_ad/controller/open_app_controller.dart';
+import 'core/ads/open_app_ad/view/open_app.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Mobile Ads first
   MobileAds.instance.initialize();
-  Get.put(GlobalAdManager(), permanent: true);
+  // Initialize Open App Ad Controller
+  Get.put(OpenAppAdController());
+  // Initialize shared preferences
   await Get.putAsync(() => SharedPreferencesService().init());
+
+  // Initialize all your controllers
   Get.put(QuizController());
   Get.put(QuizResultController());
   Get.put(CountryLevelsController());
@@ -40,16 +46,17 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ToastificationWrapper(
-      child: GetMaterialApp(
-        title: 'Flutter Demo',
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.themeData,
-        initialRoute: RoutesName.homeScreen,
-        getPages: Routes.routes,
-
-        useInheritedMediaQuery: true,
-        locale: DevicePreview.locale(context),
-        builder: DevicePreview.appBuilder,
+      child: OpenAppAdWidget(
+        child: GetMaterialApp(
+          title: 'Flutter Demo',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.themeData,
+          initialRoute: RoutesName.homeScreen,
+          getPages: Routes.routes,
+          useInheritedMediaQuery: true,
+          locale: DevicePreview.locale(context),
+          builder: DevicePreview.appBuilder,
+        ),
       ),
     );
   }

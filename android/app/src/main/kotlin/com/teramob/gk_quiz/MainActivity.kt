@@ -19,7 +19,7 @@ import io.flutter.plugin.common.MethodChannel
 import java.util.Locale
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.teramob.gk_quiz/speech_Text"
+    private val CHANNEL = "com.teramob.gk_quiz/MainActivity"
     private val SPEECH_REQUEST_CODE = 1001
     private var pendingResult: MethodChannel.Result? = null
     private lateinit var tts: TextToSpeech

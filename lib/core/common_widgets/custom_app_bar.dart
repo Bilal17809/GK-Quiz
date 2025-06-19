@@ -8,12 +8,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final String subtitle;
   final bool useBackButton;
+  final bool hideTitle;
   final VoidCallback? onBackTap;
 
   const CustomAppBar({
     super.key,
     required this.subtitle,
     this.useBackButton = true,
+    this.hideTitle = true,
     this.actions,
     this.onBackTap,
   });
@@ -46,22 +48,38 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   );
                 },
               ),
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'GK Quiz',
-            style: Get.textTheme.titleMedium?.copyWith(color: kWhite),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              subtitle,
-              style: Get.textTheme.bodyLarge?.copyWith(color: kWhite),
-            ),
-          ),
-        ],
-      ),
+      title:
+          hideTitle
+              ? Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Text(
+                  subtitle,
+                  style: context.textTheme.titleMedium?.copyWith(
+                    color: kWhite,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              )
+              : Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'GK Quiz',
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: kWhite,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: Text(
+                      subtitle,
+                      style: context.textTheme.bodyLarge?.copyWith(
+                        color: kWhite,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       actions: actions,
     );
   }

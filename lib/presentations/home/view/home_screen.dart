@@ -30,6 +30,7 @@ class HomeScreen extends StatelessWidget {
         drawer: const NavigationDrawerWidget(),
         appBar: CustomAppBar(
           subtitle: 'Level Up Your Learning',
+          hideTitle: false,
           useBackButton: false,
           actions: [
             Padding(
@@ -188,7 +189,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Get.toNamed(RoutesName.contextSelectionScreen);
                   },
-                  text: 'Smart Quiz',
+                  text: 'Smart AI',
                   icon: Container(
                     decoration: roundedDecoration.copyWith(
                       color: kWhite.withValues(alpha: 0.2),

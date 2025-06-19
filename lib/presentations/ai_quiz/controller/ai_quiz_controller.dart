@@ -3,33 +3,64 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:toastification/toastification.dart';
-
+import 'package:panara_dialogs/panara_dialogs.dart';
 import '../../../core/service/ai_service.dart';
+import '../../../core/local_storage/shared_preferences_storage.dart';
 
 class AiQuizController extends GetxController {
   final RxList<Map<String, String>> chatHistory = <Map<String, String>>[].obs;
   final RxBool isLoading = false.obs;
   final RxString currentContext = ''.obs;
-
+  final RxInt limit = 5.obs;
   final AiService _aiService = AiService();
-
-  // final String systemContext = """
-  // You are an AI assistant specialized in creating educational quizzes and learning materials.
-  // Always follow these guidelines:
-  // - Keep responses educational and engaging
-  // - Always reply with answers that are short and concise
-  // - Your tone must be so simple and friendly that a person of any age group can understand
-  // - You are here only to generate quiz questions and provide information related to that
-  // - Do not provide answers directly plus, ask single question at a time
-  // """;
 
   void setContext(String context) {
     currentContext.value = context;
     clearChat();
   }
 
+  void _showPremiumDialog() {
+    PanaraConfirmDialog.show(
+      Get.context!,
+      title: "Limit Reached",
+      message:
+          "You have reached your limit. Purchase Premium to continue using Smart AI.",
+      confirmButtonText: "Premium",
+      cancelButtonText: "Cancel",
+      onTapCancel: () {
+        Get.back();
+      },
+      onTapConfirm: () {
+        Get.back();
+        purchasePremium();
+      },
+      panaraDialogType: PanaraDialogType.custom,
+      color: kSkyBlueColor,
+      barrierDismissible: false,
+    );
+  }
+
+  void purchasePremium() {
+    toastification.show(
+      type: ToastificationType.info,
+      title: const Text('Premium Purchase'),
+      description: const Text('Redirecting to premium purchase...'),
+      style: ToastificationStyle.flatColored,
+      autoCloseDuration: const Duration(seconds: 2),
+      primaryColor: kSkyBlueColor,
+      margin: const EdgeInsets.all(8),
+      closeOnClick: true,
+      alignment: Alignment.bottomCenter,
+    );
+  }
+
   Future<void> sendMessage(String message) async {
     if (message.trim().isEmpty || currentContext.value.isEmpty) return;
+
+    if (limit.value <= 0) {
+      _showPremiumDialog();
+      return;
+    }
 
     chatHistory.add({"role": "user", "content": message.trim()});
     isLoading.value = true;
@@ -37,9 +68,43 @@ class AiQuizController extends GetxController {
     try {
       final List<Map<String, String>> messages = [
         {"role": "system", "content": currentContext.value},
-        ...chatHistory.map(
-          (msg) => {"role": msg["role"]!, "content": msg["content"]!},
-        ),
+        ...chatHistory.map((msg) {
+          String role = msg["role"]!;
+          if (role == "system" && msg != chatHistory.first) {
+            role = "assistant";
+          }
+          return {"role": role, "content": msg["content"]!};
+        }),
+      ];
+
+      final response = await _aiService.sendMessage(messages);
+
+      chatHistory.add({"role": "assistant", "content": response});
+
+      await _decrementLimit();
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  Future<void> sendInitialResponse() async {
+    if (currentContext.value.isEmpty) return;
+    if (chatHistory.isNotEmpty) return;
+
+    if (limit.value <= 0) {
+      return;
+    }
+
+    isLoading.value = true;
+
+    try {
+      final List<Map<String, String>> messages = [
+        {"role": "system", "content": currentContext.value},
+        {
+          "role": "user",
+          "content":
+              "Hi! I'd like to start. Please introduce yourself based on the context provided and let's begin.",
+        },
       ];
 
       final response = await _aiService.sendMessage(messages);
@@ -50,6 +115,15 @@ class AiQuizController extends GetxController {
     }
   }
 
+  Future<void> _decrementLimit() async {
+    await SharedPreferencesService.to.decrementLimit();
+    limit.value = SharedPreferencesService.to.getLimit();
+  }
+
+  void _loadLimit() {
+    limit.value = SharedPreferencesService.to.getLimit();
+  }
+
   void clearChat() {
     chatHistory.clear();
   }
@@ -58,17 +132,12 @@ class AiQuizController extends GetxController {
     if (text.trim().isEmpty) return;
 
     Clipboard.setData(ClipboardData(text: text));
-    toastification.show(
-      type: ToastificationType.info,
-      title: const Text('Copied'),
-      description: Text('Text copied to clipboard'),
-      style: ToastificationStyle.flatColored,
-      autoCloseDuration: const Duration(seconds: 2),
-      primaryColor: kSkyBlueColor,
-      margin: const EdgeInsets.all(8),
-      closeOnClick: true,
-      alignment: Alignment.bottomCenter,
-    );
+  }
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadLimit();
   }
 
   @override

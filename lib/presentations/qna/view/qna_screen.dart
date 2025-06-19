@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/long_icon_text_button.dart';
@@ -154,7 +153,7 @@ class QnaScreen extends StatelessWidget {
         }),
         bottomNavigationBar: const Padding(
           padding: kBottomNav,
-          child: BannerAdWidget(adSize: AdSize.banner),
+          child: BannerAdWidget(),
         ),
       ),
     );

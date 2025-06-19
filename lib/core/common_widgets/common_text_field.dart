@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../theme/app_colors.dart';
 
 class CommonTextField extends StatelessWidget {
@@ -19,14 +18,8 @@ class CommonTextField extends StatelessWidget {
     this.minLines = 1,
     this.maxLines = 1,
     this.contentPadding = const EdgeInsets.all(16),
-    this.hintStyle = const TextStyle(
-      color: greyColor,
-      fontSize: 16,
-    ),
-    this.textStyle = const TextStyle(
-      fontSize: 16,
-      color: kBlack,
-    ),
+    this.hintStyle = const TextStyle(color: greyColor, fontSize: 16),
+    this.textStyle = const TextStyle(fontSize: 16, color: kBlack),
     this.border = InputBorder.none,
   });
 
@@ -40,6 +33,9 @@ class CommonTextField extends StatelessWidget {
         hintText: hintText,
         hintStyle: hintStyle,
         border: border,
+        enabledBorder: border,
+        focusedBorder: border,
+        disabledBorder: border,
         contentPadding: contentPadding,
       ),
       style: textStyle,

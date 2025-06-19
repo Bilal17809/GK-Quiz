@@ -1,95 +1,143 @@
 import 'dart:ui';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:flutter/foundation.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:get/get.dart';
-import '../../global_ads_manager.dart';
 
 class InterstitialAdController extends GetxController {
   final String uniqueId;
   final String route;
   final RxInt _counter = 0.obs;
-  static const int _threshold = 3;
+  int screenCount = 3;
   bool _isShowing = false;
+  InterstitialAd? _interstitialAd;
+  bool _isLoading = false;
 
   InterstitialAdController({required this.uniqueId, required this.route});
 
   @override
   void onInit() {
     super.onInit();
-    print('🔄 [DEBUG] InterstitialAdController initialized for route: $route');
-    print('🔄 [DEBUG] Current counter value: ${_counter.value}');
-    GlobalAdManager.instance.preloadAdForRoute(route);
-    _ensureAdAvailability();
+    remoteConfig();
+    loadAds();
   }
 
-  void _ensureAdAvailability() {
-    if (!GlobalAdManager.instance.isAdReadyForRoute(route)) {
-      print('🔄 [DEBUG] Ensuring ad availability for route: $route');
-      GlobalAdManager.instance.preloadAdForRoute(route);
-      Future.delayed(const Duration(milliseconds: 500), _ensureAdAvailability);
+  Future<void> remoteConfig() async {
+    try {
+      final config = FirebaseRemoteConfig.instance;
+      await config.fetchAndActivate().timeout(
+        const Duration(seconds: 10),
+        onTimeout: () => false,
+      );
+      final remoteScreenCount = config.getInt('screen_count');
+      if (remoteScreenCount > 0) {
+        screenCount = remoteScreenCount;
+      }
+    } catch (e) {
+      debugPrint('Error fetching remote config: $e');
     }
   }
 
-  void maybeShowAd({VoidCallback? onClosed}) {
+  Future<void> loadAds() async {
+    if (_isLoading || _interstitialAd != null) return;
+
+    _isLoading = true;
+
+    try {
+      await InterstitialAd.load(
+        adUnitId: 'ca-app-pub-3940256099942544/1033173712',
+        request: const AdRequest(),
+        adLoadCallback: InterstitialAdLoadCallback(
+          onAdLoaded: (ad) {
+            _interstitialAd = ad;
+            _isLoading = false;
+
+            _interstitialAd!
+                .fullScreenContentCallback = FullScreenContentCallback(
+              onAdDismissedFullScreenContent: (ad) {
+                ad.dispose();
+                _interstitialAd = null;
+                Future.delayed(const Duration(milliseconds: 500), loadAds);
+              },
+              onAdFailedToShowFullScreenContent: (ad, error) {
+                ad.dispose();
+                _interstitialAd = null;
+                _isShowing = false;
+                Future.delayed(const Duration(milliseconds: 500), loadAds);
+              },
+              onAdShowedFullScreenContent: (ad) {},
+            );
+          },
+          onAdFailedToLoad: (error) {
+            _isLoading = false;
+            Future.delayed(const Duration(seconds: 5), loadAds);
+          },
+        ),
+      );
+    } catch (e) {
+      debugPrint('Error loading interstitial ad: $e');
+      _isLoading = false;
+    }
+  }
+
+  void showAds({VoidCallback? onClosed}) {
     if (_isShowing) {
-      print('⚠️ [DEBUG] Ad already showing, skipping...');
       onClosed?.call();
       return;
     }
 
     _counter.value++;
-    print('📈 [DEBUG] Counter incremented to: ${_counter.value}');
 
-    final isAdReady = GlobalAdManager.instance.isAdReadyForRoute(route);
-
-    print(
-      '📊 [DEBUG] [$uniqueId] Counter: ${_counter.value}, Threshold: $_threshold, Ad Ready: $isAdReady',
-    );
-
-    if (_counter.value >= _threshold) {
-      if (isAdReady) {
-        print('✅ [DEBUG] [$uniqueId] Showing ad now!');
+    if (_counter.value >= screenCount) {
+      if (_interstitialAd != null) {
         _isShowing = true;
         _counter.value = 0;
 
-        GlobalAdManager.instance.showAdForRoute(
-          route,
-          onClosed: () {
+        _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
+          onAdDismissedFullScreenContent: (ad) {
+            ad.dispose();
+            _interstitialAd = null;
             _isShowing = false;
-            print('👋 [DEBUG] Ad closed, counter reset to: ${_counter.value}');
             onClosed?.call();
-            Future.delayed(const Duration(milliseconds: 100), () {
-              GlobalAdManager.instance.preloadAdForRoute(route);
-              _ensureAdAvailability();
-            });
+            Future.delayed(const Duration(milliseconds: 500), loadAds);
           },
+          onAdFailedToShowFullScreenContent: (ad, error) {
+            ad.dispose();
+            _interstitialAd = null;
+            _isShowing = false;
+            onClosed?.call();
+            Future.delayed(const Duration(milliseconds: 500), loadAds);
+          },
+          onAdShowedFullScreenContent: (ad) {},
         );
+
+        _interstitialAd!.show();
       } else {
-        print('❌ [DEBUG] [$uniqueId] Threshold reached but ad not ready!');
-        GlobalAdManager.instance.preloadAdForRoute(route);
-        _ensureAdAvailability();
+        if (!_isLoading) {
+          loadAds();
+        }
         onClosed?.call();
       }
     } else {
-      print(
-        '⏳ [DEBUG] [$uniqueId] Threshold not reached (${_counter.value}/$_threshold)',
-      );
-
-      if (_counter.value >= _threshold - 1 &&
-          !GlobalAdManager.instance.isAdReadyForRoute(route)) {
-        print('🚀 [DEBUG] Proactively preloading ad (approaching threshold)');
-        GlobalAdManager.instance.preloadAdForRoute(route);
-        _ensureAdAvailability();
+      if (_counter.value >= screenCount - 1 &&
+          _interstitialAd == null &&
+          !_isLoading) {
+        loadAds();
       }
-
       onClosed?.call();
     }
   }
 
   void resetCounter() {
-    print('🔄 [DEBUG] Resetting counter for route: $route');
     _counter.value = 0;
   }
 
-  bool get isAdReady => GlobalAdManager.instance.isAdReadyForRoute(route);
-
+  bool get isAdReady => _interstitialAd != null;
   int get currentCount => _counter.value;
+
+  @override
+  void onClose() {
+    _interstitialAd?.dispose();
+    super.onClose();
+  }
 }

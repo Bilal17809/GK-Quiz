@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/constant/constant.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
-import '../../../core/ads/banner_ad/view/banner_ad.dart';
 import '../../../core/common_widgets/common_text_field.dart';
-import '../../../core/common_widgets/elongated_button.dart';
 import '../../../core/common_widgets/icon_buttons.dart';
 import '../controller/speech_controller.dart';
+import 'package:toastification/toastification.dart';
 
 class AiQuizScreen extends StatefulWidget {
   const AiQuizScreen({super.key});
@@ -31,6 +30,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
     super.initState();
     controller = Get.find<AiQuizController>();
     speechController = Get.put(SpeechController());
+    controller.sendInitialResponse();
   }
 
   void scrollToBottom() {
@@ -57,7 +57,26 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
         inputController.text = recognizedText;
       }
     } catch (e) {
-      Get.snackbar("Error", "Failed to process speech input: $e");
+      toastification.show(
+        type: ToastificationType.info,
+        title: const Text('Error'),
+        description: Text('Failed to process speech input: $e'),
+        style: ToastificationStyle.flatColored,
+        autoCloseDuration: const Duration(seconds: 2),
+        primaryColor: kSkyBlueColor,
+        margin: const EdgeInsets.all(8),
+        closeOnClick: true,
+        alignment: Alignment.bottomCenter,
+      );
+    }
+  }
+
+  void _sendMessage() {
+    final text = inputController.text.trim();
+    if (text.isNotEmpty && !controller.isLoading.value) {
+      controller.sendMessage(text);
+      inputController.clear();
+      scrollToBottom();
     }
   }
 
@@ -73,14 +92,16 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
   Widget build(BuildContext context) {
     return InterstitialAdWidget(
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         appBar: CustomAppBar(subtitle: 'AI Chat'),
         body: SafeArea(
           child: Column(
             children: [
-              // Context Display Banner
-              Obx(
-                () => Container(
+              // Context Header
+              Obx(() {
+                if (controller.currentContext.value.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+                return Container(
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
@@ -117,226 +138,234 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                       ),
                     ],
                   ),
-                ),
-              ),
-              // Input Container
-              Container(
-                margin: const EdgeInsets.all(kBodyHp),
-                padding: const EdgeInsets.all(kBodyHp),
-                decoration: roundedDecorationWithShadow,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // Limit Section
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(12),
-                      margin: const EdgeInsets.only(bottom: 12),
-                      decoration: roundedDecoration.copyWith(
-                        color: greyColor.withValues(alpha: 0.05),
-                        border: Border.all(
-                          color: greyColor.withValues(alpha: 0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Text(
-                        'Daily Limit: 5',
-                        style: context.textTheme.bodyMedium?.copyWith(
-                          color: greyColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                );
+              }),
+              // Limit Banner
+              Obx(
+                () => InkWell(
+                  onTap: () {
+                    PanaraConfirmDialog.show(
+                      Get.context!,
+                      title: "Go Premium",
+                      message:
+                          "Purchase Premium to get unlimited access to Smart AI.",
+                      confirmButtonText: "Premium",
+                      cancelButtonText: "Cancel",
+                      onTapCancel: () {
+                        Get.back();
+                      },
+                      onTapConfirm: () {
+                        Get.back();
+                        controller.purchasePremium();
+                      },
+                      panaraDialogType: PanaraDialogType.custom,
+                      color: kSkyBlueColor,
+                      barrierDismissible: false,
+                    );
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: kBodyHp,
+                      vertical: 8,
                     ),
-                    // Input Container
-                    Container(
-                      decoration: roundedDecoration.copyWith(
-                        color: greyColor.withValues(alpha: 0.05),
-                        border: Border.all(
-                          color: greyColor.withValues(alpha: 0.3),
-                          width: 1,
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          // Input Field
-                          CommonTextField(
-                            controller: inputController,
-                            minLines: 3,
-                            maxLines: 4,
-                            hintText:
-                                'Write your message here or tap the mic to speak...',
-                            hintStyle: const TextStyle(
-                              color: greyColor,
-                              fontSize: 16,
-                            ),
-                            textStyle: const TextStyle(
-                              fontSize: 16,
-                              color: kBlack,
-                            ),
-                            contentPadding: const EdgeInsets.all(16),
-                            border: InputBorder.none,
-                          ),
-                          // Bottom Icons Row
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            child: Row(
-                              children: [
-                                // Speech Button
-                                Obx(
-                                  () => IconActionButton(
-                                    onTap: _handleSpeechInput,
-                                    icon: Icons.mic,
-                                    color:
-                                        speechController.isListening.value
-                                            ? Colors.red
-                                            : kSkyBlueColor,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                IconActionButton(
-                                  onTap: () {
-                                    inputController.clear();
-                                  },
-                                  icon: Icons.cancel,
-                                  color: kSkyBlueColor,
-                                ),
-                                const SizedBox(width: 16),
-                                IconActionButton(
-                                  onTap: () {
-                                    final text = inputController.text.trim();
-                                    if (text.isNotEmpty) {
-                                      _copyToClipboard(text);
-                                    }
-                                  },
-                                  icon: Icons.copy,
-                                  color: kSkyBlueColor,
-                                ),
-                                const Spacer(),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
                     ),
-                    const SizedBox(height: 12),
-                    // Generate Button
-                    Obx(
-                      () => ElongatedButton(
-                        height: 54,
-                        width: double.infinity,
+                    decoration: BoxDecoration(
+                      color:
+                          controller.limit.value > 0
+                              ? greyColor.withValues(alpha: 0.05)
+                              : kRed.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
                         color:
-                            controller.isLoading.value
-                                ? kSkyBlueColor.withValues(alpha: 0.6)
-                                : kSkyBlueColor,
-                        borderRadius: BorderRadius.circular(12),
-                        onTap:
-                            controller.isLoading.value
-                                ? null
-                                : () {
-                                  final text = inputController.text.trim();
-                                  if (text.isNotEmpty) {
-                                    controller.sendMessage(text);
-                                    controller.clearChat();
-                                  }
-                                },
-                        child:
-                            controller.isLoading.value
-                                ? const SizedBox(
-                                  width: 20,
-                                  height: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      kWhite,
-                                    ),
-                                  ),
-                                )
-                                : const Text(
-                                  'Generate',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    color: kWhite,
-                                  ),
-                                ),
+                            controller.limit.value > 0
+                                ? greyColor.withValues(alpha: 0.3)
+                                : kRed.withValues(alpha: 0.3),
+                        width: 1,
                       ),
                     ),
-                  ],
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (controller.limit.value <= 0)
+                          const Icon(Icons.warning, color: kRed, size: 16),
+                        if (controller.limit.value <= 0)
+                          const SizedBox(width: 4),
+                        Text(
+                          controller.limit.value > 0
+                              ? 'Limit: ${controller.limit.value}'
+                              : 'Limit Reached',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color:
+                                controller.limit.value > 0 ? greyColor : kRed,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-              // Chat
+              // Chat Messages Area
               Expanded(
                 child: Container(
-                  margin: const EdgeInsets.all(kBodyHp),
-                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.fromLTRB(kBodyHp, 0, kBodyHp, 0),
                   decoration: roundedDecorationWithShadow.copyWith(
                     border: Border.all(color: greyColor.withValues(alpha: 0.3)),
                   ),
                   child: Obx(() {
-                    if (controller.chatHistory.isEmpty) {
+                    if (controller.chatHistory.isEmpty &&
+                        !controller.isLoading.value) {
                       return Center(
-                        child: Image.asset(
-                          'assets/images/chatbot.png',
-                          color: kSkyBlueColor,
-                          width: MediaQuery.of(context).size.width * 0.3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/chatbot.png',
+                              color: kSkyBlueColor,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                            ),
+                            const SizedBox(height: 16),
+                            Text(
+                              'Start a conversation!',
+                              style: context.textTheme.bodyLarge?.copyWith(
+                                color: greyColor,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     }
-                    scrollToBottom();
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      scrollToBottom();
+                    });
                     return ListView.builder(
                       controller: scrollController,
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(16),
                       itemCount:
                           controller.chatHistory.length +
                           (controller.isLoading.value ? 1 : 0),
                       itemBuilder: (context, index) {
                         if (index == controller.chatHistory.length &&
                             controller.isLoading.value) {
-                          return const Padding(
-                            padding: EdgeInsets.all(16.0),
+                          return Container(
+                            margin: const EdgeInsets.only(bottom: 16),
                             child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                CircularProgressIndicator(strokeWidth: 2),
-                                SizedBox(width: 16),
-                                Text('AI is thinking...'),
+                                CircleAvatar(
+                                  radius: 16,
+                                  backgroundColor: kSkyBlueColor.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  child: const Icon(
+                                    Icons.smart_toy,
+                                    size: 16,
+                                    color: kSkyBlueColor,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      color: greyColor.withValues(alpha: 0.1),
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(4),
+                                        topRight: Radius.circular(16),
+                                        bottomLeft: Radius.circular(16),
+                                        bottomRight: Radius.circular(16),
+                                      ),
+                                    ),
+                                    child: const Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 16,
+                                          height: 16,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            valueColor:
+                                                AlwaysStoppedAnimation<Color>(
+                                                  kSkyBlueColor,
+                                                ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 12),
+                                        Text(
+                                          'AI is thinking...',
+                                          style: TextStyle(
+                                            color: greyColor,
+                                            fontStyle: FontStyle.italic,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                           );
                         }
-                        final response = controller.chatHistory[index];
-                        final content = response['content']!;
-                        final isUser = response['role'] == 'user';
-                        // Only show AI responses, not user messages
-                        if (isUser) return const SizedBox.shrink();
+                        final message = controller.chatHistory[index];
+                        final content = message['content']!;
+                        final isUser = message['role'] == 'user';
+                        final isAssistant = message['role'] == 'assistant';
 
                         return Container(
-                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          margin: const EdgeInsets.only(bottom: 16),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment:
+                                isUser
+                                    ? MainAxisAlignment.end
+                                    : MainAxisAlignment.start,
                             children: [
-                              CircleAvatar(
-                                radius: 16,
-                                backgroundColor: greyColor.withValues(
-                                  alpha: 0.2,
-                                ),
-                                child: const Icon(Icons.smart_toy, size: 16),
-                              ),
-                              const SizedBox(width: 8),
-                              Expanded(
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 16,
-                                    vertical: 12,
+                              if (!isUser) ...[
+                                CircleAvatar(
+                                  radius: 16,
+                                  backgroundColor: kSkyBlueColor.withValues(
+                                    alpha: 0.2,
                                   ),
-                                  decoration: roundedDecoration.copyWith(
-                                    color: greyColor.withValues(alpha: 0.1),
-                                    border: Border.all(
-                                      color: greyColor.withValues(alpha: 0.2),
-                                      width: 1,
-                                    ),
+                                  child: const Icon(
+                                    Icons.smart_toy,
+                                    size: 16,
+                                    color: kSkyBlueColor,
+                                  ),
+                                ),
+                                const SizedBox(width: 12),
+                              ],
+                              Flexible(
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                    maxWidth:
+                                        MediaQuery.of(context).size.width *
+                                        0.75,
+                                  ),
+                                  padding: const EdgeInsets.all(16),
+                                  decoration: BoxDecoration(
+                                    color:
+                                        isUser
+                                            ? kSkyBlueColor
+                                            : greyColor.withValues(alpha: 0.1),
+                                    borderRadius:
+                                        isUser
+                                            ? const BorderRadius.only(
+                                              topLeft: Radius.circular(16),
+                                              topRight: Radius.circular(4),
+                                              bottomLeft: Radius.circular(16),
+                                              bottomRight: Radius.circular(16),
+                                            )
+                                            : const BorderRadius.only(
+                                              topLeft: Radius.circular(4),
+                                              topRight: Radius.circular(16),
+                                              bottomLeft: Radius.circular(16),
+                                              bottomRight: Radius.circular(16),
+                                            ),
                                   ),
                                   child: Column(
                                     crossAxisAlignment:
@@ -344,49 +373,74 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                                     children: [
                                       Text(
                                         content,
-                                        style: context.textTheme.bodyMedium,
-                                      ),
-                                      const SizedBox(height: 12),
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: ElongatedButton(
-                                          height: 32,
-                                          width: 80,
-                                          onTap:
-                                              () => _copyToClipboard(content),
-                                          color: kSkyBlueColor.withValues(
-                                            alpha: 0.1,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            20,
-                                          ),
-                                          child: const Row(
-                                            mainAxisSize: MainAxisSize.min,
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Icon(
-                                                Icons.copy,
-                                                size: 14,
-                                                color: kSkyBlueColor,
-                                              ),
-                                              SizedBox(width: 4),
-                                              Text(
-                                                'Copy',
-                                                style: TextStyle(
-                                                  color: kSkyBlueColor,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w500,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          color: isUser ? kWhite : kBlack,
+                                          height: 1.4,
                                         ),
                                       ),
+                                      if (!isUser) ...[
+                                        const SizedBox(height: 12),
+                                        Align(
+                                          alignment: Alignment.centerRight,
+                                          child: GestureDetector(
+                                            onTap:
+                                                () => _copyToClipboard(content),
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 6,
+                                                  ),
+                                              decoration: BoxDecoration(
+                                                color: kSkyBlueColor.withValues(
+                                                  alpha: 0.1,
+                                                ),
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                              child: const Row(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Icon(
+                                                    Icons.copy,
+                                                    size: 14,
+                                                    color: kSkyBlueColor,
+                                                  ),
+                                                  SizedBox(width: 4),
+                                                  Text(
+                                                    'Copy',
+                                                    style: TextStyle(
+                                                      color: kSkyBlueColor,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ],
                                   ),
                                 ),
                               ),
+                              if (isUser) ...[
+                                const SizedBox(width: 12),
+                                CircleAvatar(
+                                  radius: 16,
+                                  backgroundColor: kSkyBlueColor.withValues(
+                                    alpha: 0.2,
+                                  ),
+                                  child: const Icon(
+                                    Icons.person,
+                                    size: 16,
+                                    color: kSkyBlueColor,
+                                  ),
+                                ),
+                              ],
                             ],
                           ),
                         );
@@ -395,12 +449,77 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                   }),
                 ),
               ),
+              // Input Area
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                padding: const EdgeInsets.all(8),
+                decoration: roundedDecorationWithShadow.copyWith(
+                  border: Border.all(color: greyColor.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    // Input Field
+                    Expanded(
+                      child: Container(
+                        constraints: const BoxConstraints(maxHeight: 60),
+                        decoration: roundedDecoration,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            // Speech Button
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 4,
+                                bottom: 4,
+                              ),
+                              child: Obx(
+                                () => IconActionButton(
+                                  onTap: _handleSpeechInput,
+                                  icon: Icons.mic,
+                                  color:
+                                      speechController.isListening.value
+                                          ? kRed
+                                          : kSkyBlueColor,
+                                ),
+                              ),
+                            ),
+                            // Text Field
+                            Expanded(
+                              child: CommonTextField(
+                                controller: inputController,
+                                minLines: 1,
+                                maxLines: 4,
+                                hintText: 'Type a message...',
+                                hintStyle: context.textTheme.bodyMedium
+                                    ?.copyWith(color: greyColor),
+                                textStyle: context.textTheme.bodyMedium,
+                                contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 12,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            // Send Button
+                            Obx(
+                              () => Padding(
+                                padding: const EdgeInsets.only(right: 8.0),
+                                child: SendButton(
+                                  onTap: _sendMessage,
+                                  isLoading: controller.isLoading.value,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
-        ),
-        bottomNavigationBar: const Padding(
-          padding: kBottomNav,
-          child: BannerAdWidget(adSize: AdSize.banner),
         ),
       ),
     );

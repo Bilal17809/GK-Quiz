@@ -26,8 +26,7 @@ class _InterstitialAdWidgetState extends State<InterstitialAdWidget> {
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      print('Checking interstitial ad for route: $currentRoute');
-      controller.maybeShowAd(onClosed: widget.onAdClosed);
+      controller.showAds(onClosed: widget.onAdClosed);
     });
   }
 
