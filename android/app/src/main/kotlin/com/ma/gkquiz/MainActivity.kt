@@ -1,4 +1,4 @@
-package com.teramob.gk_quiz
+package com.ma.gkquiz.generalknowledge
 
 import android.Manifest
 import android.speech.tts.TextToSpeech
@@ -18,7 +18,7 @@ import io.flutter.plugin.common.MethodChannel
 import java.util.Locale
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "com.teramob.gk_quiz/MainActivity"
+    private val CHANNEL = "com.ma.gkquiz.generalknowledge/MainActivity"
     private val SPEECH_REQUEST_CODE = 1001
     private val PERMISSION_REQUEST_CODE = 1002
     private var pendingResult: MethodChannel.Result? = null

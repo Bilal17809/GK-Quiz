@@ -7,14 +7,24 @@ import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz_levels/widgets/levels_card.dart';
-
-import '../../../core/ads/banner_ad/view/banner_ad.dart';
-import '../../../core/ads/interstitial_ad/view/interstitial_ad.dart';
+import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/common_widgets/grid_data.dart';
 import '../controller/quiz_result_controller.dart';
 
-class QuizLevelsScreen extends StatelessWidget {
+class QuizLevelsScreen extends StatefulWidget {
   const QuizLevelsScreen({super.key});
+
+  @override
+  State<QuizLevelsScreen> createState() => _QuizLevelsScreenState();
+}
+
+class _QuizLevelsScreenState extends State<QuizLevelsScreen> {
+  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  @override
+  void initState() {
+    super.initState();
+    interstitialAd.checkAndShowAd();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,94 +43,92 @@ class QuizLevelsScreen extends StatelessWidget {
       );
     }
 
-    return InterstitialAdWidget(
-      child: Scaffold(
-        appBar: CustomAppBar(subtitle: 'Levels'),
-        body: SafeArea(
-          child: Column(
-            children: [
-              // Topic Header
-              if (topic.isNotEmpty)
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.all(kBodyHp),
-                  padding: const EdgeInsets.all(kBodyHp),
-                  decoration: roundedDecoration.copyWith(
-                    color: gridColors[(gridTexts.contains(topic)
-                                ? gridTexts.indexOf(topic)
-                                : 0) %
-                            gridColors.length]
-                        .withValues(alpha: 0.9),
-                    border: Border.all(color: greyBorderColor),
-                  ),
-                  child: Column(
-                    children: [
-                      Text(
-                        topic,
-                        style: context.textTheme.titleLarge?.copyWith(
-                          color: kWhite,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 8),
-                      Obx(
-                        () => Text(
-                          'Total Questions: ${(controller.topicCounts[topic] ?? 0) - ((controller.topicCounts[topic] ?? 0) % 20)}',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: kWhite,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+    return  Scaffold(
+      appBar: CustomAppBar(subtitle: 'Levels'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Topic Header
+            if (topic.isNotEmpty)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(kBodyHp),
+                padding: const EdgeInsets.all(kBodyHp),
+                decoration: roundedDecoration.copyWith(
+                  color: gridColors[(gridTexts.contains(topic)
+                      ? gridTexts.indexOf(topic)
+                      : 0) %
+                      gridColors.length]
+                      .withValues(alpha: 0.9),
+                  border: Border.all(color: greyBorderColor),
                 ),
-              // Categories List
-              Expanded(
-                child: Obx(() {
-                  if (controller.isLoadingCategories.value) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(16),
-                    itemCount: controller.questionCategories.length,
-                    itemBuilder: (context, categoryIndex) {
-                      final category =
-                          controller.questionCategories[categoryIndex];
-                      return LevelsCard(
-                        category: category,
-                        topicIndex: topicIndex,
-                        categoryIndex: categoryIndex,
-                        onTap: () {
-                          controller.resetQuizState();
-                          Get.toNamed(
-                            RoutesName.quizScreen,
-                            arguments: {
-                              'topic': category.topic,
-                              'categoryIndex': category.categoryIndex,
-                              'isCategory': true,
-                              'topicIndex':
-                                  topicIndex, // Pass the topic grid index
-                              'categoryIndexForResult':
-                                  categoryIndex, // Pass the category index for result
-                            },
-                          );
-                        },
-                        topic: topic,
-                      );
-                    },
-                  );
-                }),
+                child: Column(
+                  children: [
+                    Text(
+                      topic,
+                      style: context.textTheme.titleLarge?.copyWith(
+                        color: kWhite,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Obx(
+                          () => Text(
+                        'Total Questions: ${(controller.topicCounts[topic] ?? 0) - ((controller.topicCounts[topic] ?? 0) % 20)}',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: kWhite,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: const Padding(
-          padding: kBottomNav,
-          child: BannerAdWidget(),
+            // Categories List
+            Expanded(
+              child: Obx(() {
+                if (controller.isLoadingCategories.value) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: controller.questionCategories.length,
+                  itemBuilder: (context, categoryIndex) {
+                    final category =
+                    controller.questionCategories[categoryIndex];
+                    return LevelsCard(
+                      category: category,
+                      topicIndex: topicIndex,
+                      categoryIndex: categoryIndex,
+                      onTap: () {
+                        controller.resetQuizState();
+                        Get.toNamed(
+                          RoutesName.quizScreen,
+                          arguments: {
+                            'topic': category.topic,
+                            'categoryIndex': category.categoryIndex,
+                            'isCategory': true,
+                            'topicIndex':
+                            topicIndex, // Pass the topic grid index
+                            'categoryIndexForResult':
+                            categoryIndex, // Pass the category index for result
+                          },
+                        );
+                      },
+                      topic: topic,
+                    );
+                  },
+                );
+              }),
+            ),
+          ],
         ),
       ),
+      // bottomNavigationBar: const Padding(
+      //   padding: kBottomNav,
+      //   child: BannerAdWidget(),
+      // ),
     );
   }
 }

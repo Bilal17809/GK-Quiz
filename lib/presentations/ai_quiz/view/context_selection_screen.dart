@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
+import 'package:template/ads_manager/interstitial_ads.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/core/common_widgets/textform_field.dart';
 import 'package:template/core/common_widgets/elongated_button.dart';
@@ -23,6 +23,7 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
   final TextEditingController contextController = TextEditingController();
   final RxInt currentSuggestionIndex = 0.obs;
   Timer? _timer;
+  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
 
   final List<String> suggestedContexts = [
     "You're an AI that creates fun, educational quizzes. Keep answers short, age-friendly, and ask one question at a time without giving direct answers.",
@@ -39,6 +40,7 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
   void initState() {
     super.initState();
     _startContextRotation();
+    interstitialAd.checkAndShowAd();
   }
 
   void _startContextRotation() {
@@ -83,117 +85,115 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return InterstitialAdWidget(
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: CustomAppBar(subtitle: 'Smart Quiz'),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(kBodyHp),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Choose AI Personality',
-                  style: context.textTheme.titleLarge,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Define how the AI should behave and respond to your messages',
-                  style: context.textTheme.bodyMedium,
-                ),
-                const SizedBox(height: 28),
-                // Suggested Contexts
-                Container(
-                  padding: const EdgeInsets.all(kBodyHp),
-                  decoration: roundedSkyBlueBorderDecoration,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          const Icon(
-                            Icons.lightbulb_outline,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: CustomAppBar(subtitle: 'Smart Quiz'),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(kBodyHp),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Choose AI Personality',
+                style: context.textTheme.titleLarge,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Define how the AI should behave and respond to your messages',
+                style: context.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 28),
+              // Suggested Contexts
+              Container(
+                padding: const EdgeInsets.all(kBodyHp),
+                decoration: roundedSkyBlueBorderDecoration,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.lightbulb_outline,
+                          color: kSkyBlueColor,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Suggested Context',
+                          style: context.textTheme.titleSmall?.copyWith(
                             color: kSkyBlueColor,
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Suggested Context',
-                            style: context.textTheme.titleSmall?.copyWith(
-                              color: kSkyBlueColor,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          const Spacer(),
-                          ElongatedButton(
-                            height: 32,
-                            width: 80,
-                            color: kSkyBlueColor,
-                            borderRadius: BorderRadius.circular(20),
-                            onTap: _useSuggestedContext,
-                            child: const Text(
-                              'Use This',
-                              style: TextStyle(
-                                color: kWhite,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Obx(
-                        () => Text(
-                          suggestedContexts[currentSuggestionIndex.value],
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: kBlack,
-                            height: 1.4,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 30),
-                // Custom Context Input
-                Text(
-                  'Or Create Your Own Context',
-                  style: context.textTheme.titleMedium,
-                ),
-                const SizedBox(height: 12),
-                Container(
-                  decoration: BoxDecoration(
-                    color: kWhite,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: greyColor.withValues(alpha: 0.3)),
-                  ),
-                  child: CustomTextFormField(
-                    hintText: 'Describe how you want the AI to behave...',
-                    controller: contextController,
-                    keyboardType: TextInputType.multiline,
-                  ),
-                ),
-                const Spacer(),
-                // Start Chat Button
-                ElongatedButton(
-                  height: 50,
-                  width: double.infinity,
-                  color: kSkyBlueColor,
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: _startChat,
-                  child: const Text(
-                    'Start Chat',
-                    style: TextStyle(
-                      color: kWhite,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                        const Spacer(),
+                        ElongatedButton(
+                          height: 32,
+                          width: 80,
+                          color: kSkyBlueColor,
+                          borderRadius: BorderRadius.circular(20),
+                          onTap: _useSuggestedContext,
+                          child: const Text(
+                            'Use This',
+                            style: TextStyle(
+                              color: kWhite,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 12),
+                    Obx(
+                          () => Text(
+                        suggestedContexts[currentSuggestionIndex.value],
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: kBlack,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              // Custom Context Input
+              Text(
+                'Or Create Your Own Context',
+                style: context.textTheme.titleMedium,
+              ),
+              const SizedBox(height: 12),
+              Container(
+                decoration: BoxDecoration(
+                  color: kWhite,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: greyColor.withValues(alpha: 0.3)),
+                ),
+                child: CustomTextFormField(
+                  hintText: 'Describe how you want the AI to behave...',
+                  controller: contextController,
+                  keyboardType: TextInputType.multiline,
+                ),
+              ),
+              const Spacer(),
+              // Start Chat Button
+              ElongatedButton(
+                height: 50,
+                width: double.infinity,
+                color: kSkyBlueColor,
+                borderRadius: BorderRadius.circular(12),
+                onTap: _startChat,
+                child: const Text(
+                  'Start Chat',
+                  style: TextStyle(
+                    color: kWhite,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

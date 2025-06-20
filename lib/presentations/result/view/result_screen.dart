@@ -2,20 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/core/common_widgets/text_icon_button.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/result/controller/result_controller.dart';
-
-import '../../../core/ads/banner_ad/view/banner_ad.dart';
+import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/constant/constant.dart';
 import '../../customized_quiz/controller/cutomized_quiz_controller.dart';
 
-class ResultScreen extends StatelessWidget {
+class ResultScreen extends StatefulWidget {
   const ResultScreen({super.key});
+
+  @override
+  State<ResultScreen> createState() => _ResultScreenState();
+}
+
+class _ResultScreenState extends State<ResultScreen> {
+  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  @override
+  void initState() {
+    super.initState();
+    interstitialAd.checkAndShowAd();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +37,17 @@ class ResultScreen extends StatelessWidget {
 
     if (arguments == null) {
       debugPrint('ERROR: No arguments passed to ResultScreen');
-      return InterstitialAdWidget(
-        child: Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Error: No quiz data found'),
-                ElevatedButton(
-                  onPressed: () => Get.offAllNamed(RoutesName.homeScreen),
-                  child: Text('Go Home'),
-                ),
-              ],
-            ),
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Error: No quiz data found'),
+              ElevatedButton(
+                onPressed: () => Get.offAllNamed(RoutesName.homeScreen),
+                child: Text('Go Home'),
+              ),
+            ],
           ),
         ),
       );
@@ -449,10 +457,10 @@ class ResultScreen extends StatelessWidget {
             ),
           ),
         ),
-        bottomNavigationBar: const Padding(
-          padding: kBottomNav,
-          child: BannerAdWidget(),
-        ),
+        // bottomNavigationBar: const Padding(
+        //   padding: kBottomNav,
+        //   child: BannerAdWidget(),
+        // ),
       ),
     );
   }

@@ -35,7 +35,7 @@ class Routes {
     ),
     GetPage(
       name: RoutesName.splashScreen,
-      page: () => const SplashScreen(),
+      page: () =>  SplashScreen(),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),

@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/presentations/country_quiz/controller/country_quiz_controller.dart';
-
-import '../../../core/ads/banner_ad/view/banner_ad.dart';
+import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/common_audios/quiz_sounds.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/routes/routes_name.dart';
@@ -24,9 +22,11 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
   late String topic;
   late int topicIndex;
   late int categoryIndex;
+  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
 
   @override
   void initState() {
+    interstitialAd.checkAndShowAd();
     super.initState();
     final arguments = Get.arguments as Map<String, dynamic>;
     topic = arguments['topic'] ?? '';
@@ -95,38 +95,36 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
   @override
   Widget build(BuildContext context) {
     final mobileSize = MediaQuery.of(context).size;
-    return InterstitialAdWidget(
-      child: Scaffold(
-        body: Obx(() {
-          if (countryQuizController.isLoadingQuestions.value) {
-            return Center(child: CircularProgressIndicator());
-          }
+    return Scaffold(
+      body: Obx(() {
+        if (countryQuizController.isLoadingQuestions.value) {
+          return Center(child: CircularProgressIndicator());
+        }
 
-          return PageView.builder(
-            controller: countryQuizController.questionsPageController,
-            physics: NeverScrollableScrollPhysics(), // Disable manual scrolling
-            onPageChanged: countryQuizController.onPageChanged,
-            itemCount: countryQuizController.questionsList.length,
-            itemBuilder: (context, pageIndex) {
-              final question = countryQuizController.questionsList[pageIndex];
-              return CountryQuizPage(
-                question: question,
-                currentIndex: pageIndex,
-                totalQuestions: countryQuizController.questionsList.length,
-                controller: countryQuizController,
-                mobileSize: mobileSize,
-                onAnswerSelected: _handleAnswerSelection,
-                topicIndex: topicIndex,
-                topic: topic,
-              );
-            },
-          );
-        }),
-        bottomNavigationBar: const Padding(
-          padding: kBottomNav,
-          child: BannerAdWidget(),
-        ),
-      ),
+        return PageView.builder(
+          controller: countryQuizController.questionsPageController,
+          physics: NeverScrollableScrollPhysics(), // Disable manual scrolling
+          onPageChanged: countryQuizController.onPageChanged,
+          itemCount: countryQuizController.questionsList.length,
+          itemBuilder: (context, pageIndex) {
+            final question = countryQuizController.questionsList[pageIndex];
+            return CountryQuizPage(
+              question: question,
+              currentIndex: pageIndex,
+              totalQuestions: countryQuizController.questionsList.length,
+              controller: countryQuizController,
+              mobileSize: mobileSize,
+              onAnswerSelected: _handleAnswerSelection,
+              topicIndex: topicIndex,
+              topic: topic,
+            );
+          },
+        );
+      }),
+      // bottomNavigationBar: const Padding(
+      //   padding: kBottomNav,
+      //   child: BannerAdWidget(),
+      // ),
     );
   }
 }

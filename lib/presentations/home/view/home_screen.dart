@@ -42,7 +42,7 @@ class HomeScreen extends StatelessWidget {
                 child: Image.asset(
                   'assets/images/no-ads.png',
                   color: kWhite,
-                  width: 24,
+                  width: 26,
                 ),
               ),
             ),

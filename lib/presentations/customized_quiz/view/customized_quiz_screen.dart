@@ -1,17 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/ads/interstitial_ad/view/interstitial_ad.dart';
 import 'package:template/core/common_widgets/custom_app_bar.dart';
 import 'package:template/presentations/customized_quiz/controller/cutomized_quiz_controller.dart';
-
-import '../../../core/ads/banner_ad/view/banner_ad.dart';
+import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../widgets/customized_quiz_content.dart';
 
-class CustomizedQuizScreen extends StatelessWidget {
+class CustomizedQuizScreen extends StatefulWidget {
   const CustomizedQuizScreen({super.key});
 
+  @override
+  State<CustomizedQuizScreen> createState() => _CustomizedQuizScreenState();
+}
+
+class _CustomizedQuizScreenState extends State<CustomizedQuizScreen> {
+  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  @override
+  void initState() {
+    super.initState();
+    interstitialAd.checkAndShowAd();
+  }
   @override
   Widget build(BuildContext context) {
     final customizedQuizController = Get.put(CustomizedQuizController());
@@ -19,28 +28,26 @@ class CustomizedQuizScreen extends StatelessWidget {
     final topic = args['topic'] ?? '';
     final questionCount = args['questionCount'] ?? 0;
 
-    return InterstitialAdWidget(
-      child: Scaffold(
-        backgroundColor: kWhite,
-        appBar: CustomAppBar(subtitle: '$topic - Questions: $questionCount'),
+    return Scaffold(
+      backgroundColor: kWhite,
+      appBar: CustomAppBar(subtitle: '$topic - Questions: $questionCount'),
 
-        body: Obx(
-          () => CustomizedQuizContent(
-            isLoading: customizedQuizController.isLoading.value,
-            questions: customizedQuizController.questionsList,
-            pageController: customizedQuizController.quizPageController,
-            currentIndex: customizedQuizController.currentQuestionIndex.value,
-            onPageChanged: customizedQuizController.onPageChanged,
-            selectedAnswers: customizedQuizController.selectedAnswers,
-            showAnswers: customizedQuizController.shouldShowAnswerResults,
-            onAnswerSelected: customizedQuizController.handleAnswerSelection,
-          ),
-        ),
-        bottomNavigationBar: const Padding(
-          padding: kBottomNav,
-          child: BannerAdWidget(),
+      body: Obx(
+            () => CustomizedQuizContent(
+          isLoading: customizedQuizController.isLoading.value,
+          questions: customizedQuizController.questionsList,
+          pageController: customizedQuizController.quizPageController,
+          currentIndex: customizedQuizController.currentQuestionIndex.value,
+          onPageChanged: customizedQuizController.onPageChanged,
+          selectedAnswers: customizedQuizController.selectedAnswers,
+          showAnswers: customizedQuizController.shouldShowAnswerResults,
+          onAnswerSelected: customizedQuizController.handleAnswerSelection,
         ),
       ),
+      // bottomNavigationBar: const Padding(
+      //   padding: kBottomNav,
+      //   child: BannerAdWidget(),
+      // ),
     );
   }
 }
