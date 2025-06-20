@@ -20,8 +20,10 @@ import 'package:template/presentations/quiz_levels/view/quiz_levels_screen.dart'
 import 'package:template/presentations/quiz_selection/view/quiz_selection_screen.dart';
 import 'package:template/presentations/result/view/result_screen.dart';
 import 'package:template/presentations/splash/view/splash_screen.dart';
+import 'package:template/presentations/terms/view/unsubscribe_info.dart';
 
 import '../../presentations/learning_hub/view/learning_hub_screen.dart';
+import '../../presentations/terms/view/terms.dart';
 
 class Routes {
   static final routes = [
@@ -149,6 +151,18 @@ class Routes {
     GetPage(
       name: RoutesName.purchaseScreen,
       page: () => PurchaseScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.termsScreen,
+      page: () => TermsScreen(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.unsubscribeInfoScreen,
+      page: () => UnsubscribeInfoScreen(),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),

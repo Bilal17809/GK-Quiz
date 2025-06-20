@@ -20,4 +20,6 @@ abstract class RoutesName {
   static const String countryLessonsScreen = '/country_lessons_screen';
   static const String countryQnaScreen = '/country_qna_screen';
   static const String purchaseScreen = '/purchase_screen';
+  static const String termsScreen = '/terms_screen';
+  static const String unsubscribeInfoScreen = '/unsubscribe_info_screen';
 }

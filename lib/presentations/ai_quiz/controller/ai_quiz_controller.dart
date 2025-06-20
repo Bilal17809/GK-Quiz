@@ -1,8 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:template/core/theme/app_colors.dart';
-import 'package:toastification/toastification.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import '../../../core/routes/routes_name.dart';
 import '../../../core/service/ai_service.dart';

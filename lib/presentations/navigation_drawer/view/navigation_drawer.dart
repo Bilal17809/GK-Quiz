@@ -5,9 +5,6 @@ import 'package:template/core/local_storage/shared_preferences_storage.dart';
 import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:toastification/toastification.dart';
-import '../../../core/common_widgets/custom_app_bar.dart';
-import '../../../core/common_widgets/round_image.dart';
-import '../../../core/constant/constant.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({super.key});

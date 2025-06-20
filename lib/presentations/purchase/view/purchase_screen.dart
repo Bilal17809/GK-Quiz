@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:template/core/constant/constant.dart';
+import 'package:template/core/routes/routes_name.dart';
 import 'package:template/core/theme/app_colors.dart';
 import 'package:template/core/theme/app_styles.dart';
 import 'package:toastification/toastification.dart';
@@ -264,17 +265,7 @@ class PurchaseScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          toastification.show(
-                            type: ToastificationType.warning,
-                            title: const Text('Info'),
-                            description: Text('Terms & Conditions clicked'),
-                            style: ToastificationStyle.flatColored,
-                            autoCloseDuration: const Duration(seconds: 2),
-                            primaryColor: skyColor,
-                            margin: const EdgeInsets.all(8),
-                            closeOnClick: true,
-                            alignment: Alignment.bottomCenter,
-                          );
+                          Get.offNamed(RoutesName.termsScreen);
                         },
                         child: Text(
                           'Terms & Conditions',
@@ -286,17 +277,7 @@ class PurchaseScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          toastification.show(
-                            type: ToastificationType.warning,
-                            title: const Text('Info'),
-                            description: Text('How to unsubscribe clicked'),
-                            style: ToastificationStyle.flatColored,
-                            autoCloseDuration: const Duration(seconds: 2),
-                            primaryColor: skyColor,
-                            margin: const EdgeInsets.all(8),
-                            closeOnClick: true,
-                            alignment: Alignment.bottomCenter,
-                          );
+                          Get.offNamed(RoutesName.unsubscribeInfoScreen);
                         },
                         child: Text(
                           'How to unsubscribe?',
