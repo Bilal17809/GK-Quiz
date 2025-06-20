@@ -66,7 +66,7 @@ class QuizLevelsScreen extends StatelessWidget {
                       const SizedBox(height: 8),
                       Obx(
                         () => Text(
-                          'Total Questions: ${controller.topicCounts[topic] ?? 0}',
+                          'Total Questions: ${(controller.topicCounts[topic] ?? 0) - ((controller.topicCounts[topic] ?? 0) % 20)}',
                           style: context.textTheme.bodyMedium?.copyWith(
                             color: kWhite,
                             fontWeight: FontWeight.w500,

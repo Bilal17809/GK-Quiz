@@ -52,26 +52,6 @@ class NavigationDrawerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: CustomAppBar(
-      //   subtitle: 'Enrich your knowledge',
-      //   useBackButton: false,
-      //   hideTitle: false,
-      //   actions: [
-      //     Padding(
-      //       padding: const EdgeInsets.symmetric(horizontal: kBodyHp),
-      //       child: RoundedButton(
-      //         onTap: () {
-      //           Get.toNamed(RoutesName.purchaseScreen);
-      //         },
-      //         child: Image.asset(
-      //           'assets/images/no-ads.png',
-      //           color: kWhite,
-      //           width: 24,
-      //         ),
-      //       ),
-      //     ),
-      //   ],
-      // ),
       backgroundColor: Colors.transparent,
       body: Drawer(
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
@@ -90,10 +70,13 @@ class NavigationDrawerWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset('assets/icon.png', height: 60),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 12.0),
+                    child: Image.asset('assets/icon.png', height: 80),
+                  ),
                   Text(
                     'GK Quiz',
-                    style: context.textTheme.headlineLarge?.copyWith(
+                    style: context.textTheme.headlineMedium?.copyWith(
                       color: kWhite,
                     ),
                   ),
@@ -104,11 +87,6 @@ class NavigationDrawerWidget extends StatelessWidget {
               icon: Icons.restart_alt,
               title: 'Reset App',
               onTap: _showResetConfirmation,
-            ),
-            DrawerTile(
-              icon: Icons.settings_rounded,
-              title: 'Settings',
-              onTap: () {},
             ),
             DrawerTile(
               icon: Icons.star_rounded,

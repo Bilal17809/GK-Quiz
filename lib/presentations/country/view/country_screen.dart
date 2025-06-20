@@ -156,7 +156,7 @@ class _CountryScreenState extends State<CountryScreen> {
                               ),
                               padding: EdgeInsets.all(6),
                               child: Text(
-                                '${countryController.topicCounts[topic] ?? 0}',
+                                '${(countryController.topicCounts[topic] ?? 0) - ((countryController.topicCounts[topic] ?? 0) % 20)}',
                                 style: context.textTheme.bodyMedium?.copyWith(
                                   color: textWhiteColor,
                                   fontSize: 10,

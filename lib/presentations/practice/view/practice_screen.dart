@@ -184,7 +184,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
                       }),
                       Obx(
                         () => Text(
-                          'Ques: ${practiceController.topicCounts[topic] ?? 0}',
+                          'Ques: ${(practiceController.topicCounts[topic] ?? 0) - ((practiceController.topicCounts[topic] ?? 0) % 20)}',
                           style: context.textTheme.bodySmall?.copyWith(
                             color: kWhite,
                             fontSize: 10,

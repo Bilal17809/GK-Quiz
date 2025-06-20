@@ -151,12 +151,13 @@ class PurchaseScreen extends StatelessWidget {
                         }).toList(),
                   ),
                 ),
-                SizedBox(height: 12),
-                // Plans using ListView.builder with Card and ListTile
+                // Plans
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: mobileWidth * 0.04),
                   child: ListView.builder(
                     shrinkWrap: true,
+                    cacheExtent: 0,
+                    padding: EdgeInsets.zero,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: 2,
                     itemBuilder: (context, index) {
@@ -203,9 +204,8 @@ class PurchaseScreen extends StatelessWidget {
                 // Cancel info
                 Text(
                   '>> Cancel anytime atleast 24 hours before renewal',
-                  style: TextStyle(
-                    color: Colors.blue[700],
-                    fontSize: mobileWidth * 0.03,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: kSkyBlueColor,
                   ),
                 ),
                 SizedBox(height: 12),
@@ -222,20 +222,42 @@ class PurchaseScreen extends StatelessWidget {
                           controller.isLoading.value
                               ? null
                               : () async {
-                                await controller.startFreeTrial();
-                                toastification.show(
-                                  type: ToastificationType.warning,
-                                  title: const Text('Success'),
-                                  description: Text(
-                                    'Free trial started successfully',
-                                  ),
-                                  style: ToastificationStyle.flatColored,
-                                  autoCloseDuration: const Duration(seconds: 2),
-                                  primaryColor: skyColor,
-                                  margin: const EdgeInsets.all(8),
-                                  closeOnClick: true,
-                                  alignment: Alignment.bottomCenter,
-                                );
+                                final success =
+                                    await controller.startFreeTrial();
+
+                                if (success) {
+                                  toastification.show(
+                                    type: ToastificationType.success,
+                                    title: const Text('Success'),
+                                    description: const Text(
+                                      'Free trial started successfully',
+                                    ),
+                                    style: ToastificationStyle.flatColored,
+                                    autoCloseDuration: const Duration(
+                                      seconds: 3,
+                                    ),
+                                    primaryColor: Colors.green,
+                                    margin: const EdgeInsets.all(8),
+                                    closeOnClick: true,
+                                    alignment: Alignment.bottomCenter,
+                                  );
+                                } else {
+                                  toastification.show(
+                                    type: ToastificationType.error,
+                                    title: const Text('Error'),
+                                    description: const Text(
+                                      'Free trial is currently unavailable. Please try again later.',
+                                    ),
+                                    style: ToastificationStyle.flatColored,
+                                    autoCloseDuration: const Duration(
+                                      seconds: 4,
+                                    ),
+                                    primaryColor: Colors.red,
+                                    margin: const EdgeInsets.all(8),
+                                    closeOnClick: true,
+                                    alignment: Alignment.bottomCenter,
+                                  );
+                                }
                               },
                       child:
                           controller.isLoading.value
@@ -265,7 +287,7 @@ class PurchaseScreen extends StatelessWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Get.offNamed(RoutesName.termsScreen);
+                          Get.toNamed(RoutesName.termsScreen);
                         },
                         child: Text(
                           'Terms & Conditions',
@@ -277,7 +299,7 @@ class PurchaseScreen extends StatelessWidget {
                       ),
                       GestureDetector(
                         onTap: () {
-                          Get.offNamed(RoutesName.unsubscribeInfoScreen);
+                          Get.toNamed(RoutesName.unsubscribeInfoScreen);
                         },
                         child: Text(
                           'How to unsubscribe?',
@@ -294,7 +316,7 @@ class PurchaseScreen extends StatelessWidget {
               ],
             ),
           ),
-          // Close button (positioned at top right)
+          // Close button
           Positioned(
             top: 0,
             right: mobileWidth * 0.04,
@@ -306,11 +328,11 @@ class PurchaseScreen extends StatelessWidget {
                   child: Container(
                     padding: EdgeInsets.all(mobileWidth * 0.02),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: kWhite.withOpacity(0.2),
                       shape: BoxShape.circle,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
+                          color: kBlack.withOpacity(0.1),
                           blurRadius: 4,
                           offset: const Offset(0, 2),
                         ),

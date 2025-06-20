@@ -93,7 +93,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
   Widget build(BuildContext context) {
     return InterstitialAdWidget(
       child: Scaffold(
-        appBar: CustomAppBar(subtitle: 'AI Chat'),
+        appBar: CustomAppBar(subtitle: 'Smart Chat'),
         body: SafeArea(
           child: Column(
             children: [
