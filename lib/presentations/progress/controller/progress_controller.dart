@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/country_grid.dart';
-
+import '../../../core/common_widgets/country_grid.dart';
 import '../../../core/common_widgets/grid_data.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
 import '../../quiz/controller/quiz_controller.dart';
@@ -43,6 +42,7 @@ class ProgressController extends GetxController {
       await calcCombinedQuizStats();
       await calcLearnProgress();
       await loadDailyPerformance();
+      calcLearnProgress();
     } catch (e) {
       debugPrint('Error loading progress data: $e');
     } finally {

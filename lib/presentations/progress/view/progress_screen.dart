@@ -1,19 +1,17 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/bottom_nav_bar.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/common_widgets/progress_circle.dart';
-import 'package:template/core/common_widgets/section_card.dart';
-import 'package:template/core/constant/constant.dart';
-import 'package:template/presentations/progress/controller/progress_controller.dart';
 import 'package:template/presentations/progress/view/progress_chart.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
-
-import '../../../core/common_widgets/circular_progress.dart';
+import '../../../core/common_widgets/bottom_nav_bar.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/common_widgets/progress_circle.dart';
+import '../../../core/common_widgets/section_card.dart';
+import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/common_widgets/circular_progress.dart';
+import '../../quiz/controller/quiz_controller.dart';
+import '../controller/progress_controller.dart';
 
 class ProgressScreen extends StatefulWidget {
   const ProgressScreen({super.key});
@@ -30,11 +28,13 @@ class _ProgressScreenState extends State<ProgressScreen> {
   void initState() {
     super.initState();
     progressController = Get.put(ProgressController());
+    progressController.loadAllData();
     Get.put(QuizController());
     _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
       if (progressController.totalAvailable.value > 0) timer.cancel();
     });
   }
+
 
   @override
   void dispose() {
