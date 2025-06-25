@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/constant/constant.dart';
-
 import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/constant/constant.dart';
 
 class UnsubscribeInfoScreen extends StatelessWidget {
   const UnsubscribeInfoScreen({super.key});

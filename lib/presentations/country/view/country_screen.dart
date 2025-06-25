@@ -1,17 +1,19 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/routes/routes_name.dart';
-import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/country/controller/country_controller.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../core/common_widgets/country_grid.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../country_levels/controller/country_levels_controller.dart';
+import '../../../ads_manager/interstitial_ads.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/theme/app_styles.dart';
+
+import '../../quiz/controller/quiz_controller.dart';
+import '../controller/country_controller.dart';
 
 class CountryScreen extends StatefulWidget {
   const CountryScreen({super.key});
@@ -26,12 +28,15 @@ class _CountryScreenState extends State<CountryScreen> {
   final CountryLevelsController levelsController = Get.put(
     CountryLevelsController(),
   );
+  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
 
   Timer? _refreshTimer;
 
   @override
   void initState() {
     super.initState();
+    interstitialAd.checkAndShowAd();
     _refreshTimer = Timer.periodic(const Duration(seconds: 2), (timer) {
       countryController.loadAllQuestions();
       levelsController.refreshAllResults();
@@ -217,10 +222,9 @@ class _CountryScreenState extends State<CountryScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox():Obx(() {
+          return bannerAdController.getBannerAdWidget('ad2');
+      }),
     );
   }
 }

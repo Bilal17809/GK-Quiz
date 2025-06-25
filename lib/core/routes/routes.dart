@@ -1,29 +1,28 @@
 import 'package:get/get.dart';
 import 'package:template/core/routes/routes_name.dart';
-import 'package:template/presentations/ai_quiz/view/ai_quiz_screen.dart';
-import 'package:template/presentations/ai_quiz/view/context_selection_screen.dart';
-import 'package:template/presentations/country/view/country_screen.dart';
-import 'package:template/presentations/country_lessons/view/country_lessons_screen.dart';
-import 'package:template/presentations/country_levels/view/country_levels_screen.dart';
-import 'package:template/presentations/country_qna/view/country_qna_screen.dart';
-import 'package:template/presentations/country_quiz/view/country_quiz_screen.dart';
-import 'package:template/presentations/country_result/view/country_result_screen.dart';
-import 'package:template/presentations/country_review/view/country_review_screen.dart';
-import 'package:template/presentations/customized_quiz/view/customized_quiz_screen.dart';
-import 'package:template/presentations/home/view/home_screen.dart';
-import 'package:template/presentations/practice/view/practice_screen.dart';
-import 'package:template/presentations/progress/view/progress_screen.dart';
-import 'package:template/presentations/purchase/view/purchase_screen.dart';
-import 'package:template/presentations/qna/view/qna_screen.dart';
-import 'package:template/presentations/quiz/view/quiz_screen.dart';
-import 'package:template/presentations/quiz_levels/view/quiz_levels_screen.dart';
-import 'package:template/presentations/quiz_selection/view/quiz_selection_screen.dart';
-import 'package:template/presentations/result/view/result_screen.dart';
-import 'package:template/presentations/splash/view/splash_screen.dart';
-import 'package:template/presentations/terms/view/unsubscribe_info.dart';
-
+import '../../presentations/ai_quiz/view/ai_quiz_screen.dart';
+import '../../presentations/ai_quiz/view/context_selection_screen.dart';
+import '../../presentations/country/view/country_screen.dart';
+import '../../presentations/country_lessons/view/country_lessons_screen.dart';
+import '../../presentations/country_levels/view/country_levels_screen.dart';
+import '../../presentations/country_qna/view/country_qna_screen.dart';
+import '../../presentations/country_quiz/view/country_quiz_screen.dart';
+import '../../presentations/country_result/view/country_result_screen.dart';
+import '../../presentations/country_review/view/country_review_screen.dart';
+import '../../presentations/customized_quiz/view/customized_quiz_screen.dart';
+import '../../presentations/home/view/home_screen.dart';
 import '../../presentations/learning_hub/view/learning_hub_screen.dart';
+import '../../presentations/practice/view/practice_screen.dart';
+import '../../presentations/progress/view/progress_screen.dart';
+import '../../presentations/purchase/view/purchase_screen.dart';
+import '../../presentations/qna/view/qna_screen.dart';
+import '../../presentations/quiz/view/quiz_screen.dart';
+import '../../presentations/quiz_levels/view/quiz_levels_screen.dart';
+import '../../presentations/quiz_selection/view/quiz_selection_screen.dart';
+import '../../presentations/result/view/result_screen.dart';
+import '../../presentations/splash/view/splash_screen.dart';
 import '../../presentations/terms/view/terms.dart';
+import '../../presentations/terms/view/unsubscribe_info.dart';
 
 class Routes {
   static final routes = [

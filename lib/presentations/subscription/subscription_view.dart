@@ -7,8 +7,6 @@
 // import 'package:in_app_purchase_android/in_app_purchase_android.dart';
 // import 'package:shared_preferences/shared_preferences.dart';
 // import '../remove_ads_contrl/remove_ads_contrl.dart';
-// import '../term/term.dart';
-// import '../them_controller/them_controller.dart';
 //
 // final bool _kAutoConsume = Platform.isIOS || true;
 //
@@ -37,8 +35,6 @@
 //   bool _purchasePending = false;
 //   bool _loading = true;
 //   String? _queryProductError;
-//
-//   final ThemeController themeController = Get.put(ThemeController());
 //   final RemoveAds removeAdsController = Get.put(RemoveAds());
 //
 //
@@ -99,21 +95,19 @@
 //
 //   @override
 //   Widget build(BuildContext context) {
-//     final check = themeController.isDarkMode.value;
 //     return Scaffold(
 //       backgroundColor:Colors.white,
 //       body: LayoutBuilder(
 //         builder: (context, constraints) {
-//           return _buildBody(constraints, check);
+//           return _buildBody(constraints,);
 //         },
 //       ),
 //     );
 //   }
 //
-//   Widget _buildBody(BoxConstraints constraints, bool isDarkMode) {
+//   Widget _buildBody(BoxConstraints constraints) {
 //     final screenWidth = constraints.maxWidth;
 //     final screenHeight = constraints.maxHeight;
-//     final check = themeController.isDarkMode.value;
 //
 //
 //     // Condition for smaller screens (less than 600px width)
@@ -200,7 +194,7 @@
 //                       margin: const EdgeInsets.symmetric(horizontal: 2), // Reduced margin
 //                       padding: const EdgeInsets.all(8),
 //                       decoration: BoxDecoration(
-//                         color: check ? Colors.grey.shade300 : Colors.grey.shade100,
+//                         color: Colors.grey.shade100,
 //                         borderRadius: BorderRadius.circular(10),
 //                         boxShadow: [
 //                           BoxShadow(
@@ -258,7 +252,7 @@
 //                   padding: EdgeInsets.only(left: isSmallScreen ? 20 : screenWidth * 0.07),
 //                   child: InkWell(
 //                     onTap: () {
-//                       Get.to(TermScreen());
+//                       // Get.to(TermScreen());
 //                     },
 //                     child: Row(
 //                       children: [
@@ -439,32 +433,6 @@
 //
 //   }
 //
-//   // void _showProcessingDialog(BuildContext context) {
-//   //   // First, show the dialog and keep its context
-//   //   showDialog<void>(
-//   //     context: context,
-//   //     barrierDismissible: false,
-//   //     builder: (BuildContext dialogContext) {
-//   //       // Start a timer that pops the dialog after 20 seconds
-//   //       Timer(Duration(seconds: 20), () {
-//   //         if (Navigator.of(dialogContext).canPop()) {
-//   //           Navigator.of(dialogContext).pop();
-//   //         }
-//   //       });
-//   //
-//   //       return AlertDialog(
-//   //         content: Row(
-//   //           children: [
-//   //             CircularProgressIndicator(),
-//   //             SizedBox(width: 10),
-//   //             Text('Processing'),
-//   //           ],
-//   //         ),
-//   //       );
-//   //     },
-//   //   );
-//   // }
-//
 //   Future<void> _buyProduct(ProductDetails product, PurchaseDetails? purchase) async {
 //     // 1. Show custom loader
 //     showDialog(
@@ -520,27 +488,6 @@
 //       }
 //     }
 //   }
-//
-//
-//   // Future<void> _buyProduct(ProductDetails product, PurchaseDetails? purchase) async {
-//   //   final purchaseParam = GooglePlayPurchaseParam(
-//   //     productDetails: product,
-//   //     changeSubscriptionParam: purchase != null
-//   //         ? ChangeSubscriptionParam(
-//   //       oldPurchaseDetails: purchase as GooglePlayPurchaseDetails,
-//   //     )
-//   //         : null,
-//   //   );
-//   //
-//   //   if (product.id == _kConsumableId) {
-//   //     await _inAppPurchase.buyConsumable(
-//   //       purchaseParam: purchaseParam,
-//   //       autoConsume: _kAutoConsume,
-//   //     );
-//   //   } else {
-//   //     await _inAppPurchase.buyNonConsumable(purchaseParam: purchaseParam);
-//   //   }
-//   // }
 //
 //   Future<void> _listenToPurchaseUpdated(List<PurchaseDetails> detailsList) async {
 //     for (var details in detailsList) {
@@ -614,42 +561,4 @@
 //       );
 //     }
 //   }
-// // Future<void> _restorePurchases() async {
-// //   final bool isAvailable = await _inAppPurchase.isAvailable();
-// //   if (!isAvailable) {
-// //     ScaffoldMessenger.of(context).showSnackBar(
-// //       SnackBar(content: Text('Store is not available!')),
-// //     );
-// //     return;
-// //   }
-// //
-// //   // Initiate the restore process
-// //   await _inAppPurchase.restorePurchases();
-// //
-// //   // Listen to the purchase stream to capture restored purchases
-// //   final Stream<List<PurchaseDetails>> purchaseUpdated = _inAppPurchase.purchaseStream;
-// //
-// //   // Listen for restored purchases
-// //   purchaseUpdated.listen((purchaseDetailsList) async {
-// //     for (var purchaseDetails in purchaseDetailsList) {
-// //       if (purchaseDetails.status == PurchaseStatus.restored) {
-// //         // Handle restored purchase
-// //         final prefs = await SharedPreferences.getInstance();
-// //         await prefs.setBool('isSubscribed', true);
-// //         await prefs.setString('subscriptionId', purchaseDetails.productID);
-// //
-// //         // Show success message to the user
-// //         ScaffoldMessenger.of(context).showSnackBar(
-// //           SnackBar(content: Text('Purchase restored successfully!')),
-// //         );
-// //       } else if (purchaseDetails.status == PurchaseStatus.error) {
-// //         // Handle errors
-// //         ScaffoldMessenger.of(context).showSnackBar(
-// //           SnackBar(content: Text('Error restoring purchase: ${purchaseDetails.error}')),
-// //         );
-// //       }
-// //     }
-// //   });
-// // }
-//
 // }

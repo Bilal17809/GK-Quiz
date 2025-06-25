@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
 import '../../../core/common_widgets/grid_data.dart';
+import '../../quiz/controller/quiz_controller.dart';
 import '../../quiz_levels/controller/quiz_result_controller.dart';
 
 class PracticeController extends GetxController {

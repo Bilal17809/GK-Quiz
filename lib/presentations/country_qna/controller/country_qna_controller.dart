@@ -1,9 +1,19 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:template/core/service/question_db_service.dart';
-import 'package:template/core/local_storage/shared_preferences_storage.dart';
-import 'package:template/core/models/questions_data.dart';
-import 'package:template/presentations/progress/controller/progress_controller.dart';
+import '../../../ads_manager/interstitial_ads.dart';
+import '../../../core/common_widgets/common_text_field.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/common_widgets/icon_buttons.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/local_storage/shared_preferences_storage.dart';
+import '../../../core/models/questions_data.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/service/question_db_service.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_styles.dart';
+import 'package:toastification/toastification.dart';
+
+import '../../progress/controller/progress_controller.dart';
 
 class CountryQnaController extends GetxController {
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;

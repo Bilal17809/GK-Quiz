@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:panara_dialogs/panara_dialogs.dart'; // Add this import
-import 'package:template/core/local_storage/shared_preferences_storage.dart';
-import 'package:template/core/routes/routes_name.dart';
-import 'package:template/core/theme/app_colors.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toastification/toastification.dart';
+import 'package:url_launcher/url_launcher.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/theme/app_colors.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({super.key});
@@ -29,8 +30,44 @@ class NavigationDrawerWidget extends StatelessWidget {
     );
   }
 
+  // void _resetApp() async {
+  //   await SharedPreferencesService.to.clear();
+  //   Get.offAllNamed(RoutesName.homeScreen);
+  //   toastification.show(
+  //     type: ToastificationType.custom(
+  //       'Reset App',
+  //       kSkyBlueColor,
+  //       Icons.restart_alt,
+  //     ),
+  //     title: const Text('Reset App'),
+  //     description: const Text('App has been reset successfully'),
+  //     style: ToastificationStyle.minimal,
+  //     autoCloseDuration: const Duration(seconds: 2),
+  //     primaryColor: skyColor,
+  //     margin: const EdgeInsets.all(8),
+  //     closeOnClick: true,
+  //     alignment: Alignment.bottomCenter,
+  //   );
+  // }
   void _resetApp() async {
-    await SharedPreferencesService.to.clear();
+    final prefs = await SharedPreferences.getInstance();
+
+    // Store subscription values before clearing
+    final isSubscribed = prefs.getBool('SubscribedGk') ?? false;
+    final subscriptionId = prefs.getString('subscriptionId');
+    final hasSeenSubscription = prefs.getBool('hasSubscriptionSeen') ?? false;
+
+    // Clear all preferences
+    await prefs.clear();
+
+    // Restore subscription values
+    await prefs.setBool('SubscribedGk', isSubscribed);
+    if (subscriptionId != null) {
+      await prefs.setString('subscriptionId', subscriptionId);
+    }
+    await prefs.setBool('hasSubscriptionSeen', hasSeenSubscription);
+
+    // Navigate and show toast
     Get.offAllNamed(RoutesName.homeScreen);
     toastification.show(
       type: ToastificationType.custom(
@@ -48,6 +85,35 @@ class NavigationDrawerWidget extends StatelessWidget {
       alignment: Alignment.bottomCenter,
     );
   }
+
+
+  void privacy() async {
+    const url = 'https://privacypolicymuslimapplications.blogspot.com/';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void rateUs() async {
+    const url = 'https://play.google.com/store/apps/details?id=com.ma.gkquiz.generalknowledge';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void moreApp() async {
+    const url = 'https://play.google.com/store/apps/developer?id=Muslim+Applications';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +152,6 @@ class NavigationDrawerWidget extends StatelessWidget {
             title: 'Reset App',
             onTap: _showResetConfirmation,
           ),
-          DrawerTile(
-            icon: Icons.star_rounded,
-            title: 'Rate Us',
-            onTap: () {},
-          ),
           ListTile(
             leading: Image.asset(
               'assets/images/no-ads.png',
@@ -103,9 +164,25 @@ class NavigationDrawerWidget extends StatelessWidget {
             },
           ),
           DrawerTile(
+            icon: Icons.star_rounded,
+            title: 'Rate Us',
+            onTap: () {
+              rateUs();
+            },
+          ),
+          DrawerTile(
             icon: Icons.privacy_tip_rounded,
             title: 'Privacy Policy',
-            onTap: () {},
+            onTap: () {
+              privacy();
+            },
+          ),
+          DrawerTile(
+            icon: Icons.more,
+            title: 'More App',
+            onTap: () {
+              moreApp();
+            },
           ),
         ],
       ),

@@ -1,10 +1,10 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:template/core/theme/app_colors.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
 import '../../../core/routes/routes_name.dart';
 import '../../../core/service/ai_service.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
+import '../../../core/theme/app_colors.dart';
 
 class AiQuizController extends GetxController {
   final RxList<Map<String, String>> chatHistory = <Map<String, String>>[].obs;

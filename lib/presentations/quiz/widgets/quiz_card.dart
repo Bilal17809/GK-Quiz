@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:template/core/common_widgets/common_widgets.dart';
-import 'package:template/core/common_widgets/elongated_button.dart';
-import 'package:template/core/models/questions_data.dart';
-import 'package:template/core/theme/app_colors.dart';
-import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
-
+import '../../../core/common_widgets/elongated_button.dart';
+import '../../../core/common_widgets/round_image.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/models/questions_data.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_styles.dart';
 import '../../../core/utils/ui_helpers.dart';
+import '../controller/quiz_controller.dart';
 
 class QuizCard extends StatelessWidget {
   final QuestionsModel question;

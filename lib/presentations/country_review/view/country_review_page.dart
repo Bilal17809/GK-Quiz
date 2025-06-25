@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:template/presentations/country_review/controller/country_review_controller.dart';
 
 import '../../../core/constant/constant.dart';
 import '../../../core/models/questions_data.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
+import '../controller/country_review_controller.dart';
 import 'country_review_options.dart';
 
 class CountryReviewPage extends StatelessWidget {

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/models/category_model.dart';
-import 'package:template/core/theme/app_colors.dart';
-import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/country_levels/controller/country_levels_controller.dart';
+import '../../../core/models/category_model.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_styles.dart';
+import 'package:toastification/toastification.dart';
 
-class CountryLevelsCard extends StatelessWidget {
+import '../controller/country_levels_controller.dart';
+
+class CountryLevelsCard extends StatefulWidget {
   final CategoryModel category;
   final VoidCallback onTap;
   final String topic;
@@ -22,14 +25,20 @@ class CountryLevelsCard extends StatelessWidget {
   });
 
   @override
+  State<CountryLevelsCard> createState() => _CountryLevelsCardState();
+}
+
+class _CountryLevelsCardState extends State<CountryLevelsCard> {
+  @override
   Widget build(BuildContext context) {
     final CountryLevelsController countryResultController =
         Get.find<CountryLevelsController>();
 
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
-        onTap: onTap,
+        onTap: widget.onTap,
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.all(16),
@@ -51,7 +60,7 @@ class CountryLevelsCard extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        '${category.categoryIndex}',
+                        '${widget.category.categoryIndex}',
                         style: Get.textTheme.titleSmall?.copyWith(
                           color: kWhite,
                           fontWeight: FontWeight.bold,
@@ -66,7 +75,7 @@ class CountryLevelsCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Level: ${category.categoryIndex}',
+                          'Level: ${widget.category.categoryIndex}',
                           style: Get.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.bold,
                             color: kWhite,
@@ -74,7 +83,7 @@ class CountryLevelsCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Total: ${category.totalQuestions} Questions',
+                          'Total: ${widget.category.totalQuestions} Questions',
                           style: Get.textTheme.bodySmall?.copyWith(
                             color: kWhite,
                             fontWeight: FontWeight.w500,
@@ -101,106 +110,110 @@ class CountryLevelsCard extends StatelessWidget {
               ),
               // Quiz Results Section
               const SizedBox(height: 12),
-              FutureBuilder<Map<String, dynamic>>(
-                future: countryResultController.getQuizResult(
-                  topicIndex,
-                  categoryIndex + 1,
-                ),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Container(
-                      padding: const EdgeInsets.all(8),
-                      child: const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                    );
-                  }
 
-                  // Results section
-                  final data = snapshot.data!;
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: kWhite.withValues(alpha: 0.75),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.check_circle,
-                                      color: kDarkGreen1,
-                                      size: 16,
-                                    ),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${data['correct'] ?? 0}',
-                                      style: Get.textTheme.bodySmall?.copyWith(
+              Obx((){
+                countryResultController.refreshAllResults();
+                return FutureBuilder<Map<String, dynamic>>(
+                  future: countryResultController.getQuizResult(
+                    widget.topicIndex,
+                    widget.categoryIndex + 1,
+                  ),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Container(
+                        padding: const EdgeInsets.all(8),
+                        child: const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        ),
+                      );
+                    }
+
+                    // Results section
+                    final data = snapshot.data!;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
+                              decoration: BoxDecoration(
+                                color: kWhite.withValues(alpha: 0.75),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.check_circle,
                                         color: kDarkGreen1,
-                                        fontWeight: FontWeight.w600,
+                                        size: 16,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 12),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.cancel,
-                                      color: kRed.withValues(alpha: 0.7),
-                                      size: 16,
-                                    ),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${data['wrong'] ?? 0}',
-                                      style: Get.textTheme.bodySmall?.copyWith(
-                                        color: kRed.withValues(alpha: 0.7),
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(width: 12),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.radio_button_checked,
-                                      color: kTealGreen1.withValues(alpha: 0.9),
-                                      size: 16,
-                                    ),
-                                    const SizedBox(width: 2),
-                                    Text(
-                                      '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
-                                      style: Get.textTheme.bodySmall?.copyWith(
-                                        color: kTealGreen1.withValues(
-                                          alpha: 0.9,
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        '${data['correct'] ?? 0}',
+                                        style: Get.textTheme.bodySmall?.copyWith(
+                                          color: kDarkGreen1,
+                                          fontWeight: FontWeight.w600,
                                         ),
-                                        fontWeight: FontWeight.bold,
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.cancel,
+                                        color: kRed.withValues(alpha: 0.7),
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        '${data['wrong'] ?? 0}',
+                                        style: Get.textTheme.bodySmall?.copyWith(
+                                          color: kRed.withValues(alpha: 0.7),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.radio_button_checked,
+                                        color: kTealGreen1.withValues(alpha: 0.9),
+                                        size: 16,
+                                      ),
+                                      const SizedBox(width: 2),
+                                      Text(
+                                        '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
+                                        style: Get.textTheme.bodySmall?.copyWith(
+                                          color: kTealGreen1.withValues(
+                                            alpha: 0.9,
+                                          ),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  );
-                },
-              ),
+                          ],
+                        ),
+                      ],
+                    );
+                  },
+                );
+              })
             ],
           ),
         ),

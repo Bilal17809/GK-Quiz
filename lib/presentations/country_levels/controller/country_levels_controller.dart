@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/country_grid.dart';
 
+import '../../../core/common_widgets/country_grid.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
 import '../../quiz/controller/quiz_controller.dart';
 
@@ -9,7 +9,7 @@ class CountryLevelsController extends GetxController {
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
   final RxMap<int, Map<String, dynamic>> _cachedResults =
       <int, Map<String, dynamic>>{}.obs;
-  final RxInt _refreshTrigger = 0.obs;
+  final RxInt refreshTrigger = 0.obs;
 
   SharedPreferencesService get prefsService => _prefsService;
 
@@ -31,7 +31,7 @@ class CountryLevelsController extends GetxController {
       );
       _cachedResults[topicIndex] = result;
     }
-    _refreshTrigger.value++;
+    refreshTrigger.value++;
   }
 
   Future<void> saveQuizResult({
@@ -59,7 +59,7 @@ class CountryLevelsController extends GetxController {
       keyPrefix: 'country_result',
     );
     _cachedResults[topicIndex] = updatedResult;
-    _refreshTrigger.value++;
+    refreshTrigger.value++;
 
     String baseKey = 'country_result$topicIndex$categoryIndex';
     final savedCorrect = _prefsService.getInt('${baseKey}_correct');
@@ -93,7 +93,7 @@ class CountryLevelsController extends GetxController {
   }
 
   Map<String, dynamic> getOverallResultSync(int topicIndex) {
-    _refreshTrigger.value;
+    refreshTrigger.value;
     return _cachedResults[topicIndex] ??
         {'correct': 0, 'wrong': 0, 'percentage': 0.0};
   }
@@ -112,6 +112,6 @@ class CountryLevelsController extends GetxController {
       keyPrefix: 'country_result',
     );
     _cachedResults[topicIndex] = result;
-    _refreshTrigger.value++;
+    refreshTrigger.value++;
   }
 }

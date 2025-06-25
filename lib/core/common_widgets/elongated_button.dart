@@ -1,5 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:template/core/theme/app_styles.dart';
+
+import '../theme/app_styles.dart';
 
 class ElongatedButton extends StatelessWidget {
   final double height;

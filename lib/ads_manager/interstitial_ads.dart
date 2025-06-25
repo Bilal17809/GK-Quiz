@@ -1,9 +1,8 @@
-import 'dart:ui';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'appOpen_ads.dart';
+import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
 
 
 class InterstitialAdController extends GetxController {
@@ -11,6 +10,9 @@ class InterstitialAdController extends GetxController {
   bool isAdReady = false;
   int screenVisitCount = 0;
   int adTriggerCount = 3;
+
+  final RemoveAds removeAds = Get.put(RemoveAds());
+
 
   @override
   void onInit() {
@@ -39,13 +41,16 @@ class InterstitialAdController extends GetxController {
       update();
     } catch (e) {
       print('Error fetching Remote Config: $e');
-      adTriggerCount = 3; // Default fallback value
+      adTriggerCount = 3;
     }
   }
 
   void loadInterstitialAd() {
+    if (removeAds.isSubscribedGet.value) {
+      return;
+    }
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3118392277684870/8883344644',
+      adUnitId:'ca-app-pub-3118392277684870/8883344644',
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -90,6 +95,9 @@ class InterstitialAdController extends GetxController {
   }
 
   void checkAndShowAd() {
+    if (removeAds.isSubscribedGet.value) {
+      return;
+    }
     screenVisitCount++;
     print("### Screen Visit Count: $screenVisitCount");
 

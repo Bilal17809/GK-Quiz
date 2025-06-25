@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/presentations/customized_quiz/controller/cutomized_quiz_controller.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
+import '../controller/cutomized_quiz_controller.dart';
 import '../widgets/customized_quiz_content.dart';
 
 class CustomizedQuizScreen extends StatefulWidget {
@@ -16,6 +17,9 @@ class CustomizedQuizScreen extends StatefulWidget {
 
 class _CustomizedQuizScreenState extends State<CustomizedQuizScreen> {
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
+
+
   @override
   void initState() {
     super.initState();
@@ -44,10 +48,10 @@ class _CustomizedQuizScreenState extends State<CustomizedQuizScreen> {
           onAnswerSelected: customizedQuizController.handleAnswerSelection,
         ),
       ),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox():
+      Obx(() {
+          return bannerAdController.getBannerAdWidget('ad10');
+      }),
     );
   }
 }

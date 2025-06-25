@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:template/core/constant/constant.dart';
+
+import '../constant/constant.dart';
 
 class CustomTextFormField extends StatelessWidget {
   final String hintText;

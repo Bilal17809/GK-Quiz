@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:template/core/service/question_db_service.dart';
-import 'package:template/core/models/questions_data.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 
 import '../../../core/common_audios/quiz_sounds.dart';
+import '../../../core/models/questions_data.dart';
 import '../../../core/routes/routes_name.dart';
+import '../../../core/service/question_db_service.dart';
+import '../../quiz/controller/quiz_controller.dart';
 
 class CustomizedQuizController extends GetxController {
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;

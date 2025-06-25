@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:template/core/theme/app_colors.dart';
+
+import '../theme/app_colors.dart';
 
 Color getOptionBackgroundColor(
   bool showAnswer,

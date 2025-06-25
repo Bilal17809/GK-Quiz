@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/country_grid.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/constant/constant.dart';
-import 'package:template/core/routes/routes_name.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
+import '../../../core/common_widgets/country_grid.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../country/controller/country_controller.dart';
+
+import '../../../ads_manager/interstitial_ads.dart';
+import '../../../core/common_widgets/common_text_field.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/routes/routes_name.dart';
 
 class CountryLessonsScreen extends StatefulWidget {
   const CountryLessonsScreen({super.key});
@@ -19,6 +23,8 @@ class CountryLessonsScreen extends StatefulWidget {
 class _CountryLessonsScreenState extends State<CountryLessonsScreen> {
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
   final CountryController countryController = Get.put(CountryController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
+
   @override
   void initState() {
     super.initState();
@@ -124,10 +130,9 @@ class _CountryLessonsScreenState extends State<CountryLessonsScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+          return bannerAdController.getBannerAdWidget('ad3');
+      }),
     );
   }
 }

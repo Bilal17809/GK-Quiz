@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/presentations/country_review/controller/country_review_controller.dart';
 
 import '../../../core/models/questions_data.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../../core/utils/ui_helpers.dart';
+import '../controller/country_review_controller.dart';
 
 class CountryReviewOptions extends StatelessWidget {
   final QuestionsModel question;

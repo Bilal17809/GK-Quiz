@@ -17,10 +17,10 @@ class QuizResultController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    Future.microtask(() => loadAllCachedResults());
+    loadAllCachedResults();
   }
 
-  void loadAllCachedResults() {
+  Future<void> loadAllCachedResults() async{
     try {
       final quizController = Get.find<QuizController>();
       if (gridTexts.isEmpty) {

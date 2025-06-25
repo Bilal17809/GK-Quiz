@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/constant/constant.dart';
-import 'package:template/core/routes/routes_name.dart';
-import 'package:template/core/theme/app_colors.dart';
 import 'package:template/presentations/quiz_selection/view/quiz_selection_dialog.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/common_widgets/grid_data.dart';
 import '../../../core/common_widgets/round_image.dart';
 import '../controller/quiz_selection_controller.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/common_widgets/icon_buttons.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/theme/app_colors.dart';
 
 class QuizSelectionScreen extends StatefulWidget {
   const QuizSelectionScreen({super.key});
@@ -21,6 +23,8 @@ class _QuizSelectionScreenState extends State<QuizSelectionScreen> {
 
 
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
+
 
   @override
   void initState() {
@@ -98,10 +102,9 @@ class _QuizSelectionScreenState extends State<QuizSelectionScreen> {
           },
         );
       }),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+        return bannerAdController.getBannerAdWidget('ad16');
+      }),
     );
   }
 

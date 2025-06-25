@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/presentations/country_review/controller/country_review_controller.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/models/questions_data.dart';
 import '../../home/view/home_screen.dart';
+import '../controller/country_review_controller.dart';
 import 'country_review_page.dart';
 
 class CountryReviewScreen extends StatefulWidget {
@@ -16,6 +17,7 @@ class CountryReviewScreen extends StatefulWidget {
 
 class _CountryReviewScreenState extends State<CountryReviewScreen> {
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
 
 
   @override
@@ -76,10 +78,9 @@ class _CountryReviewScreenState extends State<CountryReviewScreen> {
           },
         );
       }),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+          return bannerAdController.getBannerAdWidget('ad8');
+      }),
     );
   }
 }

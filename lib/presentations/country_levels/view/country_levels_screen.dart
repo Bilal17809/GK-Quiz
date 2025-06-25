@@ -1,14 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/routes/routes_name.dart';
-import 'package:template/presentations/country_levels/widgets/country_levels_card.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../quiz/controller/quiz_controller.dart';
 import '../controller/country_levels_controller.dart';
+
+import '../../../ads_manager/interstitial_ads.dart';
+import '../../../core/common_widgets/common_text_field.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/common_widgets/icon_buttons.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/routes/routes_name.dart';
+import '../widgets/country_levels_card.dart';
 
 class CountryLevelsScreen extends StatefulWidget {
   const CountryLevelsScreen({super.key});
@@ -19,10 +27,12 @@ class CountryLevelsScreen extends StatefulWidget {
 
 class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
+
+  final resultController = Get.put(CountryLevelsController());
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     interstitialAd.checkAndShowAd();
   }
@@ -121,10 +131,9 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+          return bannerAdController.getBannerAdWidget('ad4');
+      }),
     );
   }
 }

@@ -9,16 +9,21 @@ import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
+import 'appOpen_ads.dart';
+
 class BannerAdController extends GetxController {
   final Map<String, BannerAd> _ads = {};
   final Map<String, RxBool> _adLoaded = {};
   RxBool isAdEnabled = true.obs;
+  final AppOpenAdController openAdController=Get.put(AppOpenAdController());
+  final RemoveAds removeAds = Get.put(RemoveAds());
+
 
   @override
   void onInit() {
     super.onInit();
     fetchRemoteConfig();
-    // loadBannerAd('large2');
   }
 
   Future<void> fetchRemoteConfig() async {
@@ -38,30 +43,40 @@ class BannerAdController extends GetxController {
         // Preload ads for multiple locations
         loadBannerAd('ad1');
         loadBannerAd('ad2');
-        loadBannerAd('ad3'); // Add more as needed
+        loadBannerAd('ad3');
         loadBannerAd('ad4');
         loadBannerAd('ad5');
-        loadBannerAd('large'); // Add more as needed
-        loadBannerAd('large1'); // Add more as needed
-        loadBannerAd('large2');
+        loadBannerAd('ad6');
+        loadBannerAd('ad7');
+        loadBannerAd('ad8');
+        loadBannerAd('ad9');
+        loadBannerAd('ad10');
+        loadBannerAd('ad11');
+        loadBannerAd('ad12');
+        loadBannerAd('ad13');
+        loadBannerAd('ad14');
+        loadBannerAd('ad15');
+        loadBannerAd('ad16');
+        loadBannerAd('ad17');
+        loadBannerAd('ad18');
+        loadBannerAd('ad19');
+        loadBannerAd('ad20');
+        loadBannerAd('ad21');
       }
     } catch (e) {
       print('Error fetching Remote Config: $e');
     }
   }
 
-
-  // Load a banner ad for a specific key
-  void loadBannerAd(String key) async {
+  void loadBannerAd(String key) async{
     if (_ads.containsKey(key)) {
       _ads[key]!.dispose();
     }
+    final screenWidth = Get.context!.mediaQuerySize.width.toInt();
 
     final bannerAd = BannerAd(
-      adUnitId: ' ca-app-pub-5405847310750111/3760827160', // tested
-      // adUnitId: 'ca-app-pub-3118392277684870/8864383563', // Your actual ad unit ID
-      // Use an appropriate size for full width
-      size: AdSize.banner, // Standard banner size
+      adUnitId:'ca-app-pub-3118392277684870/7308756138',
+      size: AdSize(height:55,width:screenWidth),
       request: AdRequest(),
       listener: BannerAdListener(
         onAdLoaded: (ad) {
@@ -78,34 +93,6 @@ class BannerAdController extends GetxController {
     bannerAd.load();
     _ads[key] = bannerAd;
   }
-  Widget getBannerAdWidget(String key) {
-    if (isAdEnabled.value && _ads.containsKey(key) && _adLoaded[key]?.value == true) {
-      return Container(
-        height: 100, // Height to match banner size
-        width: double.infinity, // Full width
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2),
-        ),
-        child: AdWidget(ad: _ads[key]!),
-      );
-    } else {
-      return Shimmer.fromColors(
-        baseColor: Colors.white12,
-        highlightColor: Colors.grey.shade900,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 60,
-            width: double.infinity, // Will also take full width during loading
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-          ),
-        ),
-      );
-    }
-  }
 
   @override
   void onClose() {
@@ -115,7 +102,39 @@ class BannerAdController extends GetxController {
     super.onClose();
   }
 
-
-
+  Widget getBannerAdWidget(String key) {
+    if (openAdController.isShowingOpenAd.value || removeAds.isSubscribedGet.value) {
+      return const SizedBox();
+    }
+    if (isAdEnabled.value && _ads.containsKey(key) && _adLoaded[key]?.value == true) {
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color:  Colors.grey.shade300,
+            width: 2,
+          ),
+          borderRadius: BorderRadius.circular(2),
+        ),
+        height: _ads[key]!.size.height.toDouble(),
+        width: double.infinity,
+        child: AdWidget(ad: _ads[key]!),
+      );
+    } else {
+      return Shimmer.fromColors(
+        baseColor:  Colors.grey[200]!,
+        highlightColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            height: 50,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(5.0),
+            ),
+          ),
+        ),
+      );
+    }
+  }
 }
-

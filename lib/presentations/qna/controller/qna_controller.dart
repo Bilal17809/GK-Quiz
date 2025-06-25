@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:template/core/service/question_db_service.dart';
-import 'package:template/core/local_storage/shared_preferences_storage.dart';
-import 'package:template/core/models/questions_data.dart';
-import 'package:template/presentations/progress/controller/progress_controller.dart';
+import '../../../core/local_storage/shared_preferences_storage.dart';
+import '../../../core/models/questions_data.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/service/question_db_service.dart';
+import '../../progress/controller/progress_controller.dart';
 
 class QnaController extends GetxController {
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;

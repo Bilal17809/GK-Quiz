@@ -1,15 +1,18 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/constant/constant.dart';
-import 'package:template/core/routes/routes_name.dart';
-import 'package:template/core/theme/app_colors.dart';
-import 'package:template/core/theme/app_styles.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
-import 'package:template/presentations/quiz_levels/widgets/levels_card.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/common_widgets/grid_data.dart';
+import '../../quiz/controller/quiz_controller.dart';
 import '../controller/quiz_result_controller.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_styles.dart';
+
+import '../widgets/levels_card.dart';
 
 class QuizLevelsScreen extends StatefulWidget {
   const QuizLevelsScreen({super.key});
@@ -20,6 +23,11 @@ class QuizLevelsScreen extends StatefulWidget {
 
 class _QuizLevelsScreenState extends State<QuizLevelsScreen> {
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
+  final QuizController controller = Get.put(QuizController());
+  final resultController = Get.put(QuizResultController());
+
+
   @override
   void initState() {
     super.initState();
@@ -31,9 +39,7 @@ class _QuizLevelsScreenState extends State<QuizLevelsScreen> {
     final arguments = Get.arguments as Map<String, dynamic>;
     final topic = arguments['topic'];
     final topicIndex = arguments['index'];
-    final QuizController controller = Get.put(QuizController());
     Get.put(QuizResultController());
-
     if (topic.isNotEmpty) {
       controller.loadCategoriesForTopic(topic);
     } else {
@@ -110,9 +116,9 @@ class _QuizLevelsScreenState extends State<QuizLevelsScreen> {
                             'categoryIndex': category.categoryIndex,
                             'isCategory': true,
                             'topicIndex':
-                            topicIndex, // Pass the topic grid index
+                            topicIndex,
                             'categoryIndexForResult':
-                            categoryIndex, // Pass the category index for result
+                            categoryIndex,
                           },
                         );
                       },
@@ -125,10 +131,9 @@ class _QuizLevelsScreenState extends State<QuizLevelsScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+          return bannerAdController.getBannerAdWidget('ad15');
+      }),
     );
   }
 }

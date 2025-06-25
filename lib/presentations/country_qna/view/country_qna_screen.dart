@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/presentations/country_qna/controller/country_qna_controller.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
 import '../../../core/common_widgets/long_icon_text_button.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
+import '../controller/country_qna_controller.dart';
 
 class CountryQnaScreen extends StatefulWidget {
   const CountryQnaScreen({super.key});
@@ -17,10 +18,10 @@ class CountryQnaScreen extends StatefulWidget {
 
 class _CountryQnaScreenState extends State<CountryQnaScreen> {
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     interstitialAd.checkAndShowAd();
   }
@@ -164,10 +165,9 @@ class _CountryQnaScreenState extends State<CountryQnaScreen> {
           },
         );
       }),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+          return bannerAdController.getBannerAdWidget('ad5');
+      }),
     );
   }
 }

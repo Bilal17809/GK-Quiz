@@ -2,14 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_audios/quiz_sounds.dart';
-import 'package:template/core/service/question_db_service.dart';
-import 'package:template/core/models/category_model.dart';
-import 'package:template/core/models/questions_data.dart';
-import 'package:template/core/routes/routes_name.dart';
 
+import '../../../core/common_audios/quiz_sounds.dart';
 import '../../../core/common_widgets/grid_data.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
+import '../../../core/models/category_model.dart';
+import '../../../core/models/questions_data.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/service/question_db_service.dart';
 
 class QuizController extends GetxController {
   final RxList<QuestionsModel> questionsList = <QuestionsModel>[].obs;
@@ -25,7 +25,7 @@ class QuizController extends GetxController {
   final RxMap<int, bool> is5050Used = <int, bool>{}.obs;
   final RxMap<int, List<String>> hiddenOptions = <int, List<String>>{}.obs;
 
-  final RxInt _fontSizeLevel = 0.obs; // 0 = normal, 1 = big, 2 = bigger
+  final RxInt _fontSizeLevel = 0.obs;
   final RxBool _isIncreasing = true.obs;
   static const double _normalQuestionSize = 20.0;
   static const double _bigQuestionSize = 24.0;
@@ -78,7 +78,7 @@ class QuizController extends GetxController {
     _loadQuestionsForTopic(topic);
   }
 
-  void loadCategoriesForTopic(String topic) {
+  Future<void> loadCategoriesForTopic(String topic) async{
     currentTopic.value = topic;
     _loadCategoriesForTopic(topic);
   }

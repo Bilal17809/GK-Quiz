@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:template/presentations/quiz/controller/quiz_controller.dart';
-
 import '../../../core/constant/constant.dart';
 import '../../../core/models/questions_data.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
+import '../../quiz/controller/quiz_controller.dart';
 import '../../quiz/widgets/quiz_card.dart';
 import '../controller/country_quiz_controller.dart';
 

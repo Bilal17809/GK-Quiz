@@ -1,12 +1,14 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
+import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
 import 'appOpen_ads.dart';
 class SplashInterstitialAdController extends GetxController {
   InterstitialAd? _interstitialAd;
   bool isAdReady = false;
-  bool showSplashAd = false;
+  bool showSplashAd = true;
 
   @override
   void onInit() {
@@ -14,6 +16,7 @@ class SplashInterstitialAdController extends GetxController {
     initializeRemoteConfig();
     loadInterstitialAd();
   }
+  final RemoveAds removeAds = Get.put(RemoveAds());
 
   Future<void> initializeRemoteConfig() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
@@ -36,6 +39,9 @@ class SplashInterstitialAdController extends GetxController {
   }
 
   void loadInterstitialAd() {
+    if (removeAds.isSubscribedGet.value) {
+      return;
+    }
     InterstitialAd.load(
       adUnitId: 'ca-app-pub-3118392277684870/7745522791',
       request: const AdRequest(),
@@ -58,7 +64,6 @@ class SplashInterstitialAdController extends GetxController {
       print("### Splash Ad Disabled via Remote Config");
       return;
     }
-
     if (_interstitialAd != null) {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
@@ -76,8 +81,6 @@ class SplashInterstitialAdController extends GetxController {
           update();
         },
       );
-
-      print("### Showing Interstitial Ad.");
       _interstitialAd!.show();
       _interstitialAd = null;
     } else {
@@ -91,5 +94,6 @@ class SplashInterstitialAdController extends GetxController {
     super.onClose();
   }
 }
+
 
 

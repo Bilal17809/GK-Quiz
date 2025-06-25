@@ -3,40 +3,30 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
-
 import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
+import 'dart:ui';
 
-class OpenAppAdController extends GetxController with WidgetsBindingObserver {
+class AppOpenAdController extends GetxController with WidgetsBindingObserver {
   final RemoveAds removeAds = Get.put(RemoveAds());
-
   final RxBool isShowingOpenAd = false.obs;
-
   AppOpenAd? _appOpenAd;
   bool _isAdAvailable = false;
   bool shouldShowAppOpenAd = true;
   bool _isFromBackground = false;
-  bool isCooldownActive = false;
-  bool _interstitialAdDismissed = false;
-  bool _openAppAdEligible = false;
-  bool isAppResumed = false;
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
-      print("App moved to background.");
-      _openAppAdEligible = true;
+      _isFromBackground = true;
     } else if (state == AppLifecycleState.resumed) {
-      print("App moved to foreground.");
-
-      Future.delayed(const Duration(milliseconds: 100), () {
-        if (_openAppAdEligible && !_interstitialAdDismissed) {
+      if (_isFromBackground && !isCooldownActive) {
+        _isFromBackground = false;
+        if (shouldShowAppOpenAd) {
           showAdIfAvailable();
         } else {
-          print("Skipping Open App Ad (flags not met).");
+          print('App Open Ad disabled via Remote Config.');
         }
-        _openAppAdEligible = false; // Reset regardless
-        _interstitialAdDismissed = false; // Reset regardless
-      });
+      }
     }
   }
 
@@ -44,25 +34,28 @@ class OpenAppAdController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
-    initializeRemoteConfig();
+    initializeRemoteConfig(); // Fetch Firebase Remote Config
   }
 
   Future<void> initializeRemoteConfig() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
     try {
       await remoteConfig.fetchAndActivate();
-      shouldShowAppOpenAd = remoteConfig.getBool('AppOpenAd');
+      shouldShowAppOpenAd = remoteConfig.getBool('AppOpenAD');
       print('Remote Config: appOpen = $shouldShowAppOpenAd');
-      loadAd();
+      loadAd(); // Load ad after fetching config
     } catch (e) {
       print('Error fetching Remote Config: $e');
     }
   }
 
+  bool isCooldownActive = false;
+
+  /// Show the App Open Ad if it's available
   void showAdIfAvailable() {
     if (removeAds.isSubscribedGet.value) {
       return;
-    } else if (_isAdAvailable && _appOpenAd != null && !isCooldownActive) {
+    } else if (_isAdAvailable && _appOpenAd != null) {
       _appOpenAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdShowedFullScreenContent: (ad) {
           print('App Open Ad is showing.');
@@ -90,10 +83,11 @@ class OpenAppAdController extends GetxController with WidgetsBindingObserver {
       _isAdAvailable = false;
     } else {
       print('No App Open Ad available to show.');
-      loadAd();
+      loadAd(); // Attempt to load a new ad
     }
   }
 
+  /// Activate cooldown to prevent showing ads too frequently
   void activateCooldown() {
     isCooldownActive = true;
     Future.delayed(const Duration(seconds: 5), () {
@@ -103,9 +97,8 @@ class OpenAppAdController extends GetxController with WidgetsBindingObserver {
 
   void loadAd() {
     if (!shouldShowAppOpenAd) return;
-
     AppOpenAd.load(
-      adUnitId: 'ca-app-pub-5405847310750111/8085432593', // Replace with your Ad Unit ID
+      adUnitId: 'ca-app-pub-3118392277684870/4944099636',
       request: const AdRequest(),
       adLoadCallback: AppOpenAdLoadCallback(
         onAdLoaded: (ad) {
@@ -119,11 +112,6 @@ class OpenAppAdController extends GetxController with WidgetsBindingObserver {
         },
       ),
     );
-  }
-
-  void setInterstitialAdDismissed() {
-    _interstitialAdDismissed = true;
-    print("Interstitial Ad dismissed, flag set.");
   }
 
   @override

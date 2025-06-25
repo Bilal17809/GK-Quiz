@@ -2,11 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/presentations/country_quiz/controller/country_quiz_controller.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/common_audios/quiz_sounds.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/routes/routes_name.dart';
+import '../controller/country_quiz_controller.dart';
 import 'country_quiz_page.dart';
 
 class CountryQuizScreen extends StatefulWidget {
@@ -23,6 +24,7 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
   late int topicIndex;
   late int categoryIndex;
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
 
   @override
   void initState() {
@@ -121,10 +123,9 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
           },
         );
       }),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+          return bannerAdController.getBannerAdWidget('ad6');
+      }),
     );
   }
 }

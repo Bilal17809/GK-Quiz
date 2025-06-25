@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart'; // Import GetX
-import 'package:template/core/constant/constant.dart';
-import 'package:template/core/models/questions_data.dart';
 import 'package:template/presentations/quiz/widgets/quiz_card.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/models/questions_data.dart';
 
 class QuizContent extends StatelessWidget {
   final bool isLoading;

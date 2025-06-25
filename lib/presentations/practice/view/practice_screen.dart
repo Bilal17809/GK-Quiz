@@ -2,15 +2,18 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/common_widgets/custom_app_bar.dart';
-import 'package:template/core/constant/constant.dart';
-import 'package:template/core/theme/app_colors.dart';
-import 'package:template/presentations/practice/controller/practice_controller.dart';
+import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../quiz/controller/quiz_controller.dart';
 import '../../quiz_levels/controller/quiz_result_controller.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/common_widgets/icon_buttons.dart';
+import '../../../core/constant/constant.dart';
+import '../../../core/routes/routes_name.dart';
+import '../../../core/theme/app_colors.dart';
+import '../controller/practice_controller.dart';
 
 class PracticeScreen extends StatefulWidget {
   const PracticeScreen({super.key});
@@ -27,6 +30,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
   Timer? _refreshTimer;
 
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final BannerAdController bannerAdController=Get.put(BannerAdController());
 
 
   @override
@@ -200,10 +204,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
           },
         ),
       ),
-      // bottomNavigationBar: const Padding(
-      //   padding: kBottomNav,
-      //   child: BannerAdWidget(),
-      // ),
+      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
+          return bannerAdController.getBannerAdWidget('ad12');
+      }),
     );
   }
 }
