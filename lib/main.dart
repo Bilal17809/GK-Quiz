@@ -1,4 +1,3 @@
-import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,7 +33,7 @@ void main() async {
   Get.put(SplashController());
   Get.put<ProgressController>(ProgressController(), permanent: true);
 
-  runApp(DevicePreview(enabled: false, builder: (context) => const MyApp()));
+  runApp(const MyApp());
 
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");
@@ -53,9 +52,6 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.themeData,
         initialRoute: RoutesName.splashScreen,
         getPages: Routes.routes,
-        useInheritedMediaQuery: true,
-        locale: DevicePreview.locale(context),
-        builder: DevicePreview.appBuilder,
       ),
     );
   }

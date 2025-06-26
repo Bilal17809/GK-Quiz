@@ -34,7 +34,7 @@ class Routes {
     ),
     GetPage(
       name: RoutesName.splashScreen,
-      page: () =>  SplashScreen(),
+      page: () => SplashScreen(),
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),
@@ -96,8 +96,6 @@ class Routes {
     GetPage(
       name: RoutesName.countryLevelsScreen,
       page: () => CountryLevelsScreen(),
-      transition: Transition.downToUp,
-      transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
       name: RoutesName.countryQuizScreen,
