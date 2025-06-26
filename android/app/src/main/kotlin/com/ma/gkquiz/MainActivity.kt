@@ -27,27 +27,27 @@ class MainActivity : FlutterActivity() {
     override fun configureFlutterEngine(@NonNull flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
-            .setMethodCallHandler { call, result ->
-                when (call.method) {
-                    "getTextFromSpeech" -> {
-                        val languageISO: String = call.argument("languageISO") ?: "en-US"
-                        if (checkAudioPermission()) {
-                            startSpeechRecognition(languageISO, result)
-                        } else {
-                            requestAudioPermission(languageISO, result)
+                .setMethodCallHandler { call, result ->
+                    when (call.method) {
+                        "getTextFromSpeech" -> {
+                            val languageISO: String = call.argument("languageISO") ?: "en-US"
+                            if (checkAudioPermission()) {
+                                startSpeechRecognition(languageISO, result)
+                            } else {
+                                requestAudioPermission(languageISO, result)
+                            }
                         }
+                        "translateText" -> {
+                            val text: String = call.argument("text") ?: ""
+                            val sourceLanguage: String = call.argument("sourceLanguage") ?: ""
+                            val targetLanguage: String = call.argument("targetLanguage") ?: ""
+                            // Simulate translation (replace this with actual API integration)
+                            val translatedText = "$text [Translated to $targetLanguage]"
+                            result.success(translatedText)
+                        }
+                        else -> result.notImplemented()
                     }
-                    "translateText" -> {
-                        val text: String = call.argument("text") ?: ""
-                        val sourceLanguage: String = call.argument("sourceLanguage") ?: ""
-                        val targetLanguage: String = call.argument("targetLanguage") ?: ""
-                        // Simulate translation (replace this with actual API integration)
-                        val translatedText = "$text [Translated to $targetLanguage]"
-                        result.success(translatedText)
-                    }
-                    else -> result.notImplemented()
                 }
-            }
     }
 
     private fun checkAudioPermission(): Boolean {
@@ -63,9 +63,9 @@ class MainActivity : FlutterActivity() {
             pendingResult = result
             pendingLanguageISO = languageISO
             ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.RECORD_AUDIO),
-                PERMISSION_REQUEST_CODE
+                    this,
+                    arrayOf(Manifest.permission.RECORD_AUDIO),
+                    PERMISSION_REQUEST_CODE
             )
         } else {
             startSpeechRecognition(languageISO, result)
@@ -73,9 +73,9 @@ class MainActivity : FlutterActivity() {
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+            requestCode: Int,
+            permissions: Array<out String>,
+            grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 

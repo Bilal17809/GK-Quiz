@@ -14,11 +14,9 @@ import '../widgets/country_levels_card.dart';
 
 class CountryLevelsScreen extends StatefulWidget {
   const CountryLevelsScreen({super.key});
-
   @override
   State<CountryLevelsScreen> createState() => _CountryLevelsScreenState();
 }
-
 class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
   final InterstitialAdController interstitialAd = Get.put(
     InterstitialAdController(),
@@ -39,7 +37,7 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
     final topic = arguments['topic'];
     final topicIndex = arguments['index'];
     final QuizController quizController = Get.put(QuizController());
-    Get.put(CountryLevelsController());
+    // Get.put(CountryLevelsController());
 
     if (topic.isNotEmpty) {
       quizController.loadCategoriesForTopic(topic);

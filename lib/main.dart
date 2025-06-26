@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:device_preview/device_preview.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -33,13 +34,27 @@ void main() async {
   Get.put(SpeechController());
   Get.put(SplashController());
   Get.put<ProgressController>(ProgressController(), permanent: true);
-
   runApp(DevicePreview(enabled: false, builder: (context) => const MyApp()));
-
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");
-  OneSignal.Notifications.requestPermission(true);
+  initializeOneSignal();
+  // OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  // OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");
+  // OneSignal.Notifications.requestPermission(true);
 }
+
+
+void initializeOneSignal() {
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  if (Platform.isAndroid) {
+    OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");
+    OneSignal.Notifications.requestPermission(true);
+  } else if (Platform.isIOS) {
+    OneSignal.initialize("106096b0-b5ad-4e4e-8b1f-9733cb0b9786");
+    OneSignal.Notifications.requestPermission(true);
+  } else {
+    print("Unsupported platform for OneSignal");
+  }
+}
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -482,6 +482,8 @@ import 'package:get/get.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:in_app_purchase/in_app_purchase.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:template/presentations/terms/view/terms.dart';
+import '../../terms/view/unsubscribe_info.dart';
 import '../controller/purchase_controller.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
@@ -658,9 +660,9 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 48),
+                SizedBox(height:height*0.1),
                 Container(
-                  height: height * 0.15,
+                  height: height * 0.18,
                   width: double.infinity,
                   margin: EdgeInsets.symmetric(vertical: height * 0.015),
                   child: CarouselSlider(
@@ -683,12 +685,23 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                   child: Column(
                     children: [
                       Text(
-                        'Upgrade to Premium & Get',
+                        _hasActiveSubscription()
+                            ? 'You are on Ads Free Version'
+                            : 'Upgrade to Premium & Get',
                         style: context.textTheme.titleMedium?.copyWith(
-                          color: kSkyBlueColor,
+                          color: _hasActiveSubscription() ? Colors.green : kSkyBlueColor,
+                          fontWeight: FontWeight.w600,
                         ),
                         textAlign: TextAlign.center,
                       ),
+
+                      // Text(
+                      //   'Upgrade to Premium & Get',
+                      //   style: context.textTheme.titleMedium?.copyWith(
+                      //     color: kSkyBlueColor,
+                      //   ),
+                      //   textAlign: TextAlign.center,
+                      // ),
                       SizedBox(height: 8),
                       Text(
                         'Unlimited Access',
@@ -698,7 +711,7 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height:20),
+                SizedBox(height:18),
                 CarouselSlider(
                   options: CarouselOptions(
                     height: height * 0.15,
@@ -743,16 +756,91 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                     );
                   }).toList(),
                 ),
-                SizedBox(height:20),
+                SizedBox(height:height*0.03),
                 _buildProductList(),
-                SizedBox(height:5),
+                SizedBox(height:3),
                 Text(
                   '>> Cancel anytime at least 24 hours before renewal',
                   style: context.textTheme.bodySmall?.copyWith(
                     color: kSkyBlueColor,
                   ),
                 ),
-                SizedBox(height: 12),
+                SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal:20.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        child: Text(
+                          'Terms & Conditions',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: blackTextColor,
+                            decoration: TextDecoration.underline,
+                            fontWeight: FontWeight.w600
+                          ),
+                        ),
+                        onTap:(){
+                          Get.to(TermsScreen());
+                        },
+                      ),
+                      GestureDetector(
+                        onTap:(){
+                          Get.to(UnsubscribeInfoScreen());
+                        },
+                        child: Text(
+                          'How to Subscribe?',
+                          style: context.textTheme.bodySmall?.copyWith(
+                            color: kSkyBlueColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height:20),
+                if(Platform.isIOS)
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(20),
+                      child: InkWell(
+                        onTap: _restorePurchases,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color:Colors.blue,
+                            borderRadius: BorderRadius.circular(50),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: _purchasePending
+                                ? Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                ),
+                                SizedBox(width:6),
+                                Text("Restoring...", style: TextStyle(color: Colors.white)),
+                              ],
+                            )
+                                : Text(
+                                  "Restore >>",
+                                  style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize:16,
+                                color: Colors.white,
+                                  ),
+                                ),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ],
             ),
           ),
@@ -788,6 +876,48 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
     );
   }
 
+  Future<void> _restorePurchases() async {
+    final bool isAvailable = await _inAppPurchase.isAvailable();
+    if (!isAvailable) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Store is not available!')),
+      );
+      return;
+    }
+
+    setState(() {
+      _purchasePending = true;
+    });
+
+    try {
+      await _inAppPurchase.restorePurchases();
+      Timer(const Duration(seconds: 10), () {
+        if (_purchasePending) {
+          setState(() {
+            _purchasePending = false;
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Restore timed out. Please try again.')),
+            );
+          });
+        }
+      });
+
+    } catch (e) {
+      setState(() {
+        _purchasePending = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred during restore: $e')),
+      );
+    }
+  }
+
+  bool _hasActiveSubscription() {
+    return _purchases.any((purchase) =>
+    purchase.status == PurchaseStatus.purchased ||
+        purchase.status == PurchaseStatus.restored);
+  }
+
   Column _buildProductList() {
     final PurchaseController controller = Get.put(PurchaseController());
     final screenWidth = MediaQuery.of(context).size.width;
@@ -818,55 +948,59 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 margin: EdgeInsets.symmetric(vertical: screenHeight * 0.01),
                 color: isSelected ? kSkyBlueColor : kWhite,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 elevation: 2,
-                child: ListTile(
-                  onTap: () {
-                    controller.selectedPlanIndex.value = index;
-                    _buyProduct(product, purchase);
-                  },
-                  title: Text(
-                    isLifetimeProduct(product.id)
-                        ? 'Lifetime Subscription'
-                        : 'Subscription Plan',
-                    style: context.textTheme.titleSmall?.copyWith(
-                      color: isSelected ? kWhite : kBlack,
-                    ),
-                  ),
-                  subtitle: Text(
-                    product.description,
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: isSelected ? kWhite.withOpacity(0.7) : greyColor,
-                    ),
-                  ),
-                  trailing: isLifetimeProduct(product.id)
-                      ? Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        "Rs $actualPrice",
-                        style: TextStyle(
-                          decoration: TextDecoration.lineThrough,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                          color: isSelected ? kWhite : Colors.red,
-                        ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: ListTile(
+                    onTap: () {
+                      controller.selectedPlanIndex.value = index;
+                      _buyProduct(product, purchase);
+                    },
+                    title: Text(
+                      isLifetimeProduct(product.id)
+                          ? 'Lifetime Subscription'
+                          : '1 Year Subscription',
+                      style: context.textTheme.titleSmall?.copyWith(
+                        color: isSelected ? kWhite : kBlack,
                       ),
-                      SizedBox(height: 4),
-                      Text(
-                        product.price,
-                        style: context.textTheme.titleSmall?.copyWith(
-                          color: isSelected ? kWhite : kBlack,
-                        ),
+                    ),
+                    subtitle: Text(
+                      isLifetimeProduct(product.id)?
+                      product.description :"Ads free Version \nPremium features",
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color:kWhite.withOpacity(0.9),
                       ),
-                    ],
-                  )
-                      : Text(
-                    product.price,
-                    style: context.textTheme.titleSmall?.copyWith(
-                      color: isSelected ? kWhite : kBlack,
+                    ),
+                    trailing: isLifetimeProduct(product.id)
+                        ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Rs $actualPrice",
+                          style: TextStyle(
+                            decoration: TextDecoration.lineThrough,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                            color: isSelected ? kWhite : Colors.red,
+                          ),
+                        ),
+                        SizedBox(height: 4),
+                        Text(
+                          product.price,
+                          style: context.textTheme.titleSmall?.copyWith(
+                            color: isSelected ? kWhite : kBlack,
+                          ),
+                        ),
+                      ],
+                    )
+                        : Text(
+                      product.price,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        color: isSelected ? kWhite : kBlack,
+                      ),
                     ),
                   ),
                 ),
