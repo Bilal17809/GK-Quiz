@@ -6,6 +6,7 @@ import 'package:toastification/toastification.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../country_levels/controller/country_levels_controller.dart';
 import '../../progress/controller/progress_controller.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
@@ -61,7 +62,7 @@ class NavigationDrawerWidget extends StatelessWidget {
     // Clear all preferences
     await prefs.clear();
 
-    _notifyProgressController();
+    _notifyControllers();
 
     // Restore subscription values
     await prefs.setBool('SubscribedGk', isSubscribed);
@@ -89,10 +90,12 @@ class NavigationDrawerWidget extends StatelessWidget {
     );
   }
 
-  void _notifyProgressController() {
+  void _notifyControllers() {
     try {
       final progressController = Get.find<ProgressController>();
+      final countryResultController = Get.find<CountryLevelsController>();
       Future.delayed(Duration(milliseconds: 50), () {
+        countryResultController.clearAllCaches();
         progressController.refreshStats();
         progressController.loadDailyPerformance();
       });

@@ -109,113 +109,87 @@ class _CountryLevelsCardState extends State<CountryLevelsCard> {
               const SizedBox(height: 12),
 
               Obx(() {
-                countryResultController.refreshAllResults();
-                return FutureBuilder<Map<String, dynamic>>(
-                  future: countryResultController.getQuizResult(
-                    widget.topicIndex,
-                    widget.categoryIndex + 1,
-                  ),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container(
-                        padding: const EdgeInsets.all(8),
-                        child: const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                      );
-                    }
-
-                    // Results section
-                    final data = snapshot.data!;
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                final data = countryResultController.getCategoryResultSync(
+                  widget.topicIndex,
+                  widget.categoryIndex + 1,
+                );
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: kWhite.withValues(alpha: 0.75),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Row(
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: kWhite.withValues(alpha: 0.75),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            children: [
+                              Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.check_circle,
-                                        color: kDarkGreen1,
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 2),
-                                      Text(
-                                        '${data['correct'] ?? 0}',
-                                        style: Get.textTheme.bodySmall
-                                            ?.copyWith(
-                                              color: kDarkGreen1,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                      ),
-                                    ],
+                                  Icon(
+                                    Icons.check_circle,
+                                    color: kDarkGreen1,
+                                    size: 16,
                                   ),
-                                  const SizedBox(width: 12),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.cancel,
-                                        color: kRed.withValues(alpha: 0.7),
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 2),
-                                      Text(
-                                        '${data['wrong'] ?? 0}',
-                                        style: Get.textTheme.bodySmall
-                                            ?.copyWith(
-                                              color: kRed.withValues(
-                                                alpha: 0.7,
-                                              ),
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                      ),
-                                    ],
-                                  ),
-                                  const SizedBox(width: 12),
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.radio_button_checked,
-                                        color: kTealGreen1.withValues(
-                                          alpha: 0.9,
-                                        ),
-                                        size: 16,
-                                      ),
-                                      const SizedBox(width: 2),
-                                      Text(
-                                        '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
-                                        style: Get.textTheme.bodySmall
-                                            ?.copyWith(
-                                              color: kTealGreen1.withValues(
-                                                alpha: 0.9,
-                                              ),
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                      ),
-                                    ],
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '${data['correct'] ?? 0}',
+                                    style: Get.textTheme.bodySmall?.copyWith(
+                                      color: kDarkGreen1,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
                                 ],
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 12),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.cancel,
+                                    color: kRed.withValues(alpha: 0.7),
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '${data['wrong'] ?? 0}',
+                                    style: Get.textTheme.bodySmall?.copyWith(
+                                      color: kRed.withValues(alpha: 0.7),
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(width: 12),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.radio_button_checked,
+                                    color: kTealGreen1.withValues(alpha: 0.9),
+                                    size: 16,
+                                  ),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
+                                    style: Get.textTheme.bodySmall?.copyWith(
+                                      color: kTealGreen1.withValues(alpha: 0.9),
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ],
-                    );
-                  },
+                    ),
+                  ],
                 );
               }),
             ],

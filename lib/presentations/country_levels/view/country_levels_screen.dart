@@ -52,38 +52,38 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
         child: Column(
           children: [
             // Topic Header
-            Container(
-              width: double.infinity,
-              margin: const EdgeInsets.all(kBodyHp),
-              padding: const EdgeInsets.all(kBodyHp),
-              decoration: roundedDecoration.copyWith(
-                color: kTealGreen1.withValues(alpha: 0.9),
-                border: Border.all(color: greyBorderColor),
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    topic,
-                    style: context.textTheme.titleLarge?.copyWith(
-                      color: kWhite,
-                      fontWeight: FontWeight.bold,
+            if (topic.isNotEmpty)
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(kBodyHp),
+                padding: const EdgeInsets.all(kBodyHp),
+                decoration: roundedDecoration.copyWith(
+                  color: kTealGreen1.withValues(alpha: 0.9),
+                  border: Border.all(color: greyBorderColor),
+                ),
+                child: Column(
+                  children: [
+                    Text(
+                      topic,
+                      style: context.textTheme.titleLarge?.copyWith(
+                        color: kWhite,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  GetBuilder<QuizController>(
-                    builder:
-                        (controller) => Text(
-                          'Total Questions: ${controller.topicCounts[topic] ?? 0}',
-                          style: context.textTheme.bodyMedium?.copyWith(
-                            color: kWhite,
-                            fontWeight: FontWeight.w500,
-                          ),
+                    const SizedBox(height: 8),
+                    Obx(
+                      () => Text(
+                        'Total Questions: ${quizController.topicCounts[topic] ?? 0}',
+                        style: context.textTheme.bodyMedium?.copyWith(
+                          color: kWhite,
+                          fontWeight: FontWeight.w500,
                         ),
-                  ),
-                ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
             // Categories List
             Expanded(
               child: Obx(() {

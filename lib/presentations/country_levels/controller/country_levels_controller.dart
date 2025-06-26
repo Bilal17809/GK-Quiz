@@ -9,6 +9,8 @@ class CountryLevelsController extends GetxController {
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
   final RxMap<int, Map<String, dynamic>> _cachedResults =
       <int, Map<String, dynamic>>{}.obs;
+  final RxMap<String, Map<String, dynamic>> _cachedCategoryResults =
+      <String, Map<String, dynamic>>{}.obs;
   final RxInt _refreshTrigger = 0.obs;
 
   SharedPreferencesService get prefsService => _prefsService;
@@ -30,8 +32,32 @@ class CountryLevelsController extends GetxController {
         keyPrefix: 'country_result',
       );
       _cachedResults[topicIndex] = result;
+      for (int categoryIndex = 1; categoryIndex <= 20; categoryIndex++) {
+        final categoryKey = '${topicIndex}_$categoryIndex';
+        final categoryResult = _prefsService.getQuizResult(
+          topicIndex,
+          categoryIndex,
+          keyPrefix: 'country_result',
+        );
+        _cachedCategoryResults[categoryKey] = categoryResult;
+      }
     }
     _refreshTrigger.value++;
+  }
+
+  Map<String, dynamic> getCategoryResultSync(
+    int topicIndex,
+    int categoryIndex,
+  ) {
+    try {
+      _refreshTrigger.value;
+      final categoryKey = '${topicIndex}_$categoryIndex';
+      return _cachedCategoryResults[categoryKey] ??
+          {'correct': 0, 'wrong': 0, 'percentage': 0.0};
+    } catch (e) {
+      debugPrint('Error getting category result sync: $e');
+      return {'correct': 0, 'wrong': 0, 'percentage': 0.0};
+    }
   }
 
   Future<void> saveQuizResult({
@@ -50,9 +76,14 @@ class CountryLevelsController extends GetxController {
         percentage: percentage,
         keyPrefix: 'country_result',
       );
+      final categoryKey = '${topicIndex}_$categoryIndex';
+      _cachedCategoryResults[categoryKey] = {
+        'correct': correctAnswers,
+        'wrong': wrongAnswers,
+        'percentage': percentage,
+      };
 
       final quizController = Get.find<QuizController>();
-
       if (topicIndex >= 0 && topicIndex < countryTexts.length) {
         final topicName = countryTexts[topicIndex];
         final totalQuestionsInTopic =
@@ -65,8 +96,6 @@ class CountryLevelsController extends GetxController {
         _cachedResults[topicIndex] = updatedResult;
         _refreshTrigger.value++;
       }
-
-      // Verify saved data
       String baseKey = 'country_result$topicIndex$categoryIndex';
       final savedCorrect = _prefsService.getInt('${baseKey}_correct');
       final savedWrong = _prefsService.getInt('${baseKey}_wrong');
@@ -113,15 +142,12 @@ class CountryLevelsController extends GetxController {
   Map<String, dynamic> getOverallResult(int topicIndex) {
     try {
       final quizController = Get.find<QuizController>();
-
       if (topicIndex < 0 || topicIndex >= countryTexts.length) {
         debugPrint('Invalid topicIndex: $topicIndex');
         return {'correct': 0, 'wrong': 0, 'percentage': 0.0};
       }
-
       final topicName = countryTexts[topicIndex];
       final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
-
       return _prefsService.calculateOverallResult(
         topicIndex,
         totalQuestionsInTopic,
@@ -151,29 +177,69 @@ class CountryLevelsController extends GetxController {
   void refreshTopicResult(int topicIndex) {
     try {
       final quizController = Get.find<QuizController>();
-
       if (topicIndex < 0 || topicIndex >= countryTexts.length) {
         debugPrint('Invalid topicIndex: $topicIndex');
         return;
       }
-
       final topicName = countryTexts[topicIndex];
       final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
+
       final result = _prefsService.calculateOverallResult(
         topicIndex,
         totalQuestionsInTopic,
         keyPrefix: 'country_result',
       );
       _cachedResults[topicIndex] = result;
+
+      for (int categoryIndex = 1; categoryIndex <= 20; categoryIndex++) {
+        final categoryKey = '${topicIndex}_$categoryIndex';
+        final categoryResult = _prefsService.getQuizResult(
+          topicIndex,
+          categoryIndex,
+          keyPrefix: 'country_result',
+        );
+        _cachedCategoryResults[categoryKey] = categoryResult;
+      }
+
       _refreshTrigger.value++;
     } catch (e) {
       debugPrint('Error refreshing topic result: $e');
     }
   }
 
+  void clearAllCaches() {
+    try {
+      _cachedResults.clear();
+      _cachedCategoryResults.clear();
+
+      for (int topicIndex = 0; topicIndex < countryTexts.length; topicIndex++) {
+        _cachedResults[topicIndex] = {
+          'correct': 0,
+          'wrong': 0,
+          'percentage': 0.0,
+        };
+
+        for (int categoryIndex = 1; categoryIndex <= 20; categoryIndex++) {
+          final categoryKey = '${topicIndex}_$categoryIndex';
+          _cachedCategoryResults[categoryKey] = {
+            'correct': 0,
+            'wrong': 0,
+            'percentage': 0.0,
+          };
+        }
+      }
+      _refreshTrigger.value++;
+
+      debugPrint('All caches cleared successfully');
+    } catch (e) {
+      debugPrint('Error clearing caches: $e');
+    }
+  }
+
   @override
   void onClose() {
     _cachedResults.clear();
+    _cachedCategoryResults.clear();
     super.onClose();
   }
 }
