@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
-import 'appOpen_ads.dart';
+
 class SplashInterstitialAdController extends GetxController {
   InterstitialAd? _interstitialAd;
   bool isAdReady = false;
@@ -16,21 +15,26 @@ class SplashInterstitialAdController extends GetxController {
     initializeRemoteConfig();
     loadInterstitialAd();
   }
+
   final RemoveAds removeAds = Get.put(RemoveAds());
 
   Future<void> initializeRemoteConfig() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
 
     try {
-      await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: const Duration(seconds: 10),
-        minimumFetchInterval: const Duration(seconds: 1),
-      ));
+      await remoteConfig.setConfigSettings(
+        RemoteConfigSettings(
+          fetchTimeout: const Duration(seconds: 10),
+          minimumFetchInterval: const Duration(seconds: 1),
+        ),
+      );
 
       await remoteConfig.fetchAndActivate();
 
       showSplashAd = remoteConfig.getBool('SplashInterstitial');
-      print("#################### Remote Config: Show Splash Ad = $showSplashAd");
+      print(
+        "#################### Remote Config: Show Splash Ad = $showSplashAd",
+      );
       update();
     } catch (e) {
       print('Error fetching Remote Config: $e');
@@ -59,7 +63,7 @@ class SplashInterstitialAdController extends GetxController {
     );
   }
 
-  Future<void> showInterstitialAd() async{
+  Future<void> showInterstitialAd() async {
     if (!showSplashAd) {
       print("### Splash Ad Disabled via Remote Config");
       return;
@@ -94,6 +98,3 @@ class SplashInterstitialAdController extends GetxController {
     super.onClose();
   }
 }
-
-
-

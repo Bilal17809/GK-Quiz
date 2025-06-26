@@ -1,18 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import '../../../ads_manager/interstitial_ads.dart';
-import '../../../core/common_widgets/common_text_field.dart';
-import '../../../core/common_widgets/custom_app_bar.dart';
-import '../../../core/common_widgets/icon_buttons.dart';
-import '../../../core/constant/constant.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
 import '../../../core/models/questions_data.dart';
-import '../../../core/routes/routes_name.dart';
 import '../../../core/service/question_db_service.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_styles.dart';
-import 'package:toastification/toastification.dart';
-
 import '../../progress/controller/progress_controller.dart';
 
 class CountryQnaController extends GetxController {
@@ -23,7 +13,6 @@ class CountryQnaController extends GetxController {
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
 
   String? _topic; // Arguments
-
   String? get topic => _topic;
   SharedPreferencesService get prefsService => _prefsService;
 
@@ -74,7 +63,6 @@ class CountryQnaController extends GetxController {
 
   Future<void> revealAnswer(int questionIndex) async {
     bool wasAlreadyRevealed = revealedAnswers[questionIndex] ?? false;
-
     revealedAnswers[questionIndex] = true;
 
     // Save to SharedPreferences
@@ -94,17 +82,22 @@ class CountryQnaController extends GetxController {
     if (_topic == null) return;
 
     String progressKey = 'learn_progress_${_topic}';
+
+    // FIXED: Use revealedAnswers.length instead of incrementing
+    // This matches the QnaController implementation
+    int newProgress = revealedAnswers.length;
     int currentProgress = _prefsService.getInt(progressKey, defaultValue: 0);
 
-    int newProgress = currentProgress + 1;
+    // Only update if progress has increased
+    if (newProgress > currentProgress) {
+      await _prefsService.setInt(progressKey, newProgress);
 
-    await _prefsService.setInt(progressKey, newProgress);
-
-    try {
-      final progressController = Get.find<ProgressController>();
-      progressController.refreshLearnProgress();
-    } catch (e) {
-      debugPrint('ProgressController not found: $e');
+      try {
+        final progressController = Get.find<ProgressController>();
+        progressController.refreshLearnProgress();
+      } catch (e) {
+        debugPrint('ProgressController not found: $e');
+      }
     }
   }
 

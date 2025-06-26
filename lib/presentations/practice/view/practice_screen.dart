@@ -9,9 +9,7 @@ import '../../../core/theme/app_styles.dart';
 import '../../quiz/controller/quiz_controller.dart';
 import '../../quiz_levels/controller/quiz_result_controller.dart';
 import '../../../core/common_widgets/custom_app_bar.dart';
-import '../../../core/common_widgets/icon_buttons.dart';
 import '../../../core/constant/constant.dart';
-import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_colors.dart';
 import '../controller/practice_controller.dart';
 
@@ -29,9 +27,10 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   Timer? _refreshTimer;
 
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
-
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   @override
   void initState() {
@@ -51,7 +50,7 @@ class _PracticeScreenState extends State<PracticeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(subtitle: 'Quiz'),
       body: SafeArea(
         child: ListView.builder(
@@ -124,9 +123,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
                                     '${data['correct'] ?? 0}',
                                     style: context.textTheme.bodyMedium
                                         ?.copyWith(
-                                      color: kDarkGreen1,
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                          color: kDarkGreen1,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                   ),
                                   Icon(
                                     Icons.done_all,
@@ -142,9 +141,9 @@ class _PracticeScreenState extends State<PracticeScreen> {
                                     '${data['wrong'] ?? 0}',
                                     style: context.textTheme.bodyMedium
                                         ?.copyWith(
-                                      color: kRed.withValues(alpha: 0.7),
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                          color: kRed.withValues(alpha: 0.7),
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                   ),
                                   Icon(
                                     Icons.close,
@@ -165,30 +164,28 @@ class _PracticeScreenState extends State<PracticeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Obx(() {
-                      final data = resultController.getOverallResultSync(
-                        index,
-                      );
+                      final data = resultController.getOverallResultSync(index);
                       final starRating = practiceController.getStarRating(
                         data['percentage'] ?? 0.0,
                       );
                       return Row(
                         mainAxisSize: MainAxisSize.min,
                         children:
-                        starRating.asMap().entries.map((entry) {
-                          final isActive = entry.value;
-                          return Icon(
-                            Icons.star,
-                            color:
-                            isActive
-                                ? kYellow
-                                : kWhite.withValues(alpha: 0.3),
-                            size: 12,
-                          );
-                        }).toList(),
+                            starRating.asMap().entries.map((entry) {
+                              final isActive = entry.value;
+                              return Icon(
+                                Icons.star,
+                                color:
+                                    isActive
+                                        ? kYellow
+                                        : kWhite.withValues(alpha: 0.3),
+                                size: 12,
+                              );
+                            }).toList(),
                       );
                     }),
                     Obx(
-                          () => Text(
+                      () => Text(
                         'Ques: ${(practiceController.topicCounts[topic] ?? 0) - ((practiceController.topicCounts[topic] ?? 0) % 20)}',
                         style: context.textTheme.bodySmall?.copyWith(
                           color: kWhite,
@@ -204,9 +201,12 @@ class _PracticeScreenState extends State<PracticeScreen> {
           },
         ),
       ),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-          return bannerAdController.getBannerAdWidget('ad12');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad12');
+              }),
     );
   }
 }

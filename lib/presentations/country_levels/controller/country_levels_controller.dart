@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../../core/common_widgets/country_grid.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
+import '../../progress/controller/progress_controller.dart';
 import '../../quiz/controller/quiz_controller.dart';
 
 class CountryLevelsController extends GetxController {
@@ -68,6 +69,20 @@ class CountryLevelsController extends GetxController {
     debugPrint(
       'Verified saved data - Correct: $savedCorrect, Wrong: $savedWrong, Percentage: $savedPercentage',
     );
+
+    _notifyProgressController();
+  }
+
+  void _notifyProgressController() {
+    try {
+      final progressController = Get.find<ProgressController>();
+      Future.delayed(Duration(milliseconds: 50), () {
+        progressController.refreshStats();
+        progressController.loadDailyPerformance();
+      });
+    } catch (e) {
+      debugPrint('ProgressController not found: $e');
+    }
   }
 
   Future<Map<String, dynamic>> getQuizResult(

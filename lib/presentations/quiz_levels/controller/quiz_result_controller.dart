@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-
 import '../../../core/common_widgets/grid_data.dart';
 import '../../../core/local_storage/shared_preferences_storage.dart';
 import '../../quiz/controller/quiz_controller.dart';
+import '../../progress/controller/progress_controller.dart'; // Add this import
 
 class QuizResultController extends GetxController {
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
@@ -20,22 +20,25 @@ class QuizResultController extends GetxController {
     loadAllCachedResults();
   }
 
-  Future<void> loadAllCachedResults() async{
+  Future<void> loadAllCachedResults() async {
     try {
       final quizController = Get.find<QuizController>();
       if (gridTexts.isEmpty) {
         debugPrint('gridTexts is empty, skipping cache load');
         return;
       }
+
       for (int topicIndex = 0; topicIndex < gridTexts.length; topicIndex++) {
         final topicName = gridTexts[topicIndex];
         final totalQuestionsInTopic =
             quizController.topicCounts[topicName] ?? 0;
+
         final result = _prefsService.calculateOverallResult(
           topicIndex,
           totalQuestionsInTopic,
           keyPrefix: 'result',
         );
+
         _cachedResults[topicIndex] = result;
       }
       _refreshTrigger.value++;
@@ -63,13 +66,29 @@ class QuizResultController extends GetxController {
     final quizController = Get.find<QuizController>();
     final topicName = gridTexts[topicIndex];
     final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
+
     final updatedResult = _prefsService.calculateOverallResult(
       topicIndex,
       totalQuestionsInTopic,
       keyPrefix: 'result',
     );
+
     _cachedResults[topicIndex] = updatedResult;
     _refreshTrigger.value++;
+
+    _notifyProgressController();
+  }
+
+  void _notifyProgressController() {
+    try {
+      final progressController = Get.find<ProgressController>();
+      Future.delayed(Duration(milliseconds: 50), () {
+        progressController.refreshStats();
+        progressController.loadDailyPerformance();
+      });
+    } catch (e) {
+      debugPrint('ProgressController not found: $e');
+    }
   }
 
   Future<Map<String, dynamic>> getQuizResult(
@@ -87,6 +106,7 @@ class QuizResultController extends GetxController {
     final quizController = Get.find<QuizController>();
     final topicName = gridTexts[topicIndex];
     final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
+
     return _prefsService.calculateOverallResult(
       topicIndex,
       totalQuestionsInTopic,
@@ -108,11 +128,13 @@ class QuizResultController extends GetxController {
     final quizController = Get.find<QuizController>();
     final topicName = gridTexts[topicIndex];
     final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
+
     final result = _prefsService.calculateOverallResult(
       topicIndex,
       totalQuestionsInTopic,
       keyPrefix: 'result',
     );
+
     _cachedResults[topicIndex] = result;
     _refreshTrigger.value++;
   }

@@ -13,7 +13,7 @@ class QnaController extends GetxController {
   final RxMap<int, bool> revealedAnswers = <int, bool>{}.obs;
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
 
-  String? _topic; // Arguments
+  String? _topic;
   String? get topic => _topic;
 
   SharedPreferencesService get prefsService => _prefsService;

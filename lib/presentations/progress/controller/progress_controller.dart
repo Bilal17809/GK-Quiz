@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import '../../../core/common_widgets/country_grid.dart';
@@ -8,6 +9,7 @@ import '../../quiz/controller/quiz_controller.dart';
 class ProgressController extends GetxController {
   final SharedPreferencesService _prefs = SharedPreferencesService.to;
   final RxBool isLoading = true.obs;
+  final RxBool isRefreshing = false.obs; // Add this for refresh state
 
   // Quiz Progress
   final RxInt totalAttempted = 0.obs;
@@ -39,14 +41,38 @@ class ProgressController extends GetxController {
   Future<void> loadAllData() async {
     try {
       isLoading.value = true;
+      debugPrint('Starting to load all data...');
+
       await calcCombinedQuizStats();
       await calcLearnProgress();
       await loadDailyPerformance();
-      calcLearnProgress();
+
+      debugPrint('All data loaded successfully');
     } catch (e) {
       debugPrint('Error loading progress data: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // Optimized refresh method that doesn't show loading indicator
+  Future<void> refreshStats() async {
+    if (isRefreshing.value) return; // Prevent multiple simultaneous refreshes
+
+    try {
+      isRefreshing.value = true;
+      debugPrint('Refreshing progress stats...');
+
+      await calcCombinedQuizStats();
+      await calcLearnProgress();
+      // Skip daily performance refresh for faster updates
+      // await loadDailyPerformance();
+
+      debugPrint('Progress stats refreshed successfully');
+    } catch (e) {
+      debugPrint('Error refreshing progress data: $e');
+    } finally {
+      isRefreshing.value = false;
     }
   }
 
@@ -60,6 +86,7 @@ class ProgressController extends GetxController {
         topicNames: countryTexts,
         keyPrefix: 'country_result',
       );
+
       final days = [
         'Monday',
         'Tuesday',
@@ -86,81 +113,108 @@ class ProgressController extends GetxController {
       (a > 0 && b > 0) ? (a + b) / 2 : (a > 0 ? a : b);
 
   Future<void> calcCombinedQuizStats() async {
-    final QuizController quizController = Get.put(QuizController());
-    if (quizController.topicCounts.isEmpty) {
-      debugPrint('Topic counts not initialized, loading...');
-      await quizController.loadAllTopicCounts([...gridTexts, ...countryTexts]);
-      await Future.delayed(Duration(milliseconds: 500));
+    try {
+      // Use Get.find to get existing controller instead of Get.put
+      final QuizController quizController = Get.find<QuizController>();
+
+      if (quizController.topicCounts.isEmpty) {
+        debugPrint('Topic counts not initialized, loading...');
+        await quizController.loadAllTopicCounts([
+          ...gridTexts,
+          ...countryTexts,
+        ]);
+        // Reduced delay from 500ms to 50ms for faster updates
+        await Future.delayed(Duration(milliseconds: 50));
+      }
+
+      // Get grid data statistics
+      final gridStatsResult = _prefs.getAllQuizStats(
+        gridTexts,
+        quizController.topicCounts,
+        keyPrefix: 'result',
+      );
+
+      // Get country data statistics
+      final countryStatsResult = _prefs.getAllQuizStats(
+        countryTexts,
+        quizController.topicCounts,
+        keyPrefix: 'country_result',
+      );
+
+      totalCorrect.value =
+          gridStatsResult['totalCorrect'] + countryStatsResult['totalCorrect'];
+      totalWrong.value =
+          gridStatsResult['totalWrong'] + countryStatsResult['totalWrong'];
+      totalAttempted.value =
+          gridStatsResult['totalAttempted'] +
+          countryStatsResult['totalAttempted'];
+      totalAvailable.value =
+          gridStatsResult['totalAvailable'] +
+          countryStatsResult['totalAvailable'];
+
+      final List<double> gridPercentages = List<double>.from(
+        gridStatsResult['percentages'],
+      );
+      final List<double> countryPercentages = List<double>.from(
+        countryStatsResult['percentages'],
+      );
+      final List<double> allPercentages = [
+        ...gridPercentages,
+        ...countryPercentages,
+      ];
+
+      calcPerformance(allPercentages);
+
+      debugPrint(
+        'Combined Stats - Attempted: ${totalAttempted.value}/${totalAvailable.value}, '
+        'Correct: ${totalCorrect.value}, Wrong: ${totalWrong.value}',
+      );
+    } catch (e) {
+      debugPrint('Error in calcCombinedQuizStats: $e');
+      // Initialize QuizController if it doesn't exist
+      if (e.toString().contains('not found')) {
+        Get.put(QuizController());
+        await calcCombinedQuizStats(); // Retry
+      }
     }
-
-    // Get grid data statistics
-    final gridStatsResult = _prefs.getAllQuizStats(
-      gridTexts,
-      quizController.topicCounts,
-      keyPrefix: 'result',
-    );
-
-    // Get country data statistics
-    final countryStatsResult = _prefs.getAllQuizStats(
-      countryTexts,
-      quizController.topicCounts,
-      keyPrefix: 'country_result',
-    );
-
-    totalCorrect.value =
-        gridStatsResult['totalCorrect'] + countryStatsResult['totalCorrect'];
-    totalWrong.value =
-        gridStatsResult['totalWrong'] + countryStatsResult['totalWrong'];
-    totalAttempted.value =
-        gridStatsResult['totalAttempted'] +
-        countryStatsResult['totalAttempted'];
-    totalAvailable.value =
-        gridStatsResult['totalAvailable'] +
-        countryStatsResult['totalAvailable'];
-
-    final List<double> gridPercentages = List<double>.from(
-      gridStatsResult['percentages'],
-    );
-    final List<double> countryPercentages = List<double>.from(
-      countryStatsResult['percentages'],
-    );
-    final List<double> allPercentages = [
-      ...gridPercentages,
-      ...countryPercentages,
-    ];
-
-    calcPerformance(allPercentages);
-
-    debugPrint(
-      'Combined Stats - Attempted: ${totalAttempted.value}/${totalAvailable.value}, '
-      'Correct: ${totalCorrect.value}, Wrong: ${totalWrong.value}',
-    );
   }
 
   Future<void> calcLearnProgress() async {
-    final QuizController quizController = Get.put(QuizController());
-    List<String> allTopics = [...gridTexts, ...countryTexts];
-    int totalAvailable = 0;
-    for (String topic in allTopics) {
-      totalAvailable += quizController.topicCounts[topic] ?? 0;
-    }
-    totalLearnAvailable.value = totalAvailable;
-    totalLearnProgress.value = _prefs.getTotalLearnProgress(allTopics);
+    try {
+      final QuizController quizController = Get.find<QuizController>();
+      Set<String> uniqueTopics = {...gridTexts, ...countryTexts};
+      List<String> allTopics = uniqueTopics.toList();
 
-    List<double> learnPercentages = [];
-    for (String topic in allTopics) {
-      int topicProgress = _prefs.getLearnProgress(topic);
-      int topicTotal = quizController.topicCounts[topic] ?? 0;
-      if (topicTotal > 0 && topicProgress > 0) {
-        double percentage = (topicProgress / topicTotal) * 100;
-        learnPercentages.add(percentage);
+      int totalAvailable = 0;
+      for (String topic in allTopics) {
+        totalAvailable += quizController.topicCounts[topic] ?? 0;
+      }
+
+      totalLearnAvailable.value = totalAvailable;
+      totalLearnProgress.value = _prefs.getTotalLearnProgress(allTopics);
+
+      List<double> learnPercentages = [];
+      for (String topic in allTopics) {
+        int topicProgress = _prefs.getLearnProgress(topic);
+        int topicTotal = quizController.topicCounts[topic] ?? 0;
+        if (topicTotal > 0 && topicProgress > 0) {
+          double percentage = (topicProgress / topicTotal) * 100;
+          learnPercentages.add(percentage);
+        }
+      }
+
+      calcLearnPerformance(learnPercentages);
+
+      debugPrint(
+        'Learn Progress - Total: ${totalLearnProgress.value}/${totalLearnAvailable.value}',
+      );
+    } catch (e) {
+      debugPrint('Error in calcLearnProgress: $e');
+      if (e.toString().contains('not found')) {
+        Get.put(QuizController());
+        await calcLearnProgress(); // Retry
       }
     }
-
-    calcLearnPerformance(learnPercentages);
-    debugPrint(
-      'Learn Progress - Total: ${totalLearnProgress.value}/${totalLearnAvailable.value}',
-    );
   }
 
   void calcPerformance(List<double> percentages) {
@@ -238,7 +292,9 @@ class ProgressController extends GetxController {
   }
 
   Future<void> refreshLearnProgress() => calcLearnProgress();
-  Future<void> refreshStats() => loadAllData();
+
+  // Full refresh including daily performance
+  Future<void> fullRefresh() => loadAllData();
 
   Map<String, dynamic> getQuizResult(int topicIndex, int categoryIndex) {
     return _prefs.getQuizResult(topicIndex, categoryIndex, keyPrefix: 'result');
@@ -248,6 +304,7 @@ class ProgressController extends GetxController {
     final QuizController quizController = Get.find<QuizController>();
     final topicName = gridTexts[topicIndex];
     final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
+
     return _prefs.calculateOverallResult(
       topicIndex,
       totalQuestionsInTopic,
@@ -267,6 +324,7 @@ class ProgressController extends GetxController {
     final QuizController quizController = Get.find<QuizController>();
     final topicName = countryTexts[topicIndex];
     final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
+
     return _prefs.calculateOverallResult(
       topicIndex,
       totalQuestionsInTopic,

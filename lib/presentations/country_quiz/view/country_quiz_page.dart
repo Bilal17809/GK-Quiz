@@ -55,31 +55,31 @@ class CountryQuizPage extends StatelessWidget {
                 right: mobileSize.width * 0.05,
                 child: Container(
                   height: mobileSize.height * 0.28,
-
                   decoration: roundedDecoration.copyWith(
                     borderRadius: BorderRadius.all(Radius.circular(25)),
                     color: kWhite,
                   ),
                   child: Padding(
                     padding: EdgeInsets.only(
-                      top: mobileSize.height * 0.1,
+                      top: mobileSize.height * 0.125,
                       left: 12.0,
                       right: 12.0,
                       bottom: 12.0,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          question.question,
-                          textAlign: TextAlign.center,
-                          style: context.textTheme.titleSmall?.copyWith(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w500,
-                            color: kBlack,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            question.question,
+                            textAlign: TextAlign.center,
+                            style: context.textTheme.titleSmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: kBlack,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

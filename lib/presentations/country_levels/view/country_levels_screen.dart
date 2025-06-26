@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../ads_manager/banner_ads.dart';
@@ -10,11 +8,7 @@ import '../../../core/theme/app_styles.dart';
 import '../../quiz/controller/quiz_controller.dart';
 import '../controller/country_levels_controller.dart';
 
-import '../../../ads_manager/interstitial_ads.dart';
-import '../../../core/common_widgets/common_text_field.dart';
 import '../../../core/common_widgets/custom_app_bar.dart';
-import '../../../core/common_widgets/icon_buttons.dart';
-import '../../../core/constant/constant.dart';
 import '../../../core/routes/routes_name.dart';
 import '../widgets/country_levels_card.dart';
 
@@ -26,8 +20,10 @@ class CountryLevelsScreen extends StatefulWidget {
 }
 
 class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   final resultController = Get.put(CountryLevelsController());
 
@@ -80,7 +76,7 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
                     ),
                     const SizedBox(height: 8),
                     Obx(
-                          () => Text(
+                      () => Text(
                         'Total Questions: ${quizController.topicCounts[topic] ?? 0}',
                         style: context.textTheme.bodyMedium?.copyWith(
                           color: kWhite,
@@ -102,7 +98,7 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
                   itemCount: quizController.questionCategories.length,
                   itemBuilder: (context, categoryIndex) {
                     final category =
-                    quizController.questionCategories[categoryIndex];
+                        quizController.questionCategories[categoryIndex];
                     return CountryLevelsCard(
                       category: category,
                       topicIndex: topicIndex,
@@ -116,9 +112,9 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
                             'categoryIndex': category.categoryIndex,
                             'isCategory': true,
                             'topicIndex':
-                            topicIndex, // Pass the topic grid index
+                                topicIndex, // Pass the topic grid index
                             'categoryIndexForResult':
-                            categoryIndex, // Pass the category index for result
+                                categoryIndex, // Pass the category index for result
                           },
                         );
                       },
@@ -131,9 +127,12 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-          return bannerAdController.getBannerAdWidget('ad4');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad4');
+              }),
     );
   }
 }

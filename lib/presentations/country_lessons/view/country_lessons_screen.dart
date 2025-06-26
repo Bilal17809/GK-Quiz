@@ -7,8 +7,6 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../country/controller/country_controller.dart';
 
-import '../../../ads_manager/interstitial_ads.dart';
-import '../../../core/common_widgets/common_text_field.dart';
 import '../../../core/common_widgets/custom_app_bar.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/routes/routes_name.dart';
@@ -21,9 +19,11 @@ class CountryLessonsScreen extends StatefulWidget {
 }
 
 class _CountryLessonsScreenState extends State<CountryLessonsScreen> {
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
   final CountryController countryController = Get.put(CountryController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   @override
   void initState() {
@@ -33,8 +33,7 @@ class _CountryLessonsScreenState extends State<CountryLessonsScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    return  Scaffold(
+    return Scaffold(
       appBar: CustomAppBar(subtitle: 'World Facts'),
       body: SafeArea(
         child: Stack(
@@ -55,7 +54,7 @@ class _CountryLessonsScreenState extends State<CountryLessonsScreen> {
                   Positioned(
                     top: 5,
                     left:
-                    countryController.imageWidth -
+                        countryController.imageWidth -
                         countryController.shift.value,
                     child: Image.asset(
                       'assets/images/world_map.png',
@@ -130,9 +129,12 @@ class _CountryLessonsScreenState extends State<CountryLessonsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-          return bannerAdController.getBannerAdWidget('ad3');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad3');
+              }),
     );
   }
 }

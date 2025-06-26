@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/models/category_model.dart';
-import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
-import 'package:toastification/toastification.dart';
 
 import '../controller/country_levels_controller.dart';
 
@@ -33,7 +31,6 @@ class _CountryLevelsCardState extends State<CountryLevelsCard> {
   Widget build(BuildContext context) {
     final CountryLevelsController countryResultController =
         Get.find<CountryLevelsController>();
-
 
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -111,7 +108,7 @@ class _CountryLevelsCardState extends State<CountryLevelsCard> {
               // Quiz Results Section
               const SizedBox(height: 12),
 
-              Obx((){
+              Obx(() {
                 countryResultController.refreshAllResults();
                 return FutureBuilder<Map<String, dynamic>>(
                   future: countryResultController.getQuizResult(
@@ -159,10 +156,11 @@ class _CountryLevelsCardState extends State<CountryLevelsCard> {
                                       const SizedBox(width: 2),
                                       Text(
                                         '${data['correct'] ?? 0}',
-                                        style: Get.textTheme.bodySmall?.copyWith(
-                                          color: kDarkGreen1,
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: Get.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: kDarkGreen1,
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -177,10 +175,13 @@ class _CountryLevelsCardState extends State<CountryLevelsCard> {
                                       const SizedBox(width: 2),
                                       Text(
                                         '${data['wrong'] ?? 0}',
-                                        style: Get.textTheme.bodySmall?.copyWith(
-                                          color: kRed.withValues(alpha: 0.7),
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: Get.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: kRed.withValues(
+                                                alpha: 0.7,
+                                              ),
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -189,18 +190,21 @@ class _CountryLevelsCardState extends State<CountryLevelsCard> {
                                     children: [
                                       Icon(
                                         Icons.radio_button_checked,
-                                        color: kTealGreen1.withValues(alpha: 0.9),
+                                        color: kTealGreen1.withValues(
+                                          alpha: 0.9,
+                                        ),
                                         size: 16,
                                       ),
                                       const SizedBox(width: 2),
                                       Text(
                                         '${data['percentage']?.toStringAsFixed(0) ?? '0'} %',
-                                        style: Get.textTheme.bodySmall?.copyWith(
-                                          color: kTealGreen1.withValues(
-                                            alpha: 0.9,
-                                          ),
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                                        style: Get.textTheme.bodySmall
+                                            ?.copyWith(
+                                              color: kTealGreen1.withValues(
+                                                alpha: 0.9,
+                                              ),
+                                              fontWeight: FontWeight.bold,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -213,7 +217,7 @@ class _CountryLevelsCardState extends State<CountryLevelsCard> {
                     );
                   },
                 );
-              })
+              }),
             ],
           ),
         ),

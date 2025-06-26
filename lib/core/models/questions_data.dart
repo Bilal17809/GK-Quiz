@@ -1,3 +1,5 @@
+import '../helper/html_parser.dart';
+
 class QuestionsModel {
   final String question;
   final String option1;
@@ -17,6 +19,18 @@ class QuestionsModel {
     required this.topicName,
   });
 
+  factory QuestionsModel.fromMap(Map<String, dynamic> map) {
+    return QuestionsModel(
+      question: HtmlParserHelper.toPlainText(map['question']),
+      option1: HtmlParserHelper.toPlainText(map['option1']),
+      option2: HtmlParserHelper.toPlainText(map['option2']),
+      option3: HtmlParserHelper.toPlainText(map['option3']),
+      option4: HtmlParserHelper.toPlainText(map['option4']),
+      answer: HtmlParserHelper.toPlainText(map['answer']),
+      topicName: HtmlParserHelper.toPlainText(map['topic']),
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'question': question,
@@ -27,17 +41,5 @@ class QuestionsModel {
       'answer': answer,
       'topic': topicName,
     };
-  }
-
-  factory QuestionsModel.fromMap(Map<String, dynamic> map) {
-    return QuestionsModel(
-      question: map['question'],
-      option1: map['option1'],
-      option2: map['option2'],
-      option3: map['option3'],
-      option4: map['option4'],
-      answer: map['answer'],
-      topicName: map['topic'],
-    );
   }
 }

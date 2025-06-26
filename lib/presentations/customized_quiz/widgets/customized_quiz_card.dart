@@ -7,7 +7,6 @@ import '../../../core/models/questions_data.dart';
 import '../../../core/utils/ui_helpers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
-import 'package:toastification/toastification.dart';
 
 import '../../quiz/controller/quiz_controller.dart';
 import '../controller/cutomized_quiz_controller.dart';

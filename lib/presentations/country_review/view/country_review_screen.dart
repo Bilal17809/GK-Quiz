@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
-import '../../../core/constant/constant.dart';
 import '../../../core/models/questions_data.dart';
 import '../../home/view/home_screen.dart';
 import '../controller/country_review_controller.dart';
@@ -16,15 +15,17 @@ class CountryReviewScreen extends StatefulWidget {
 }
 
 class _CountryReviewScreenState extends State<CountryReviewScreen> {
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
-
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   @override
   void initState() {
     super.initState();
     interstitialAd.checkAndShowAd();
   }
+
   @override
   Widget build(BuildContext context) {
     final CountryReviewController countryReviewController = Get.put(
@@ -53,7 +54,7 @@ class _CountryReviewScreenState extends State<CountryReviewScreen> {
           onPageChanged: (index) {
             if (index >= countryReviewController.questionsList.length) {
               Get.offAll(
-                    () => const HomeScreen(),
+                () => const HomeScreen(),
                 transition: Transition.rightToLeft,
                 duration: Duration(milliseconds: 300),
               );
@@ -78,9 +79,12 @@ class _CountryReviewScreenState extends State<CountryReviewScreen> {
           },
         );
       }),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-          return bannerAdController.getBannerAdWidget('ad8');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad8');
+              }),
     );
   }
 }

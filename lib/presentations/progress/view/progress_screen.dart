@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -13,38 +12,17 @@ import '../../../core/common_widgets/circular_progress.dart';
 import '../../quiz/controller/quiz_controller.dart';
 import '../controller/progress_controller.dart';
 
-class ProgressScreen extends StatefulWidget {
+class ProgressScreen extends StatelessWidget {
   const ProgressScreen({super.key});
-
-  @override
-  State<ProgressScreen> createState() => _ProgressScreenState();
-}
-
-class _ProgressScreenState extends State<ProgressScreen> {
-  Timer? _timer;
-  late ProgressController progressController;
-
-  @override
-  void initState() {
-    super.initState();
-    progressController = Get.put(ProgressController());
-    progressController.loadAllData();
-    Get.put(QuizController());
-    _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-      if (progressController.totalAvailable.value > 0) timer.cancel();
-    });
-  }
-
-
-  @override
-  void dispose() {
-    _timer?.cancel();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
     final mobileWidth = MediaQuery.of(context).size.width;
+
+    final ProgressController progressController =
+        Get.find<ProgressController>();
+    final QuizController quizController = Get.find<QuizController>();
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) async {
@@ -55,149 +33,162 @@ class _ProgressScreenState extends State<ProgressScreen> {
       child: Scaffold(
         appBar: CustomAppBar(subtitle: 'Progress'),
         body: SafeArea(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(kBodyHp),
-            child: Column(
-              children: [
-                // Your Learning Journey
-                SectionCard(
-                  image: AssetImage('assets/images/progress_meter.png'),
-                  title: 'Your Learning Journey',
-                  child: Column(
-                    children: [
-                      SizedBox(height: 12),
-                      Obx(
-                        () => ProgressCircle(
-                          icon: Icons.file_copy_rounded,
-                          label: 'Learn/Total',
-                          value: progressController.totalLearnProgress.value,
-                          totalValue:
-                              progressController.totalLearnAvailable.value,
+          child: Obx(() {
+            // Show loading spinner while data is being loaded
+            if (progressController.isLoading.value) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return SingleChildScrollView(
+              padding: EdgeInsets.all(kBodyHp),
+              child: Column(
+                children: [
+                  // Your Learning Journey
+                  SectionCard(
+                    image: AssetImage('assets/images/progress_meter.png'),
+                    title: 'Your Learning Journey',
+                    child: Column(
+                      children: [
+                        SizedBox(height: 12),
+                        Obx(
+                          () => ProgressCircle(
+                            icon: Icons.file_copy_rounded,
+                            label: 'Learn/Total',
+                            value: progressController.totalLearnProgress.value,
+                            totalValue:
+                                progressController.totalLearnAvailable.value,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 6),
-                      Divider(),
-                      SizedBox(height: 6),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Obx(
-                            () => CircularProgressWidget(
-                              label: 'Weak',
-                              percentage:
-                                  progressController.learnWeakPercentage.value,
-                              progressColor: kRed,
+                        SizedBox(height: 6),
+                        Divider(),
+                        SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Obx(
+                              () => CircularProgressWidget(
+                                label: 'Weak',
+                                percentage:
+                                    progressController
+                                        .learnWeakPercentage
+                                        .value,
+                                progressColor: kRed,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: mobileWidth * 0.05),
-                          Obx(
-                            () => CircularProgressWidget(
-                              label: 'Good',
-                              percentage:
-                                  progressController.learnGoodPercentage.value,
-                              progressColor: kTealGreen1,
+                            SizedBox(width: mobileWidth * 0.05),
+                            Obx(
+                              () => CircularProgressWidget(
+                                label: 'Good',
+                                percentage:
+                                    progressController
+                                        .learnGoodPercentage
+                                        .value,
+                                progressColor: kTealGreen1,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: mobileWidth * 0.05),
-                          Obx(
-                            () => CircularProgressWidget(
-                              label: 'Excellent',
-                              percentage:
-                                  progressController
-                                      .learnExcellentPercentage
-                                      .value,
-                              progressColor: kMediumGreen2,
+                            SizedBox(width: mobileWidth * 0.05),
+                            Obx(
+                              () => CircularProgressWidget(
+                                label: 'Excellent',
+                                percentage:
+                                    progressController
+                                        .learnExcellentPercentage
+                                        .value,
+                                progressColor: kMediumGreen2,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 12),
-                //Quiz Insights
-                SectionCard(
-                  image: AssetImage('assets/images/progress_result.png'),
-                  title: 'Quiz Insights',
-                  child: Column(
-                    children: [
-                      SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Obx(
-                            () => ProgressCircle(
-                              icon: Icons.file_copy_rounded,
-                              label: 'Attempt/Total',
-                              value: progressController.totalAttempted.value,
-                              totalValue:
-                                  progressController.totalAvailable.value,
+                  SizedBox(height: 12),
+                  //Quiz Insights
+                  SectionCard(
+                    image: AssetImage('assets/images/progress_result.png'),
+                    title: 'Quiz Insights',
+                    child: Column(
+                      children: [
+                        SizedBox(height: 12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Obx(
+                              () => ProgressCircle(
+                                icon: Icons.file_copy_rounded,
+                                label: 'Attempt/Total',
+                                value: progressController.totalAttempted.value,
+                                totalValue:
+                                    progressController.totalAvailable.value,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: mobileWidth * 0.1),
-                          Obx(
-                            () => ProgressCircle(
-                              icon: Icons.star,
-                              label: 'Correct/Wrong',
-                              value: progressController.totalCorrect.value,
-                              totalValue: progressController.totalWrong.value,
+                            SizedBox(width: mobileWidth * 0.1),
+                            Obx(
+                              () => ProgressCircle(
+                                icon: Icons.star,
+                                label: 'Correct/Wrong',
+                                value: progressController.totalCorrect.value,
+                                totalValue: progressController.totalWrong.value,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 6),
-                      Divider(),
-                      SizedBox(height: 6),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Obx(
-                            () => CircularProgressWidget(
-                              label: 'Weak',
-                              percentage:
-                                  progressController.weakPercentage.value,
-                              progressColor: kRed,
+                          ],
+                        ),
+                        SizedBox(height: 6),
+                        Divider(),
+                        SizedBox(height: 6),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Obx(
+                              () => CircularProgressWidget(
+                                label: 'Weak',
+                                percentage:
+                                    progressController.weakPercentage.value,
+                                progressColor: kRed,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: mobileWidth * 0.05),
-                          Obx(
-                            () => CircularProgressWidget(
-                              label: 'Good',
-                              percentage:
-                                  progressController.goodPercentage.value,
-                              progressColor: kTealGreen1,
+                            SizedBox(width: mobileWidth * 0.05),
+                            Obx(
+                              () => CircularProgressWidget(
+                                label: 'Good',
+                                percentage:
+                                    progressController.goodPercentage.value,
+                                progressColor: kTealGreen1,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: mobileWidth * 0.05),
-                          Obx(
-                            () => CircularProgressWidget(
-                              label: 'Excellent',
-                              percentage:
-                                  progressController.excellentPercentage.value,
-                              progressColor: kMediumGreen2,
+                            SizedBox(width: mobileWidth * 0.05),
+                            Obx(
+                              () => CircularProgressWidget(
+                                label: 'Excellent',
+                                percentage:
+                                    progressController
+                                        .excellentPercentage
+                                        .value,
+                                progressColor: kMediumGreen2,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(height: 12),
-                //Chart
-                SectionCard(
-                  image: AssetImage('assets/images/progress_chart.png'),
-                  title: 'Days Performance',
-                  child: Column(
-                    children: [
-                      SizedBox(height: 12),
-                      ProgressChart(),
-                      SizedBox(height: 12),
-                    ],
+                  SizedBox(height: 12),
+                  //Chart
+                  SectionCard(
+                    image: AssetImage('assets/images/progress_chart.png'),
+                    title: 'Days Performance',
+                    child: Column(
+                      children: [
+                        SizedBox(height: 12),
+                        ProgressChart(),
+                        SizedBox(height: 12),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ),
+                ],
+              ),
+            );
+          }),
         ),
         bottomNavigationBar: BottomNavBar(currentIndex: 1),
       ),

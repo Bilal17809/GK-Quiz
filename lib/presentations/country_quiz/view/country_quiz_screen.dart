@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/common_audios/quiz_sounds.dart';
-import '../../../core/constant/constant.dart';
 import '../../../core/routes/routes_name.dart';
 import '../controller/country_quiz_controller.dart';
 import 'country_quiz_page.dart';
@@ -23,8 +22,10 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
   late String topic;
   late int topicIndex;
   late int categoryIndex;
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   @override
   void initState() {
@@ -123,9 +124,12 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
           },
         );
       }),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-          return bannerAdController.getBannerAdWidget('ad6');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad6');
+              }),
     );
   }
 }

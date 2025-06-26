@@ -7,6 +7,7 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:template/presentations/ai_quiz/controller/ai_quiz_controller.dart';
 import 'package:template/presentations/ai_quiz/controller/speech_controller.dart';
 import 'package:template/presentations/country_levels/controller/country_levels_controller.dart';
+import 'package:template/presentations/progress/controller/progress_controller.dart';
 import 'package:template/presentations/quiz/controller/quiz_controller.dart';
 import 'package:template/presentations/quiz_levels/controller/quiz_result_controller.dart';
 import 'package:template/presentations/splash/view/splash_screen.dart';
@@ -31,13 +32,9 @@ void main() async {
   Get.put(AiQuizController());
   Get.put(SpeechController());
   Get.put(SplashController());
+  Get.put<ProgressController>(ProgressController(), permanent: true);
 
-  runApp(
-    DevicePreview(
-      enabled: false,
-      builder: (context) => const MyApp(),
-    ),
-  );
+  runApp(DevicePreview(enabled: false, builder: (context) => const MyApp()));
 
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
   OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");

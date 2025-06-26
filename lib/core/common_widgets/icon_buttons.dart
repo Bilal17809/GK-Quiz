@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../constant/constant.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_styles.dart';
 
 class BackIconButton extends StatelessWidget {
   const BackIconButton({super.key});
@@ -23,14 +22,17 @@ class BackIconButton extends StatelessWidget {
               color: kWhite,
             ),
             alignment: Alignment.center,
-            child: Icon(Icons.arrow_circle_left_outlined, color: skyColor, size:20),
+            child: Icon(
+              Icons.arrow_circle_left_outlined,
+              color: skyColor,
+              size: 20,
+            ),
           ),
         ),
       ),
     );
   }
 }
-
 
 class IconActionButton extends StatelessWidget {
   final VoidCallback onTap;

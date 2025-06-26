@@ -6,6 +6,7 @@ import 'package:toastification/toastification.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../progress/controller/progress_controller.dart';
 
 class NavigationDrawerWidget extends StatelessWidget {
   const NavigationDrawerWidget({super.key});
@@ -60,6 +61,8 @@ class NavigationDrawerWidget extends StatelessWidget {
     // Clear all preferences
     await prefs.clear();
 
+    _notifyProgressController();
+
     // Restore subscription values
     await prefs.setBool('SubscribedGk', isSubscribed);
     if (subscriptionId != null) {
@@ -86,6 +89,17 @@ class NavigationDrawerWidget extends StatelessWidget {
     );
   }
 
+  void _notifyProgressController() {
+    try {
+      final progressController = Get.find<ProgressController>();
+      Future.delayed(Duration(milliseconds: 50), () {
+        progressController.refreshStats();
+        progressController.loadDailyPerformance();
+      });
+    } catch (e) {
+      debugPrint('ProgressController not found: $e');
+    }
+  }
 
   void privacy() async {
     const url = 'https://privacypolicymuslimapplications.blogspot.com/';
@@ -97,7 +111,8 @@ class NavigationDrawerWidget extends StatelessWidget {
   }
 
   void rateUs() async {
-    const url = 'https://play.google.com/store/apps/details?id=com.ma.gkquiz.generalknowledge';
+    const url =
+        'https://play.google.com/store/apps/details?id=com.ma.gkquiz.generalknowledge';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
@@ -106,7 +121,8 @@ class NavigationDrawerWidget extends StatelessWidget {
   }
 
   void moreApp() async {
-    const url = 'https://play.google.com/store/apps/developer?id=Muslim+Applications';
+    const url =
+        'https://play.google.com/store/apps/developer?id=Muslim+Applications';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
@@ -114,10 +130,9 @@ class NavigationDrawerWidget extends StatelessWidget {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return  Drawer(
+    return Drawer(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       child: ListView(
         padding: EdgeInsets.zero,
