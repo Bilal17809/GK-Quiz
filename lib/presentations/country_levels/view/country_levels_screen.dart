@@ -7,23 +7,22 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 import '../../quiz/controller/quiz_controller.dart';
 import '../controller/country_levels_controller.dart';
-
 import '../../../core/common_widgets/custom_app_bar.dart';
 import '../../../core/routes/routes_name.dart';
 import '../widgets/country_levels_card.dart';
 
 class CountryLevelsScreen extends StatefulWidget {
   const CountryLevelsScreen({super.key});
+
   @override
   State<CountryLevelsScreen> createState() => _CountryLevelsScreenState();
 }
+
 class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
   final InterstitialAdController interstitialAd = Get.put(
     InterstitialAdController(),
   );
   final BannerAdController bannerAdController = Get.put(BannerAdController());
-
-  final resultController = Get.put(CountryLevelsController());
 
   @override
   void initState() {
@@ -37,8 +36,7 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
     final topic = arguments['topic'];
     final topicIndex = arguments['index'];
     final QuizController quizController = Get.put(QuizController());
-    // Get.put(CountryLevelsController());
-
+    Get.put(CountryLevelsController());
     if (topic.isNotEmpty) {
       quizController.loadCategoriesForTopic(topic);
     } else {
@@ -47,6 +45,7 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
         'Unable to fetch categories from the database at the moment, please try later',
       );
     }
+
     return Scaffold(
       appBar: CustomAppBar(subtitle: 'Country Levels'),
       body: SafeArea(
@@ -125,12 +124,22 @@ class _CountryLevelsScreenState extends State<CountryLevelsScreen> {
           ],
         ),
       ),
-      bottomNavigationBar:
-          interstitialAd.isAdReady
-              ? SizedBox()
-              : Obx(() {
-                return bannerAdController.getBannerAdWidget('ad4');
-              }),
+      bottomNavigationBar: GetBuilder<InterstitialAdController>(
+        builder:
+            (controller) =>
+                controller.isAdReady
+                    ? SizedBox()
+                    : GetBuilder<BannerAdController>(
+                      builder:
+                          (bannerController) =>
+                              bannerController.getBannerAdWidget('ad4'),
+                    ),
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

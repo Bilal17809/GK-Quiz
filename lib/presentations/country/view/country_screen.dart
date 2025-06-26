@@ -28,8 +28,10 @@ class _CountryScreenState extends State<CountryScreen> {
   final CountryLevelsController levelsController = Get.put(
     CountryLevelsController(),
   );
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   Timer? _refreshTimer;
 
@@ -73,7 +75,7 @@ class _CountryScreenState extends State<CountryScreen> {
                   Positioned(
                     top: 5,
                     left:
-                    countryController.imageWidth -
+                        countryController.imageWidth -
                         countryController.shift.value,
                     child: Image.asset(
                       'assets/images/world_map.png',
@@ -118,8 +120,9 @@ class _CountryScreenState extends State<CountryScreen> {
                           children: [
                             const SizedBox(height: 35),
                             Container(
-                              decoration: roundedDecorationWithShadow
-                                  .copyWith(color: kWhite.withAlpha(50)),
+                              decoration: roundedDecorationWithShadow.copyWith(
+                                color: kWhite.withAlpha(50),
+                              ),
                               padding: const EdgeInsets.all(8),
                               child: Image.asset(
                                 icon,
@@ -134,8 +137,7 @@ class _CountryScreenState extends State<CountryScreen> {
                                 fit: BoxFit.scaleDown,
                                 child: Text(
                                   topic,
-                                  style: context.textTheme.titleSmall
-                                      ?.copyWith(
+                                  style: context.textTheme.titleSmall?.copyWith(
                                     color: textWhiteColor,
                                     fontSize: 14,
                                   ),
@@ -147,7 +149,7 @@ class _CountryScreenState extends State<CountryScreen> {
                         ),
                       ),
                       Obx(
-                            () => Positioned(
+                        () => Positioned(
                           top: -6,
                           left: -6,
                           child: Container(
@@ -191,11 +193,8 @@ class _CountryScreenState extends State<CountryScreen> {
 
                             return StepProgressIndicator(
                               totalSteps:
-                              totalQuestions > 0 ? totalQuestions : 1,
-                              currentStep: currentStep.clamp(
-                                0,
-                                totalQuestions,
-                              ),
+                                  totalQuestions > 0 ? totalQuestions : 1,
+                              currentStep: currentStep.clamp(0, totalQuestions),
                               size: 8,
                               padding: 0,
                               roundedEdges: const Radius.circular(10),
@@ -207,9 +206,7 @@ class _CountryScreenState extends State<CountryScreen> {
                                   kTealGreen1,
                                 ],
                               ),
-                              unselectedColor: greyColor.withValues(
-                                alpha: 0.2,
-                              ),
+                              unselectedColor: greyColor.withValues(alpha: 0.2),
                             );
                           }),
                         ),
@@ -222,9 +219,12 @@ class _CountryScreenState extends State<CountryScreen> {
           ],
         ),
       ),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox():Obx(() {
-          return bannerAdController.getBannerAdWidget('ad2');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad2');
+              }),
     );
   }
 }
