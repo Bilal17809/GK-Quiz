@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +28,48 @@ class BannerAdController extends GetxController {
     fetchRemoteConfig();
   }
 
+  // Future<void> fetchRemoteConfig() async {
+  //   try {
+  //     final remoteConfig = FirebaseRemoteConfig.instance;
+  //
+  //     await remoteConfig.setConfigSettings(RemoteConfigSettings(
+  //       fetchTimeout: const Duration(seconds: 10),
+  //       minimumFetchInterval: const Duration(minutes: 1),
+  //     ));
+  //     await remoteConfig.fetchAndActivate();
+  //
+  //     bool bannerAdsEnabled = remoteConfig.getBool('BannerAd');
+  //     isAdEnabled.value = bannerAdsEnabled;
+  //
+  //     if (bannerAdsEnabled) {
+  //       // Preload ads for multiple locations
+  //       loadBannerAd('ad1');
+  //       loadBannerAd('ad2');
+  //       loadBannerAd('ad3');
+  //       loadBannerAd('ad4');
+  //       loadBannerAd('ad5');
+  //       loadBannerAd('ad6');
+  //       loadBannerAd('ad7');
+  //       loadBannerAd('ad8');
+  //       loadBannerAd('ad9');
+  //       loadBannerAd('ad10');
+  //       loadBannerAd('ad11');
+  //       loadBannerAd('ad12');
+  //       loadBannerAd('ad13');
+  //       loadBannerAd('ad14');
+  //       loadBannerAd('ad15');
+  //       loadBannerAd('ad16');
+  //       loadBannerAd('ad17');
+  //       loadBannerAd('ad18');
+  //       loadBannerAd('ad19');
+  //       loadBannerAd('ad20');
+  //       loadBannerAd('ad21');
+  //     }
+  //   } catch (e) {
+  //     print('Error fetching Remote Config: $e');
+  //   }
+  // }
+
   Future<void> fetchRemoteConfig() async {
     try {
       final remoteConfig = FirebaseRemoteConfig.instance;
@@ -34,37 +78,40 @@ class BannerAdController extends GetxController {
         fetchTimeout: const Duration(seconds: 10),
         minimumFetchInterval: const Duration(minutes: 1),
       ));
+
       await remoteConfig.fetchAndActivate();
 
-      bool bannerAdsEnabled = remoteConfig.getBool('BannerAd');
+      // Use platform-specific Remote Config key
+      String bannerKey;
+      if (Platform.isAndroid) {
+        bannerKey = 'BannerAd';
+      } else if (Platform.isIOS) {
+        bannerKey = 'BannerAd';
+      } else {
+        throw UnsupportedError('Unsupported platform');
+      }
+
+      bool bannerAdsEnabled = remoteConfig.getBool(bannerKey);
       isAdEnabled.value = bannerAdsEnabled;
 
       if (bannerAdsEnabled) {
-        // Preload ads for multiple locations
-        loadBannerAd('ad1');
-        loadBannerAd('ad2');
-        loadBannerAd('ad3');
-        loadBannerAd('ad4');
-        loadBannerAd('ad5');
-        loadBannerAd('ad6');
-        loadBannerAd('ad7');
-        loadBannerAd('ad8');
-        loadBannerAd('ad9');
-        loadBannerAd('ad10');
-        loadBannerAd('ad11');
-        loadBannerAd('ad12');
-        loadBannerAd('ad13');
-        loadBannerAd('ad14');
-        loadBannerAd('ad15');
-        loadBannerAd('ad16');
-        loadBannerAd('ad17');
-        loadBannerAd('ad18');
-        loadBannerAd('ad19');
-        loadBannerAd('ad20');
-        loadBannerAd('ad21');
+        for (int i = 1; i <= 21; i++) {
+          loadBannerAd('ad$i');
+        }
       }
     } catch (e) {
       print('Error fetching Remote Config: $e');
+    }
+  }
+
+
+  String get bannerAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3118392277684870/7308756138';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-5405847310750111/7237577716';
+    } else {
+      throw UnsupportedError('Unsupported platform');
     }
   }
 
@@ -75,7 +122,7 @@ class BannerAdController extends GetxController {
     final screenWidth = Get.context!.mediaQuerySize.width.toInt();
 
     final bannerAd = BannerAd(
-      adUnitId:'ca-app-pub-3118392277684870/7308756138',
+      adUnitId:bannerAdUnitId,
       size: AdSize(height:55,width:screenWidth),
       request: AdRequest(),
       listener: BannerAdListener(
