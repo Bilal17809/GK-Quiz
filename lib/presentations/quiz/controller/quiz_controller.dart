@@ -78,7 +78,7 @@ class QuizController extends GetxController {
     _loadQuestionsForTopic(topic);
   }
 
-  Future<void> loadCategoriesForTopic(String topic) async{
+  Future<void> loadCategoriesForTopic(String topic) async {
     currentTopic.value = topic;
     _loadCategoriesForTopic(topic);
   }

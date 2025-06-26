@@ -9,75 +9,29 @@ class CountryLevelsController extends GetxController {
   final SharedPreferencesService _prefsService = SharedPreferencesService.to;
   final RxMap<int, Map<String, dynamic>> _cachedResults =
       <int, Map<String, dynamic>>{}.obs;
-  final RxInt refreshTrigger = 0.obs;
+  final RxInt _refreshTrigger = 0.obs;
 
   SharedPreferencesService get prefsService => _prefsService;
 
   @override
   void onInit() {
     super.onInit();
-    ever(_checkQuizControllerReady(), (ready) {
-      if (ready) {
-        loadAllCachedResults();
-      }
-    });
-  }
-
-  RxBool _checkQuizControllerReady() {
-    final ready = false.obs;
-    Future.microtask(() {
-      try {
-        Get.find<QuizController>();
-        ready.value = true;
-      } catch (e) {
-        Future.delayed(Duration(milliseconds: 100), () {
-          try {
-            Get.find<QuizController>();
-            ready.value = true;
-          } catch (e) {
-            debugPrint('QuizController not ready: $e');
-          }
-        });
-      }
-    });
-    return ready;
+    Future.microtask(() => loadAllCachedResults());
   }
 
   void loadAllCachedResults() {
-    try {
-      QuizController? quizController;
-
-      // Safely get QuizController
-      try {
-        quizController = Get.find<QuizController>();
-      } catch (e) {
-        debugPrint('QuizController not found: $e');
-        return;
-      }
-
-      if (countryTexts.isEmpty) {
-        debugPrint('countryTexts is empty');
-        return;
-      }
-
-      for (int topicIndex = 0; topicIndex < countryTexts.length; topicIndex++) {
-        final topicName = countryTexts[topicIndex];
-        final totalQuestionsInTopic =
-            quizController.topicCounts[topicName] ?? 0;
-
-        final result = _prefsService.calculateOverallResult(
-          topicIndex,
-          totalQuestionsInTopic,
-          keyPrefix: 'country_result',
-        );
-
-        _cachedResults[topicIndex] = result;
-      }
-
-      refreshTrigger.value++;
-    } catch (e) {
-      debugPrint('Error loading cached results: $e');
+    final quizController = Get.find<QuizController>();
+    for (int topicIndex = 0; topicIndex < countryTexts.length; topicIndex++) {
+      final topicName = countryTexts[topicIndex];
+      final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
+      final result = _prefsService.calculateOverallResult(
+        topicIndex,
+        totalQuestionsInTopic,
+        keyPrefix: 'country_result',
+      );
+      _cachedResults[topicIndex] = result;
     }
+    _refreshTrigger.value++;
   }
 
   Future<void> saveQuizResult({
@@ -97,29 +51,22 @@ class CountryLevelsController extends GetxController {
         keyPrefix: 'country_result',
       );
 
-      QuizController? quizController;
-      try {
-        quizController = Get.find<QuizController>();
-      } catch (e) {
-        debugPrint('QuizController not found during save: $e');
-        return;
-      }
+      final quizController = Get.find<QuizController>();
 
       if (topicIndex >= 0 && topicIndex < countryTexts.length) {
         final topicName = countryTexts[topicIndex];
         final totalQuestionsInTopic =
             quizController.topicCounts[topicName] ?? 0;
-
         final updatedResult = _prefsService.calculateOverallResult(
           topicIndex,
           totalQuestionsInTopic,
           keyPrefix: 'country_result',
         );
-
         _cachedResults[topicIndex] = updatedResult;
-        refreshTrigger.value++;
+        _refreshTrigger.value++;
       }
 
+      // Verify saved data
       String baseKey = 'country_result$topicIndex$categoryIndex';
       final savedCorrect = _prefsService.getInt('${baseKey}_correct');
       final savedWrong = _prefsService.getInt('${baseKey}_wrong');
@@ -165,13 +112,7 @@ class CountryLevelsController extends GetxController {
 
   Map<String, dynamic> getOverallResult(int topicIndex) {
     try {
-      QuizController? quizController;
-      try {
-        quizController = Get.find<QuizController>();
-      } catch (e) {
-        debugPrint('QuizController not found: $e');
-        return {'correct': 0, 'wrong': 0, 'percentage': 0.0};
-      }
+      final quizController = Get.find<QuizController>();
 
       if (topicIndex < 0 || topicIndex >= countryTexts.length) {
         debugPrint('Invalid topicIndex: $topicIndex');
@@ -194,7 +135,7 @@ class CountryLevelsController extends GetxController {
 
   Map<String, dynamic> getOverallResultSync(int topicIndex) {
     try {
-      refreshTrigger.value; // Make reactive
+      _refreshTrigger.value;
       return _cachedResults[topicIndex] ??
           {'correct': 0, 'wrong': 0, 'percentage': 0.0};
     } catch (e) {
@@ -209,13 +150,7 @@ class CountryLevelsController extends GetxController {
 
   void refreshTopicResult(int topicIndex) {
     try {
-      QuizController? quizController;
-      try {
-        quizController = Get.find<QuizController>();
-      } catch (e) {
-        debugPrint('QuizController not found: $e');
-        return;
-      }
+      final quizController = Get.find<QuizController>();
 
       if (topicIndex < 0 || topicIndex >= countryTexts.length) {
         debugPrint('Invalid topicIndex: $topicIndex');
@@ -224,15 +159,13 @@ class CountryLevelsController extends GetxController {
 
       final topicName = countryTexts[topicIndex];
       final totalQuestionsInTopic = quizController.topicCounts[topicName] ?? 0;
-
       final result = _prefsService.calculateOverallResult(
         topicIndex,
         totalQuestionsInTopic,
         keyPrefix: 'country_result',
       );
-
       _cachedResults[topicIndex] = result;
-      refreshTrigger.value++;
+      _refreshTrigger.value++;
     } catch (e) {
       debugPrint('Error refreshing topic result: $e');
     }
