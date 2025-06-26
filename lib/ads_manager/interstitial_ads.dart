@@ -1,9 +1,8 @@
+import 'dart:io';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-
 import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
-
 
 class InterstitialAdController extends GetxController {
   InterstitialAd? _interstitialAd;
@@ -32,8 +31,17 @@ class InterstitialAdController extends GetxController {
 
       await remoteConfig.fetchAndActivate();
 
-      if (remoteConfig.getValue('InterstitialAd').source != ValueSource.valueStatic) {
-        adTriggerCount = remoteConfig.getInt('InterstitialAd');
+      String interstitialKey;
+      if (Platform.isAndroid) {
+        interstitialKey = 'InterstitialAd';
+      } else if (Platform.isIOS) {
+        interstitialKey = 'InterstitialAd';
+      } else {
+        throw UnsupportedError('Unsupported platform');
+      }
+
+      if (remoteConfig.getValue(interstitialKey).source != ValueSource.valueStatic) {
+        adTriggerCount = remoteConfig.getInt(interstitialKey);
         print("### Remote Config: Ad Trigger Count = $adTriggerCount");
       } else {
         print("### Remote Config: Using default value.");
@@ -45,12 +53,22 @@ class InterstitialAdController extends GetxController {
     }
   }
 
+  String get interstitialAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3118392277684870/8883344644';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-5405847310750111/7502684487';
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
+
   void loadInterstitialAd() {
     if (removeAds.isSubscribedGet.value) {
       return;
     }
     InterstitialAd.load(
-      adUnitId:'ca-app-pub-3118392277684870/8883344644',
+      adUnitId:interstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {
@@ -73,7 +91,7 @@ class InterstitialAdController extends GetxController {
           print("### Ad Dismissed, resetting visit count.");
           ad.dispose();
           isAdReady = false;
-          screenVisitCount = 0; // Reset count after showing the ad
+          screenVisitCount = 0;
           loadInterstitialAd();
           update();
         },

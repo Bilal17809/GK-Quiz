@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
-
 import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
-import 'appOpen_ads.dart';
+
 class SplashInterstitialAdController extends GetxController {
   InterstitialAd? _interstitialAd;
   bool isAdReady = false;
@@ -20,7 +19,6 @@ class SplashInterstitialAdController extends GetxController {
 
   Future<void> initializeRemoteConfig() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
-
     try {
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: const Duration(seconds: 10),
@@ -38,12 +36,21 @@ class SplashInterstitialAdController extends GetxController {
     }
   }
 
+  String get spInterstitialAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3118392277684870/7745522791';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-5405847310750111/8032602876';
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
   void loadInterstitialAd() {
     if (removeAds.isSubscribedGet.value) {
       return;
     }
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-3118392277684870/7745522791',
+      adUnitId:spInterstitialAdUnitId,
       request: const AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (ad) {

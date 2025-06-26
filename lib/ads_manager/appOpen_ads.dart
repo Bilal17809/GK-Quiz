@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -34,24 +35,43 @@ class AppOpenAdController extends GetxController with WidgetsBindingObserver {
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
-    initializeRemoteConfig(); // Fetch Firebase Remote Config
+    initializeRemoteConfig();
   }
+
+  // Future<void> initializeRemoteConfig() async {
+  //   final remoteConfig = FirebaseRemoteConfig.instance;
+  //   try {
+  //     await remoteConfig.fetchAndActivate();
+  //     shouldShowAppOpenAd = remoteConfig.getBool('AppOpenAD');
+  //     print('Remote Config: appOpen = $shouldShowAppOpenAd');
+  //     loadAd();
+  //   } catch (e) {
+  //     print('Error fetching Remote Config: $e');
+  //   }
+  // }
 
   Future<void> initializeRemoteConfig() async {
     final remoteConfig = FirebaseRemoteConfig.instance;
+
     try {
       await remoteConfig.fetchAndActivate();
-      shouldShowAppOpenAd = remoteConfig.getBool('AppOpenAD');
-      print('Remote Config: appOpen = $shouldShowAppOpenAd');
-      loadAd(); // Load ad after fetching config
+      String remoteConfigKey;
+      if (Platform.isAndroid) {
+        remoteConfigKey = 'AppOpenAD';
+      } else if (Platform.isIOS) {
+        remoteConfigKey = 'AppOpen';
+      } else {
+        throw UnsupportedError('Unsupported platform');
+      }
+      shouldShowAppOpenAd = remoteConfig.getBool(remoteConfigKey);
+      loadAd();
     } catch (e) {
       print('Error fetching Remote Config: $e');
     }
   }
 
-  bool isCooldownActive = false;
 
-  /// Show the App Open Ad if it's available
+  bool isCooldownActive = false;
   void showAdIfAvailable() {
     if (removeAds.isSubscribedGet.value) {
       return;
@@ -83,7 +103,7 @@ class AppOpenAdController extends GetxController with WidgetsBindingObserver {
       _isAdAvailable = false;
     } else {
       print('No App Open Ad available to show.');
-      loadAd(); // Attempt to load a new ad
+      loadAd();
     }
   }
 
@@ -95,10 +115,20 @@ class AppOpenAdController extends GetxController with WidgetsBindingObserver {
     });
   }
 
+  String get appOpenAdUnitId {
+    if (Platform.isAndroid) {
+      return 'ca-app-pub-3118392277684870/4944099636';
+    } else if (Platform.isIOS) {
+      return 'ca-app-pub-5405847310750111/1239963810';
+    } else {
+      throw UnsupportedError('Unsupported platform');
+    }
+  }
+
   void loadAd() {
     if (!shouldShowAppOpenAd) return;
     AppOpenAd.load(
-      adUnitId: 'ca-app-pub-3118392277684870/4944099636',
+      adUnitId:appOpenAdUnitId,
       request: const AdRequest(),
       adLoadCallback: AppOpenAdLoadCallback(
         onAdLoaded: (ad) {

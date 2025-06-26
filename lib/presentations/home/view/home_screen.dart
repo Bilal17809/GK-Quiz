@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:panara_dialogs/panara_dialogs.dart';
-import '../../../ads_manager/banner_ads.dart';
 import '../../../core/common_widgets/big_icon_text_button.dart';
 import '../../../core/common_widgets/bottom_nav_bar.dart';
 import '../../../core/common_widgets/long_icon_text_button.dart';
 import '../../../core/common_widgets/round_image.dart';
 import '../../../core/common_widgets/custom_app_bar.dart';
-import '../../../core/common_widgets/icon_buttons.dart';
 import '../../../core/constant/constant.dart';
 import '../../../core/routes/routes_name.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
-import 'package:toastification/toastification.dart';
 
 import '../../navigation_drawer/view/navigation_drawer.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     final mobileWidth = MediaQuery.of(context).size.width;
