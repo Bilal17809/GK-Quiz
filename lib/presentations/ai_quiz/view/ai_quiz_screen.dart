@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
+import 'package:template/presentations/ai_quiz/view/speech_dialog.dart';
 import '../../../ads_manager/appOpen_ads.dart';
 import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
@@ -27,10 +28,11 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
   late final SpeechController speechController;
   final TextEditingController inputController = TextEditingController();
   final ScrollController scrollController = ScrollController();
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
-  final AppOpenAdController openAds=Get.put(AppOpenAdController());
-
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
+  final AppOpenAdController openAds = Get.put(AppOpenAdController());
 
   @override
   void initState() {
@@ -57,12 +59,39 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
     controller.copyToClipboard(text);
   }
 
+  // Speech input method using native MainActivity.kt
+  // void _handleSpeechInput() async {
+  //   try {
+  //     await speechController.startSpeechToText();
+  //     final recognizedText = speechController.getRecognizedText();
+  //     if (recognizedText.isNotEmpty) {
+  //       inputController.text = recognizedText;
+  //     }
+  //   } catch (e) {
+  //     toastification.show(
+  //       type: ToastificationType.info,
+  //       title: const Text('Error'),
+  //       description: Text('Failed to process speech input: $e'),
+  //       style: ToastificationStyle.flatColored,
+  //       autoCloseDuration: const Duration(seconds: 2),
+  //       primaryColor: kSkyBlueColor,
+  //       margin: const EdgeInsets.all(8),
+  //       closeOnClick: true,
+  //       alignment: Alignment.bottomCenter,
+  //     );
+  //   }
+  // }
+
+  // NEW - Speech input method using Flutter speech dialog
   void _handleSpeechInput() async {
     try {
-      await speechController.startSpeechToText();
-      final recognizedText = speechController.getRecognizedText();
-      if (recognizedText.isNotEmpty) {
-        inputController.text = recognizedText;
+      final result = await showDialog<String>(
+        context: context,
+        builder: (context) => const SpeechDialog(),
+      );
+
+      if (result != null && result.isNotEmpty) {
+        inputController.text = result;
       }
     } catch (e) {
       toastification.show(
@@ -149,13 +178,13 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
             }),
             // Limit Banner
             Obx(
-                  () => InkWell(
+              () => InkWell(
                 onTap: () {
                   PanaraConfirmDialog.show(
                     Get.context!,
                     title: "Go Premium",
                     message:
-                    "Purchase Premium to get unlimited access to Smart AI.",
+                        "Purchase Premium to get unlimited access to Smart AI.",
                     confirmButtonText: "Premium",
                     cancelButtonText: "Cancel",
                     onTapCancel: () {
@@ -181,15 +210,15 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                   ),
                   decoration: BoxDecoration(
                     color:
-                    controller.limit.value > 0
-                        ? greyColor.withValues(alpha: 0.05)
-                        : kRed.withValues(alpha: 0.1),
+                        controller.limit.value > 0
+                            ? greyColor.withValues(alpha: 0.05)
+                            : kRed.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
                       color:
-                      controller.limit.value > 0
-                          ? greyColor.withValues(alpha: 0.3)
-                          : kRed.withValues(alpha: 0.3),
+                          controller.limit.value > 0
+                              ? greyColor.withValues(alpha: 0.3)
+                              : kRed.withValues(alpha: 0.3),
                       width: 1,
                     ),
                   ),
@@ -198,15 +227,13 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                     children: [
                       if (controller.limit.value <= 0)
                         const Icon(Icons.warning, color: kRed, size: 16),
-                      if (controller.limit.value <= 0)
-                        const SizedBox(width: 4),
+                      if (controller.limit.value <= 0) const SizedBox(width: 4),
                       Text(
                         controller.limit.value > 0
                             ? 'Limit: ${controller.limit.value}'
                             : 'Limit Reached',
                         style: context.textTheme.bodySmall?.copyWith(
-                          color:
-                          controller.limit.value > 0 ? greyColor : kRed,
+                          color: controller.limit.value > 0 ? greyColor : kRed,
                           fontWeight: FontWeight.w500,
                         ),
                         textAlign: TextAlign.center,
@@ -254,7 +281,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                     controller: scrollController,
                     padding: const EdgeInsets.all(16),
                     itemCount:
-                    controller.chatHistory.length +
+                        controller.chatHistory.length +
                         (controller.isLoading.value ? 1 : 0),
                     itemBuilder: (context, index) {
                       if (index == controller.chatHistory.length &&
@@ -296,9 +323,9 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                                         child: CircularProgressIndicator(
                                           strokeWidth: 2,
                                           valueColor:
-                                          AlwaysStoppedAnimation<Color>(
-                                            kSkyBlueColor,
-                                          ),
+                                              AlwaysStoppedAnimation<Color>(
+                                                kSkyBlueColor,
+                                              ),
                                         ),
                                       ),
                                       SizedBox(width: 12),
@@ -321,15 +348,14 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                       final content = message['content']!;
                       final isUser = message['role'] == 'user';
                       final isAssistant = message['role'] == 'assistant';
-
                       return Container(
                         margin: const EdgeInsets.only(bottom: 16),
                         child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment:
-                          isUser
-                              ? MainAxisAlignment.end
-                              : MainAxisAlignment.start,
+                              isUser
+                                  ? MainAxisAlignment.end
+                                  : MainAxisAlignment.start,
                           children: [
                             if (!isUser) ...[
                               CircleAvatar(
@@ -349,33 +375,31 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                               child: Container(
                                 constraints: BoxConstraints(
                                   maxWidth:
-                                  MediaQuery.of(context).size.width *
-                                      0.75,
+                                      MediaQuery.of(context).size.width * 0.75,
                                 ),
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
                                   color:
-                                  isUser
-                                      ? kSkyBlueColor
-                                      : greyColor.withValues(alpha: 0.1),
+                                      isUser
+                                          ? kSkyBlueColor
+                                          : greyColor.withValues(alpha: 0.1),
                                   borderRadius:
-                                  isUser
-                                      ? const BorderRadius.only(
-                                    topLeft: Radius.circular(16),
-                                    topRight: Radius.circular(4),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16),
-                                  )
-                                      : const BorderRadius.only(
-                                    topLeft: Radius.circular(4),
-                                    topRight: Radius.circular(16),
-                                    bottomLeft: Radius.circular(16),
-                                    bottomRight: Radius.circular(16),
-                                  ),
+                                      isUser
+                                          ? const BorderRadius.only(
+                                            topLeft: Radius.circular(16),
+                                            topRight: Radius.circular(4),
+                                            bottomLeft: Radius.circular(16),
+                                            bottomRight: Radius.circular(16),
+                                          )
+                                          : const BorderRadius.only(
+                                            topLeft: Radius.circular(4),
+                                            topRight: Radius.circular(16),
+                                            bottomLeft: Radius.circular(16),
+                                            bottomRight: Radius.circular(16),
+                                          ),
                                 ),
                                 child: Column(
-                                  crossAxisAlignment:
-                                  CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
                                       content,
@@ -393,8 +417,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                                           onTap:
                                               () => _copyToClipboard(content),
                                           child: Container(
-                                            padding:
-                                            const EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                               horizontal: 12,
                                               vertical: 6,
                                             ),
@@ -403,7 +426,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                                                 alpha: 0.1,
                                               ),
                                               borderRadius:
-                                              BorderRadius.circular(20),
+                                                  BorderRadius.circular(20),
                                             ),
                                             child: const Row(
                                               mainAxisSize: MainAxisSize.min,
@@ -419,8 +442,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                                                   style: TextStyle(
                                                     color: kSkyBlueColor,
                                                     fontSize: 12,
-                                                    fontWeight:
-                                                    FontWeight.w500,
+                                                    fontWeight: FontWeight.w500,
                                                   ),
                                                 ),
                                               ],
@@ -474,18 +496,15 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                         children: [
                           // Speech Button
                           Padding(
-                            padding: const EdgeInsets.only(
-                              left: 4,
-                              bottom: 4,
-                            ),
+                            padding: const EdgeInsets.only(left: 4, bottom: 4),
                             child: Obx(
-                                  () => IconActionButton(
+                              () => IconActionButton(
                                 onTap: _handleSpeechInput,
                                 icon: Icons.mic,
                                 color:
-                                speechController.isListening.value
-                                    ? kRed
-                                    : kSkyBlueColor,
+                                    speechController.isListening.value
+                                        ? kRed
+                                        : kSkyBlueColor,
                               ),
                             ),
                           ),
@@ -496,8 +515,9 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                               minLines: 1,
                               maxLines: 4,
                               hintText: 'Type a message...',
-                              hintStyle: context.textTheme.bodyMedium
-                                  ?.copyWith(color: greyColor),
+                              hintStyle: context.textTheme.bodyMedium?.copyWith(
+                                color: greyColor,
+                              ),
                               textStyle: context.textTheme.bodyMedium,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: 8,
@@ -509,7 +529,7 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
                           const SizedBox(width: 8),
                           // Send Button
                           Obx(
-                                () => Padding(
+                            () => Padding(
                               padding: const EdgeInsets.only(right: 8.0),
                               child: SendButton(
                                 onTap: _sendMessage,
@@ -527,9 +547,12 @@ class _AiQuizScreenState extends State<AiQuizScreen> {
           ],
         ),
       ),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-          return bannerAdController.getBannerAdWidget('ad1');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad1');
+              }),
     );
   }
 }
