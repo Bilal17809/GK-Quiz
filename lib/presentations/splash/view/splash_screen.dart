@@ -51,7 +51,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       builder: (context) => PurchaseScreen(),
     );
   }
-
   void _goToHome() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool hasSeenDialog = prefs.getBool('hasSubscriptionSeen') ?? false;
@@ -60,7 +59,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       await showSubscriptionDialog(context);
       await prefs.setBool('hasSubscriptionSeen', true);
     }
-
     if (!removeAds.isSubscribedGet.value) {
       if (splashAd.isAdReady) {
         await splashAd.showInterstitialAd();

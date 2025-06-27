@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:panara_dialogs/panara_dialogs.dart';
@@ -32,25 +34,6 @@ class NavigationDrawerWidget extends StatelessWidget {
     );
   }
 
-  // void _resetApp() async {
-  //   await SharedPreferencesService.to.clear();
-  //   Get.offAllNamed(RoutesName.homeScreen);
-  //   toastification.show(
-  //     type: ToastificationType.custom(
-  //       'Reset App',
-  //       kSkyBlueColor,
-  //       Icons.restart_alt,
-  //     ),
-  //     title: const Text('Reset App'),
-  //     description: const Text('App has been reset successfully'),
-  //     style: ToastificationStyle.minimal,
-  //     autoCloseDuration: const Duration(seconds: 2),
-  //     primaryColor: skyColor,
-  //     margin: const EdgeInsets.all(8),
-  //     closeOnClick: true,
-  //     alignment: Alignment.bottomCenter,
-  //   );
-  // }
   void _resetApp() async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -103,9 +86,12 @@ class NavigationDrawerWidget extends StatelessWidget {
       debugPrint('ProgressController not found: $e');
     }
   }
-
   void privacy() async {
-    const url = 'https://privacypolicymuslimapplications.blogspot.com/';
+    const androidUrl = 'https://privacypolicymuslimapplications.blogspot.com/';
+    const iosUrl = 'https://asadarmantech.blogspot.com';
+
+    final url = Platform.isIOS ? iosUrl : androidUrl;
+
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
@@ -114,8 +100,11 @@ class NavigationDrawerWidget extends StatelessWidget {
   }
 
   void rateUs() async {
-    const url =
-        'https://play.google.com/store/apps/details?id=com.ma.gkquiz.generalknowledge';
+    const androidUrl = 'https://play.google.com/store/apps/details?id=com.ma.gkquiz.generalknowledge';
+    const iosUrl = 'https://apps.apple.com/us/app/GK Quiz/6747742199';
+
+    final url = Platform.isIOS ? iosUrl : androidUrl;
+
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
@@ -124,14 +113,52 @@ class NavigationDrawerWidget extends StatelessWidget {
   }
 
   void moreApp() async {
-    const url =
-        'https://play.google.com/store/apps/developer?id=Muslim+Applications';
+    const androidUrl = 'https://play.google.com/store/apps/developer?id=Muslim+Applications';
+    const iosUrl = 'https://apps.apple.com/us/developer/muhammad-asad-arman/id1487950157?see-all=i-phonei-pad-apps';
+
+    final url = Platform.isIOS ? iosUrl : androidUrl;
+
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $url';
     }
   }
+  // void privacy() async {
+  //   const url = 'https://privacypolicymuslimapplications.blogspot.com/';
+  //   const iosUrl=
+  //       'https://asadarmantech.blogspot.com';
+  //   if (await canLaunchUrl(Uri.parse(url))) {
+  //     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
+  //
+  // void rateUs() async {
+  //   const url =
+  //       'https://play.google.com/store/apps/details?id=com.ma.gkquiz.generalknowledge';
+  //   const iosUrl=
+  //       'https://apps.apple.com/us/app/advance-english-dictionary/1492444796';
+  //   if (await canLaunchUrl(Uri.parse(url))) {
+  //     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
+  //
+  //
+  // void moreApp() async {
+  //   const url =
+  //       'https://play.google.com/store/apps/developer?id=Muslim+Applications';
+  //   const iosUrl=
+  //       'https://apps.apple.com/us/developer/muhammad-asad-arman/id1487950157?see-all=i-phonei-pad-apps';
+  //   if (await canLaunchUrl(Uri.parse(url))) {
+  //     await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  //   } else {
+  //     throw 'Could not launch $url';
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

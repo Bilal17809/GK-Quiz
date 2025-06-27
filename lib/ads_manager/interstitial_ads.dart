@@ -90,6 +90,7 @@ class InterstitialAdController extends GetxController {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
           print("### Ad Dismissed, resetting visit count.");
+          Get.find<AppOpenAdController>().setInterstitialAdDismissed();
           ad.dispose();
           isAdReady = false;
           screenVisitCount = 0;

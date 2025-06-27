@@ -18,7 +18,18 @@ import 'ads_manager/interstitial_ads.dart';
 import 'core/local_storage/shared_preferences_storage.dart';
 import 'core/routes/routes.dart';
 import 'core/routes/routes_name.dart';
-
+void initializeOneSignal() {
+  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  if (Platform.isAndroid) {
+    OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");
+    OneSignal.Notifications.requestPermission(true);
+  } else if (Platform.isIOS) {
+    OneSignal.initialize("106096b0-b5ad-4e4e-8b1f-9733cb0b9786");
+    OneSignal.Notifications.requestPermission(true);
+  } else {
+    print("Unsupported platform for OneSignal");
+  }
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -34,22 +45,11 @@ void main() async {
   Get.put(SplashController());
   Get.put<ProgressController>(ProgressController(), permanent: true);
   initializeOneSignal();
+  runApp(const MyApp());
+  // OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
+  // OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");
+  // OneSignal.Notifications.requestPermission(true);
 }
-
-
-void initializeOneSignal() {
-  OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  if (Platform.isAndroid) {
-    OneSignal.initialize("87c9689a-bb86-4612-86fd-9b104a13222d");
-    OneSignal.Notifications.requestPermission(true);
-  } else if (Platform.isIOS) {
-    OneSignal.initialize("106096b0-b5ad-4e4e-8b1f-9733cb0b9786");
-    OneSignal.Notifications.requestPermission(true);
-  } else {
-    print("Unsupported platform for OneSignal");
-  }
-}
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -63,9 +63,7 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.themeData,
         initialRoute: RoutesName.splashScreen,
         getPages: Routes.routes,
-        useInheritedMediaQuery: true,
       ),
     );
   }
 }
-
