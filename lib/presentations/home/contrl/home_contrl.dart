@@ -1,13 +1,15 @@
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:get/get.dart';
-
+import 'dart:io';
 
 class TrackingController extends GetxController {
-  // Request App Tracking Transparency permission
   Future<void> requestTrackingPermission() async {
-    final trackingStatus = await AppTrackingTransparency.requestTrackingAuthorization();
+    if (!Platform.isIOS) {
+      return;
+    }
+    final trackingStatus =
+    await AppTrackingTransparency.requestTrackingAuthorization();
 
-    // Handle different tracking statuses
     switch (trackingStatus) {
       case TrackingStatus.notDetermined:
         print('User has not yet decided');

@@ -14,6 +14,8 @@ class AppOpenAdController extends GetxController with WidgetsBindingObserver {
   bool _isAdAvailable = false;
   bool shouldShowAppOpenAd = true;
   bool _isFromBackground = false;
+  bool _interstitialAdDismissed = false;
+
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -142,6 +144,11 @@ class AppOpenAdController extends GetxController with WidgetsBindingObserver {
         },
       ),
     );
+  }
+
+  void setInterstitialAdDismissed() {
+    _interstitialAdDismissed = true;
+    print("Interstitial Ad dismissed, flag set.");
   }
 
   @override
