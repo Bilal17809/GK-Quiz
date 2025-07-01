@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import '../presentations/remove_ads_contrl/remove_ads_contrl.dart';
+import 'appOpen_ads.dart';
 
 class SplashInterstitialAdController extends GetxController {
   InterstitialAd? _interstitialAd;
@@ -26,7 +27,6 @@ class SplashInterstitialAdController extends GetxController {
       ));
 
       await remoteConfig.fetchAndActivate();
-
       showSplashAd = remoteConfig.getBool('SplashInterstitial');
       print("#################### Remote Config: Show Splash Ad = $showSplashAd");
       update();
@@ -75,6 +75,7 @@ class SplashInterstitialAdController extends GetxController {
       _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
         onAdDismissedFullScreenContent: (ad) {
           print("### Ad Dismissed");
+          Get.find<AppOpenAdController>().setInterstitialAdDismissed();
           ad.dispose();
           isAdReady = false;
           loadInterstitialAd();

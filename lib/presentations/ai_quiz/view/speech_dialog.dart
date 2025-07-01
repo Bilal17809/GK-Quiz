@@ -29,7 +29,7 @@ class SpeechDialog extends StatelessWidget {
         backgroundColor: kWhite,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         child: Obx(
-          () => Padding(
+              () => Padding(
             padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 24),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -106,7 +106,7 @@ class SpeechDialog extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                           onTap:
                               () =>
-                                  SpeechHelper.submitText(context, controller),
+                              SpeechHelper.submitText(context, controller),
                           width: double.infinity,
                           child: Text(
                             'Use Text',

@@ -50,11 +50,9 @@ class SpeechController extends GetxController {
       print("Speech recognition not available");
       return;
     }
-
     if (isListening.value) {
       return;
     }
-
     isListening.value = true;
     recognizedText.value = "";
     speechStatus.value = "listening";
@@ -87,29 +85,29 @@ class SpeechController extends GetxController {
     isListening.value = false;
   }
 
-  // Methods for native stt dialog
-  // static const MethodChannel _methodChannel = MethodChannel(
-  //   'com.ma.gkquiz.generalknowledge/MainActivity',
-  // );
+  //Methods for native stt dialog
+  static const MethodChannel _methodChannel = MethodChannel(
+    'com.ma.gkquiz.generalknowledge/MainActivity',
+  );
 
-  // Future<void> startSpeechToText({String languageISO = 'en'}) async {
-  //   print("Starting speech recognition for language: $languageISO");
-  //   try {
-  //     isListening.value = true;
-  //     final result = await _methodChannel.invokeMethod('getTextFromSpeech', {
-  //       'languageISO': languageISO,
-  //     });
-  //     if (result != null && result.isNotEmpty) {
-  //       controller.text = result;
-  //       recognizedText.value = result;
-  //     }
-  //   } on PlatformException catch (e) {
-  //     print("Error in Speech-to-Text: ${e.message}");
-  //     recognizedText.value = "Speech recognition failed: ${e.message}";
-  //   } finally {
-  //     isListening.value = false;
-  //   }
-  // }
+  Future<void> startSpeechToText({String languageISO = 'en'}) async {
+    print("Starting speech recognition for language: $languageISO");
+    try {
+      isListening.value = true;
+      final result = await _methodChannel.invokeMethod('getTextFromSpeech', {
+        'languageISO': languageISO,
+      });
+      if (result != null && result.isNotEmpty) {
+        controller.text = result;
+        recognizedText.value = result;
+      }
+    } on PlatformException catch (e) {
+      print("Error in Speech-to-Text: ${e.message}");
+      recognizedText.value = "Speech recognition failed: ${e.message}";
+    } finally {
+      isListening.value = false;
+    }
+  }
 
   void clearData() {
     controller.clear();
@@ -123,6 +121,6 @@ class SpeechController extends GetxController {
 
   bool get isProcessing =>
       speechStatus.value == 'done' &&
-      isListening.value == false &&
-      recognizedText.value.isNotEmpty;
+          isListening.value == false &&
+          recognizedText.value.isNotEmpty;
 }

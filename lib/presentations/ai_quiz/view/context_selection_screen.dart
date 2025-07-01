@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:toastification/toastification.dart';
-import '../../../ads_manager/interstitial_ads.dart';
 import '../../../core/common_widgets/custom_app_bar.dart';
 import '../../../core/common_widgets/elongated_button.dart';
 import '../../../core/common_widgets/textform_field.dart';
@@ -23,8 +22,6 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
   final TextEditingController contextController = TextEditingController();
   final RxInt currentSuggestionIndex = 0.obs;
   Timer? _timer;
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-
   final List<String> suggestedContexts = [
     "You're an AI that creates fun, educational quizzes. Keep answers short, age-friendly, and ask one question at a time without giving direct answers.",
     "Help users enhance their storytelling with feedback on plot, characters, and writing style. Be practical, supportive, and encouraging.",
@@ -40,7 +37,6 @@ class _ContextSelectionScreenState extends State<ContextSelectionScreen> {
   void initState() {
     super.initState();
     _startContextRotation();
-    interstitialAd.checkAndShowAd();
   }
 
   void _startContextRotation() {

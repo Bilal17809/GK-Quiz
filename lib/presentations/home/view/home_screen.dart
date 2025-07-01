@@ -11,9 +11,23 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
 
 import '../../navigation_drawer/view/navigation_drawer.dart';
+import '../contrl/home_contrl.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+class _HomeScreenState extends State<HomeScreen> {
+  final TrackingController tracking=Get.put(TrackingController());
+
+  @override
+  void initState() {
+    super.initState();
+    tracking.requestTrackingPermission();
+  }
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(

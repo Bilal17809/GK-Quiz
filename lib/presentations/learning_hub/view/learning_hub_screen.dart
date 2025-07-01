@@ -19,7 +19,6 @@ class _LearningHubScreenState extends State<LearningHubScreen> {
   final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
   final BannerAdController bannerAdController=Get.put(BannerAdController());
 
-
   @override
   void initState() {
     super.initState();
