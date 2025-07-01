@@ -22,8 +22,10 @@ class CountryResultScreen extends StatefulWidget {
 }
 
 class _CountryResultScreenState extends State<CountryResultScreen> {
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   @override
   void initState() {
@@ -70,7 +72,7 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
         },
 
         panaraDialogType: PanaraDialogType.custom,
-        color: kTealGreen1,
+        color: kSkyBlueColor,
       );
     });
 
@@ -86,7 +88,7 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
       child: Scaffold(
         body: Stack(
           children: [
-            //Teal Container
+            //SkyBlue Container
             Container(
               height: mobileHeight * 0.55,
               decoration: BoxDecoration(
@@ -94,7 +96,7 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                   bottomLeft: Radius.circular(30),
                   bottomRight: Radius.circular(30),
                 ),
-                color: kTealGreen1,
+                color: kSkyBlueColor,
               ),
             ),
             //Title
@@ -147,9 +149,9 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                         child: CircularStepProgressIndicator(
                           totalSteps: 100,
                           currentStep:
-                          countryResultController.currentStep.value,
+                              countryResultController.currentStep.value,
                           stepSize: mobileWidth * 0.02,
-                          selectedColor: kTealGreen1.withValues(alpha: 0.9),
+                          selectedColor: kSkyBlueColor.withValues(alpha: 0.9),
                           unselectedColor: greyBorderColor.withAlpha(25),
                           padding: 0,
                           width: mobileWidth * 0.35,
@@ -167,7 +169,7 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                             child: Text(
                               '${countryResultController.currentStep.value}%',
                               style: context.textTheme.displaySmall?.copyWith(
-                                color: kTealGreen1.withValues(alpha: 0.9),
+                                color: kSkyBlueColor.withValues(alpha: 0.9),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -200,13 +202,11 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -218,13 +218,11 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                                       SizedBox(width: 8),
                                       Text(
                                         '${countryResultController.currentStep}%',
-                                        style: context
-                                            .textTheme
-                                            .displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
-                                          color: kTealGreen1,
-                                          fontSize: 28,
-                                        ),
+                                              color: kTealGreen1,
+                                              fontSize: 28,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -235,8 +233,7 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                                 ],
                               ),
                               Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -248,13 +245,11 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                                       SizedBox(width: 8),
                                       Text(
                                         '${countryResultController.totalQuestions}',
-                                        style: context
-                                            .textTheme
-                                            .displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
-                                          color: skyColor,
-                                          fontSize: 28,
-                                        ),
+                                              color: skyColor,
+                                              fontSize: 28,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -271,13 +266,11 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                           ),
                           SizedBox(height: 12),
                           Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -290,13 +283,11 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
 
                                       Text(
                                         '${countryResultController.correctAnswers}',
-                                        style: context
-                                            .textTheme
-                                            .displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
-                                          color: kDarkGreen1,
-                                          fontSize: 28,
-                                        ),
+                                              color: kDarkGreen1,
+                                              fontSize: 28,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -307,8 +298,7 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                                 ],
                               ),
                               Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
@@ -320,13 +310,11 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                                       SizedBox(width: 8),
                                       Text(
                                         '${countryResultController.wrongAnswers}',
-                                        style: context
-                                            .textTheme
-                                            .displaySmall
+                                        style: context.textTheme.displaySmall
                                             ?.copyWith(
-                                          color: kRed,
-                                          fontSize: 28,
-                                        ),
+                                              color: kRed,
+                                              fontSize: 28,
+                                            ),
                                       ),
                                     ],
                                   ),
@@ -366,6 +354,10 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                             height: mobileWidth * 0.15,
                             onTap: () {
                               Get.delete<CountryQuizController>();
+                              int count = 0;
+
+                              Get.until((_) => count++ == 2);
+
                               Get.toNamed(
                                 RoutesName.countryQuizScreen,
                                 arguments: {
@@ -375,7 +367,7 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                                 },
                               );
                             },
-                            backgroundColor: kTealGreen1,
+                            backgroundColor: kSkyBlueColor,
                             child: Icon(Icons.replay, color: kWhite),
                           ),
                           SizedBox(height: 5),
@@ -397,12 +389,12 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                             onTap: () {
                               final selectedAnswers =
                                   arguments['selectedAnswers']
-                                  as Map<int, String>? ??
-                                      {};
+                                      as Map<int, String>? ??
+                                  {};
                               final questionsList =
                                   arguments['questionsList']
-                                  as List<QuestionsModel>? ??
-                                      [];
+                                      as List<QuestionsModel>? ??
+                                  [];
                               Get.toNamed(
                                 RoutesName.countryReviewScreen,
                                 arguments: {
@@ -433,8 +425,8 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
                             height: mobileWidth * 0.15,
                             onTap: () async {
                               Get.until(
-                                    (route) =>
-                                route.settings.name ==
+                                (route) =>
+                                    route.settings.name ==
                                     RoutesName.countryLevelsScreen,
                               );
                             },
@@ -457,9 +449,12 @@ class _CountryResultScreenState extends State<CountryResultScreen> {
             ),
           ],
         ),
-        bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-            return bannerAdController.getBannerAdWidget('ad7');
-        }),
+        bottomNavigationBar:
+            interstitialAd.isAdReady
+                ? SizedBox()
+                : Obx(() {
+                  return bannerAdController.getBannerAdWidget('ad7');
+                }),
       ),
     );
   }

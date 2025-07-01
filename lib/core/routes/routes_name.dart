@@ -22,4 +22,5 @@ abstract class RoutesName {
   static const String purchaseScreen = '/purchase_screen';
   static const String termsScreen = '/terms_screen';
   static const String unsubscribeInfoScreen = '/unsubscribe_info_screen';
+  static const String explanationScreen = '/explanation_screen';
 }

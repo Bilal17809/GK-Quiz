@@ -20,11 +20,10 @@ class QuizSelectionScreen extends StatefulWidget {
 }
 
 class _QuizSelectionScreenState extends State<QuizSelectionScreen> {
-
-
-  final InterstitialAdController interstitialAd=Get.put(InterstitialAdController());
-  final BannerAdController bannerAdController=Get.put(BannerAdController());
-
+  final InterstitialAdController interstitialAd = Get.put(
+    InterstitialAdController(),
+  );
+  final BannerAdController bannerAdController = Get.put(BannerAdController());
 
   @override
   void initState() {
@@ -49,9 +48,9 @@ class _QuizSelectionScreenState extends State<QuizSelectionScreen> {
           itemCount: quizSelectionController.topics.length,
           itemBuilder: (context, index) {
             final topic = quizSelectionController.topics[index];
-            final questionCount = quizSelectionController.getQuestionCount(
-              topic,
-            );
+            final questionCount =
+                quizSelectionController.getQuestionCount(topic) -
+                (quizSelectionController.getQuestionCount(topic) % 20);
             final topicIndex = gridTexts.indexOf(topic);
             final cardColor = gridColors[topicIndex % gridColors.length]
                 .withValues(alpha: 0.64);
@@ -62,11 +61,8 @@ class _QuizSelectionScreenState extends State<QuizSelectionScreen> {
               color: kWhite,
               child: InkWell(
                 onTap:
-                    () => _showQuizSelectionDialog(
-                  context,
-                  topic,
-                  questionCount,
-                ),
+                    () =>
+                        _showQuizSelectionDialog(context, topic, questionCount),
                 child: ListTile(
                   leading: CircleAvatar(
                     radius: 28,
@@ -102,9 +98,12 @@ class _QuizSelectionScreenState extends State<QuizSelectionScreen> {
           },
         );
       }),
-      bottomNavigationBar:interstitialAd.isAdReady?SizedBox(): Obx(() {
-        return bannerAdController.getBannerAdWidget('ad16');
-      }),
+      bottomNavigationBar:
+          interstitialAd.isAdReady
+              ? SizedBox()
+              : Obx(() {
+                return bannerAdController.getBannerAdWidget('ad16');
+              }),
     );
   }
 

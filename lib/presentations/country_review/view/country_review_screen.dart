@@ -1,20 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:template/presentations/country_review/controller/country_review_controller.dart';
+import 'package:template/presentations/country_review/view/country_review_content.dart';
 import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
-import '../../../core/models/questions_data.dart';
-import '../../home/view/home_screen.dart';
-import '../controller/country_review_controller.dart';
-import 'country_review_page.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/theme/app_colors.dart';
 
 class CountryReviewScreen extends StatefulWidget {
   const CountryReviewScreen({super.key});
 
   @override
-  State<CountryReviewScreen> createState() => _CountryReviewScreenState();
+  State<CountryReviewScreen> createState() => _CountryQuizScreenState();
 }
 
-class _CountryReviewScreenState extends State<CountryReviewScreen> {
+class _CountryQuizScreenState extends State<CountryReviewScreen> {
+  late CountryReviewController countryQuizController;
+  late String topic;
+  late int topicIndex;
+  late int categoryIndex;
+
   final InterstitialAdController interstitialAd = Get.put(
     InterstitialAdController(),
   );
@@ -24,66 +29,61 @@ class _CountryReviewScreenState extends State<CountryReviewScreen> {
   void initState() {
     super.initState();
     interstitialAd.checkAndShowAd();
+
+    // Get arguments
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    if (arguments == null) {
+      Get.back();
+      return;
+    }
+
+    topic = arguments['topic'] ?? '';
+    topicIndex = arguments['topicIndex'] ?? arguments['index'] ?? 1;
+    categoryIndex = arguments['categoryIndex'] ?? 1;
+
+    countryQuizController = Get.put(
+      CountryReviewController(),
+      permanent: false,
+    );
+
+    countryQuizController.updateArguments({
+      'topic': topic,
+      'topicIndex': topicIndex,
+      'categoryIndex': categoryIndex,
+    });
+
+    // Pre-select all answers from arguments if available
+    final selectedAnswers = arguments['selectedAnswers'] as Map<int, String>?;
+    if (selectedAnswers != null) {
+      countryQuizController.preSelectAnswers(selectedAnswers);
+    }
+
+    countryQuizController.loadQuestionsForCategory(topic, categoryIndex);
   }
 
   @override
   Widget build(BuildContext context) {
-    final CountryReviewController countryReviewController = Get.put(
-      CountryReviewController(),
-      permanent: false,
-    );
-    final arguments = Get.arguments as Map<String, dynamic>;
-    final questionsList =
-        arguments['questionsList'] as List<QuestionsModel>? ?? [];
-    final selectedAnswers =
-        arguments['selectedAnswers'] as Map<int, String>? ?? {};
-    final topic = arguments['topic'] as String? ?? 'Quiz Review';
-
-    countryReviewController.initializeReview(
-      questionsList,
-      selectedAnswers,
-      topic,
-    );
-
-    final mobileSize = MediaQuery.of(context).size;
-
     return Scaffold(
-      body: Obx(() {
-        return PageView.builder(
-          controller: countryReviewController.pageController,
-          onPageChanged: (index) {
-            if (index >= countryReviewController.questionsList.length) {
-              Get.offAll(
-                () => const HomeScreen(),
-                transition: Transition.rightToLeft,
-                duration: Duration(milliseconds: 300),
-              );
-              return;
-            }
-            countryReviewController.onPageChanged(index);
-          },
-          itemCount: countryReviewController.questionsList.length + 1,
-          itemBuilder: (context, pageIndex) {
-            if (pageIndex >= countryReviewController.questionsList.length) {
-              return Container();
-            }
-            final question = countryReviewController.questionsList[pageIndex];
-            return CountryReviewPage(
-              question: question,
-              currentIndex: pageIndex,
-              totalQuestions: countryReviewController.questionsList.length,
-              controller: countryReviewController,
-              mobileSize: mobileSize,
-              topic: topic,
-            );
-          },
-        );
-      }),
+      backgroundColor: kWhite,
+      appBar: CustomAppBar(subtitle: '$topic - Level $categoryIndex'),
+      body: Obx(
+        () => CountryReviewContent(
+          isLoading: countryQuizController.isLoadingQuestions.value,
+          questions: countryQuizController.questionsList,
+          pageController: countryQuizController.questionsPageController,
+          selectedAnswers: countryQuizController.selectedAnswers,
+          controller: countryQuizController,
+          topic: topic,
+          topicIndex: topicIndex,
+          categoryIndex: categoryIndex,
+          onPageChanged: countryQuizController.onPageChanged,
+        ),
+      ),
       bottomNavigationBar:
           interstitialAd.isAdReady
               ? SizedBox()
               : Obx(() {
-                return bannerAdController.getBannerAdWidget('ad8');
+                return bannerAdController.getBannerAdWidget('ad6');
               }),
     );
   }

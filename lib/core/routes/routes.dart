@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:template/core/routes/routes_name.dart';
+import 'package:template/presentations/explanation_screen/view/explanation_screen.dart';
 import '../../presentations/ai_quiz/view/ai_quiz_screen.dart';
 import '../../presentations/ai_quiz/view/context_selection_screen.dart';
 import '../../presentations/country/view/country_screen.dart';
@@ -84,8 +85,6 @@ class Routes {
     GetPage(
       name: RoutesName.quizSelectionScreen,
       page: () => QuizSelectionScreen(),
-      transition: Transition.downToUp,
-      transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
       name: RoutesName.countryScreen,
@@ -161,6 +160,12 @@ class Routes {
       name: RoutesName.unsubscribeInfoScreen,
       page: () => UnsubscribeInfoScreen(),
       transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.explanationScreen,
+      page: () => ExplanationScreen(),
+      transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 250),
     ),
   ];
