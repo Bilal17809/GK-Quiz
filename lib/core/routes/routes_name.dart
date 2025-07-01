@@ -23,4 +23,6 @@ abstract class RoutesName {
   static const String termsScreen = '/terms_screen';
   static const String unsubscribeInfoScreen = '/unsubscribe_info_screen';
   static const String explanationScreen = '/explanation_screen';
+  static const String aiExplainTopics = '/ai_explain_topics';
+  static const String aiExplain = '/ai_explain';
 }
