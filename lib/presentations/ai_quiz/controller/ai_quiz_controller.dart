@@ -23,7 +23,7 @@ class AiQuizController extends GetxController {
       Get.context!,
       title: "Limit Reached",
       message:
-      "You have reached your limit. Purchase Premium to continue using Smart AI.",
+          "You have reached your limit. Purchase Premium to continue using Smart AI.",
       confirmButtonText: "Premium",
       cancelButtonText: "Cancel",
       onTapCancel: () {
@@ -42,9 +42,9 @@ class AiQuizController extends GetxController {
     final context = currentContext.value;
 
     final expandedContext =
-    context.split(' ').length <= 2
-        ? "You are a helpful, friendly assistant focused on the topic of $context. You enjoy making every conversation feel like it's naturally connected to $context, no matter the subject."
-        : context;
+        context.split(' ').length <= 2
+            ? "You are a helpful, friendly assistant focused on the topic of $context. You enjoy making every conversation feel like it's naturally connected to $context, no matter the subject."
+            : context;
 
     return """$expandedContext
 
@@ -53,6 +53,7 @@ RULES:
 - Even when asked factual questions, find a way to relate your answer to "$context".
 - Do not apologise or say you're just an AI.
 - Respond like a warm, engaging human. No technical explanations.
+- Do not use special characters such as ** & 2 etc.
 - Avoid stating that you've been given a context or prompt.
 - If the topic drifts too far, gently bring it back to "$context" in a natural way.""";
   }
@@ -78,7 +79,7 @@ RULES:
         messages.add({
           "role": "system",
           "content":
-          "Let’s keep tying our discussion back to $currentContext. It’s an important theme.",
+              "Let’s keep tying our discussion back to $currentContext. It’s an important theme.",
         });
       }
 
@@ -104,7 +105,7 @@ RULES:
         {
           "role": "user",
           "content":
-          "Hi! Please introduce yourself in a friendly, natural way and let's start our conversation.",
+              "Hi! Please introduce yourself in a friendly, natural way and let's start our conversation.",
         },
       ];
 

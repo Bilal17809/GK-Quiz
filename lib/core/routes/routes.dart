@@ -1,5 +1,8 @@
 import 'package:get/get.dart';
 import 'package:template/core/routes/routes_name.dart';
+import 'package:template/presentations/ai_explain/view/ai_explain.dart';
+import 'package:template/presentations/ai_explain_topics/view/ai_explain_topics.dart';
+import 'package:template/presentations/explanation_screen/view/explanation_screen.dart';
 import '../../presentations/ai_quiz/view/ai_quiz_screen.dart';
 import '../../presentations/ai_quiz/view/context_selection_screen.dart';
 import '../../presentations/country/view/country_screen.dart';
@@ -84,8 +87,6 @@ class Routes {
     GetPage(
       name: RoutesName.quizSelectionScreen,
       page: () => QuizSelectionScreen(),
-      transition: Transition.downToUp,
-      transitionDuration: Duration(milliseconds: 250),
     ),
     GetPage(
       name: RoutesName.countryScreen,
@@ -115,6 +116,13 @@ class Routes {
       transition: Transition.downToUp,
       transitionDuration: Duration(milliseconds: 250),
     ),
+    GetPage(
+      name: RoutesName.aiExplainTopics,
+      page: () => AiExplainTopics(),
+      transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(name: RoutesName.aiExplain, page: () => AiExplain()),
     GetPage(
       name: RoutesName.aiQuizScreen,
       page: () => AiQuizScreen(),
@@ -161,6 +169,12 @@ class Routes {
       name: RoutesName.unsubscribeInfoScreen,
       page: () => UnsubscribeInfoScreen(),
       transition: Transition.downToUp,
+      transitionDuration: Duration(milliseconds: 250),
+    ),
+    GetPage(
+      name: RoutesName.explanationScreen,
+      page: () => ExplanationScreen(),
+      transition: Transition.fadeIn,
       transitionDuration: Duration(milliseconds: 250),
     ),
   ];

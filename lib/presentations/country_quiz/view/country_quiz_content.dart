@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/presentations/quiz/widgets/quiz_card.dart';
-import '../../../core/constant/constant.dart';
-import '../../../core/models/questions_data.dart';
+import '../../../../core/constant/constant.dart';
+import '../../../../core/models/questions_data.dart';
+import '../controller/country_quiz_controller.dart';
+import 'country_quiz_card.dart';
 
-class QuizContent extends StatelessWidget {
+class CountryQuizContent extends StatelessWidget {
   final bool isLoading;
   final List<QuestionsModel> questions;
   final PageController pageController;
@@ -13,8 +14,12 @@ class QuizContent extends StatelessWidget {
   final RxMap<int, String> selectedAnswers;
   final RxMap<int, bool> showAnswers;
   final Function(int, String) onAnswerSelected;
+  final CountryQuizController controller;
+  final String topic;
+  final int topicIndex;
+  final int categoryIndex;
 
-  const QuizContent({
+  const CountryQuizContent({
     super.key,
     required this.isLoading,
     required this.questions,
@@ -24,6 +29,10 @@ class QuizContent extends StatelessWidget {
     required this.selectedAnswers,
     required this.showAnswers,
     required this.onAnswerSelected,
+    required this.controller,
+    required this.topic,
+    required this.topicIndex,
+    required this.categoryIndex,
   });
 
   @override
@@ -44,13 +53,17 @@ class QuizContent extends StatelessWidget {
         itemCount: questions.length,
         onPageChanged: onPageChanged,
         itemBuilder: (context, index) {
-          return QuizCard(
+          return CountryQuizCard(
             question: questions[index],
             currentIndex: index,
             totalQuestions: questions.length,
             selectedAnswers: selectedAnswers,
             showAnswers: showAnswers,
             onOptionSelected: onAnswerSelected,
+            controller: controller,
+            topic: topic,
+            topicIndex: topicIndex,
+            categoryIndex: categoryIndex,
           );
         },
       ),

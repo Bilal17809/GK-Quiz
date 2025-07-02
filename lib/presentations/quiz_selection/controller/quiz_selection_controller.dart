@@ -17,6 +17,7 @@ class QuizSelectionController extends GetxController {
   Future<void> loadTopics() async {
     try {
       isLoading.value = true;
+      Future.delayed(const Duration(milliseconds: 200));
       List<QuestionsModel> questionsList = await DBService.getAllQuestions();
       Map<String, int> topicCounts = {};
 

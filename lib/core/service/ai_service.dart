@@ -3,13 +3,11 @@ import 'package:google_generative_ai/google_generative_ai.dart';
 class AiService {
   final GenerativeModel _gm = GenerativeModel(
     model: "gemini-2.0-flash",
-    apiKey: "AIzaSyC6BcnlWO4hHGLL6gVGfrlrxZ4mVLrUEAw",
+    apiKey: "AIzaSyC8ELThCDUg6eTXGhisxBTJ9kjZSnQku6U",
   );
 
-  // Method to handle conversation messages
   Future<String> sendMessage(List<Map<String, String>> messages) async {
     try {
-      // Convert messages to a single prompt with proper system context handling
       String prompt = _convertMessagesToPrompt(messages);
       final content = [Content.text(prompt)];
       final response = await _gm.generateContent(content);
@@ -19,7 +17,6 @@ class AiService {
     }
   }
 
-  // Fixed helper method to properly handle system context
   String _convertMessagesToPrompt(List<Map<String, String>> messages) {
     if (messages.isEmpty) return "";
 

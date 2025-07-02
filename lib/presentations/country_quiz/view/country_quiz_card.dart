@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import '../../../core/common_widgets/elongated_button.dart';
-import '../../../core/common_widgets/round_image.dart';
-import '../../../core/constant/constant.dart';
-import '../../../core/models/questions_data.dart';
-import '../../../core/routes/routes_name.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_styles.dart';
-import '../../../core/utils/ui_helpers.dart';
-import '../controller/quiz_controller.dart';
+import '../../../../core/common_widgets/elongated_button.dart';
+import '../../../../core/common_widgets/round_image.dart';
+import '../../../../core/constant/constant.dart';
+import '../../../../core/models/questions_data.dart';
+import '../../../../core/routes/routes_name.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_styles.dart';
+import '../../../../core/utils/ui_helpers.dart';
+import '../controller/country_quiz_controller.dart';
 
-class QuizCard extends StatelessWidget {
+class CountryQuizCard extends StatelessWidget {
   final QuestionsModel question;
   final int currentIndex;
   final int totalQuestions;
   final RxMap<int, String> selectedAnswers;
   final RxMap<int, bool> showAnswers;
   final Function(int, String) onOptionSelected;
+  final CountryQuizController controller;
+  final String topic;
+  final int topicIndex;
+  final int categoryIndex;
 
-  const QuizCard({
+  const CountryQuizCard({
     super.key,
     required this.question,
     required this.currentIndex,
@@ -27,6 +31,10 @@ class QuizCard extends StatelessWidget {
     required this.selectedAnswers,
     required this.showAnswers,
     required this.onOptionSelected,
+    required this.controller,
+    required this.topic,
+    required this.topicIndex,
+    required this.categoryIndex,
   });
 
   String getCorrectAnswerText() {
@@ -47,7 +55,6 @@ class QuizCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final mobileWidth = MediaQuery.of(context).size.width;
-    final controller = Get.find<QuizController>();
 
     return Card(
       elevation: 2,
@@ -57,6 +64,7 @@ class QuizCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Progress bar and font size toggle
             Row(
               children: [
                 Expanded(
@@ -75,7 +83,10 @@ class QuizCard extends StatelessWidget {
                         selectedGradientColor: LinearGradient(
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
-                          colors: [skyColor.withValues(alpha: 0.2), skyColor],
+                          colors: [
+                            kSkyBlueColor.withValues(alpha: 0.2),
+                            kSkyBlueColor,
+                          ],
                         ),
                         unselectedColor: greyColor.withValues(alpha: 0.2),
                       );
@@ -85,26 +96,32 @@ class QuizCard extends StatelessWidget {
                 SizedBox(width: 8),
                 RoundedButton(
                   onTap: controller.toggleFontSize,
-                  backgroundColor: skyColor,
+                  backgroundColor: kSkyBlueColor,
                   child: Icon(Icons.text_fields, color: kWhite),
                 ),
               ],
             ),
             const SizedBox(height: 12),
+
+            // Topic title
             Center(
               child: Text(
-                question.topicName,
+                topic,
                 style: context.textTheme.headlineMedium?.copyWith(
-                  color: skyColor,
+                  color: kSkyBlueColor,
                   fontSize: 22,
                 ),
               ),
             ),
+
+            // Question header
             QuestionHeader(
               totalQuestions: totalQuestions,
               currentIndex: currentIndex,
             ),
             const SizedBox(height: 12),
+
+            // Question content
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
@@ -120,8 +137,10 @@ class QuizCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: 12),
+
+                    // Options
                     Obx(
-                      () => QuestionOptions(
+                      () => CountryQuestionOptions(
                         question: question,
                         currentIndex: currentIndex,
                         showAnswer: showAnswers[currentIndex] ?? false,
@@ -132,11 +151,12 @@ class QuizCard extends StatelessWidget {
                       ),
                     ),
                     SizedBox(height: kBodyHp * 2),
+
+                    // Correct answer display
                     GestureDetector(
                       onTap: () {
                         final selectedLetter = selectedAnswers[currentIndex];
                         String selectedOptionText = '';
-
                         switch (selectedLetter) {
                           case 'A':
                             selectedOptionText = question.option1;
@@ -151,18 +171,16 @@ class QuizCard extends StatelessWidget {
                             selectedOptionText = question.option4;
                             break;
                         }
-
                         Get.toNamed(
                           RoutesName.explanationScreen,
                           arguments: {
-                            'topic': question.topicName,
+                            'topic': topic,
                             'question': question.question,
                             'selectedOption': selectedOptionText,
                             'correctAnswer': getCorrectAnswerText(),
                           },
                         );
                       },
-
                       child: Obx(() {
                         bool isAnswered = selectedAnswers.containsKey(
                           currentIndex,
@@ -199,6 +217,8 @@ class QuizCard extends StatelessWidget {
               ),
             ),
             SizedBox(height: 4),
+
+            // Bottom buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -214,7 +234,7 @@ class QuizCard extends StatelessWidget {
                             ? greyColor.withValues(alpha: 0.5)
                             : isAnswered
                             ? greyColor.withValues(alpha: 0.5)
-                            : skyColor.withValues(alpha: 0.8),
+                            : kSkyBlueColor.withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(25),
                     onTap:
                         (is5050Used || isAnswered)
@@ -232,12 +252,19 @@ class QuizCard extends StatelessWidget {
                 Obx(() {
                   bool isAnswered = selectedAnswers.containsKey(currentIndex);
                   return ElongatedButton(
-                    onTap: isAnswered ? controller.goToNextQuestion : null,
+                    onTap:
+                        isAnswered
+                            ? () => controller.goToNextQuestion(
+                              topic: topic,
+                              topicIndex: topicIndex,
+                              categoryIndex: categoryIndex,
+                            )
+                            : null,
                     height: 70,
                     width: 70,
                     color:
                         isAnswered
-                            ? skyColor
+                            ? kSkyBlueColor
                             : greyColor.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(28),
                     child: Image.asset(
@@ -278,15 +305,15 @@ class QuestionHeader extends StatelessWidget {
   }
 }
 
-class QuestionOptions extends StatelessWidget {
+class CountryQuestionOptions extends StatelessWidget {
   final QuestionsModel question;
   final int currentIndex;
   final bool showAnswer;
   final String? selectedOption;
   final Function(String) onOptionSelected;
-  final QuizController controller;
+  final CountryQuizController controller;
 
-  const QuestionOptions({
+  const CountryQuestionOptions({
     super.key,
     required this.question,
     required this.currentIndex,
@@ -303,7 +330,7 @@ class QuestionOptions extends StatelessWidget {
         children: [
           // Option A
           if (!controller.isOptionHidden(currentIndex, 'A')) ...[
-            OptionItem(
+            CountryOptionItem(
               letter: 'A',
               option: question.option1,
               showAnswer: showAnswer,
@@ -316,7 +343,7 @@ class QuestionOptions extends StatelessWidget {
           ],
           // Option B
           if (!controller.isOptionHidden(currentIndex, 'B')) ...[
-            OptionItem(
+            CountryOptionItem(
               letter: 'B',
               option: question.option2,
               showAnswer: showAnswer,
@@ -329,7 +356,7 @@ class QuestionOptions extends StatelessWidget {
           ],
           // Option C
           if (!controller.isOptionHidden(currentIndex, 'C')) ...[
-            OptionItem(
+            CountryOptionItem(
               letter: 'C',
               option: question.option3,
               showAnswer: showAnswer,
@@ -342,7 +369,7 @@ class QuestionOptions extends StatelessWidget {
           ],
           // Option D
           if (!controller.isOptionHidden(currentIndex, 'D')) ...[
-            OptionItem(
+            CountryOptionItem(
               letter: 'D',
               option: question.option4,
               showAnswer: showAnswer,
@@ -358,16 +385,16 @@ class QuestionOptions extends StatelessWidget {
   }
 }
 
-class OptionItem extends StatelessWidget {
+class CountryOptionItem extends StatelessWidget {
   final String letter;
   final String option;
   final bool showAnswer;
   final String correctAnswer;
   final String? selectedOption;
   final Function(String) onOptionSelected;
-  final QuizController controller;
+  final CountryQuizController controller;
 
-  const OptionItem({
+  const CountryOptionItem({
     super.key,
     required this.letter,
     required this.option,

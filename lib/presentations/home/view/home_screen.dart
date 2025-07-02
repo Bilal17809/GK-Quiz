@@ -19,8 +19,9 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+
 class _HomeScreenState extends State<HomeScreen> {
-  final TrackingController tracking=Get.put(TrackingController());
+  final TrackingController tracking = Get.put(TrackingController());
 
   @override
   void initState() {
@@ -202,6 +203,30 @@ class _HomeScreenState extends State<HomeScreen> {
                       Get.toNamed(RoutesName.contextSelectionScreen);
                     },
                     text: 'Smart AI',
+                    icon: Container(
+                      decoration: roundedDecoration.copyWith(
+                        color: kWhite.withValues(alpha: 0.2),
+                      ),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.asset(
+                        'assets/images/ai-quiz.png',
+                        color: kWhite,
+                        width: iconSize,
+                        height: iconSize,
+                      ),
+                    ),
+                    style: context.textTheme.titleMedium?.copyWith(
+                      color: kWhite,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  LongIconTextButton(
+                    height: buttonHeight - 20,
+                    color: kSkyBlueColor.withValues(alpha: 0.9),
+                    onPressed: () {
+                      Get.toNamed(RoutesName.aiExplainTopics);
+                    },
+                    text: 'Smart Explanation',
                     icon: Container(
                       decoration: roundedDecoration.copyWith(
                         color: kWhite.withValues(alpha: 0.2),

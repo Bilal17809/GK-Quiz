@@ -1,13 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../ads_manager/banner_ads.dart';
 import '../../../ads_manager/interstitial_ads.dart';
-import '../../../core/common_audios/quiz_sounds.dart';
-import '../../../core/routes/routes_name.dart';
+import '../../../core/common_widgets/custom_app_bar.dart';
+import '../../../core/theme/app_colors.dart';
 import '../controller/country_quiz_controller.dart';
-import 'country_quiz_page.dart';
+import 'country_quiz_content.dart';
 
 class CountryQuizScreen extends StatefulWidget {
   const CountryQuizScreen({super.key});
@@ -17,11 +15,11 @@ class CountryQuizScreen extends StatefulWidget {
 }
 
 class _CountryQuizScreenState extends State<CountryQuizScreen> {
-  Timer? _autoProgressTimer;
   late CountryQuizController countryQuizController;
   late String topic;
   late int topicIndex;
   late int categoryIndex;
+
   final InterstitialAdController interstitialAd = Get.put(
     InterstitialAdController(),
   );
@@ -29,15 +27,22 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
 
   @override
   void initState() {
-    interstitialAd.checkAndShowAd();
     super.initState();
-    final arguments = Get.arguments as Map<String, dynamic>;
+    interstitialAd.checkAndShowAd();
+
+    // Get arguments
+    final arguments = Get.arguments as Map<String, dynamic>?;
+    if (arguments == null) {
+      Get.back();
+      return;
+    }
+
     topic = arguments['topic'] ?? '';
     topicIndex = arguments['topicIndex'] ?? arguments['index'] ?? 1;
     categoryIndex = arguments['categoryIndex'] ?? 1;
 
+    // Initialize controller
     countryQuizController = Get.put(CountryQuizController(), permanent: false);
-
     countryQuizController.updateArguments({
       'topic': topic,
       'topicIndex': topicIndex,
@@ -47,83 +52,26 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
   }
 
   @override
-  void dispose() {
-    _autoProgressTimer?.cancel();
-    super.dispose();
-  }
-
-  void _handleAnswerSelection(int questionIndex, String selectedOption) {
-    if (countryQuizController.shouldShowAnswerResults[questionIndex] == true) {
-      return;
-    }
-
-    _autoProgressTimer?.cancel();
-
-    countryQuizController.handleAnswerSelection(questionIndex, selectedOption);
-
-    _autoProgressTimer = Timer(Duration(seconds: 1), () {
-      _moveToNextQuestion();
-    });
-  }
-
-  void _moveToNextQuestion() {
-    if (countryQuizController.currentQuestionIndex.value <
-        countryQuizController.questionsList.length - 1) {
-      countryQuizController.questionsPageController.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-      );
-    } else {
-      _navigateToResults();
-    }
-  }
-
-  void _navigateToResults() {
-    QuizSounds.playCompletionSound();
-    Get.toNamed(
-      RoutesName.countryResultScreen,
-      arguments: {
-        'topicIndex': topicIndex,
-        'categoryIndex': categoryIndex,
-        'topic': topic,
-        'fromCustomQuiz': false,
-        'selectedAnswers': countryQuizController.selectedAnswers,
-        'questionsList': countryQuizController.questionsList,
-      },
-    );
-
-    debugPrint('Quiz completed! Navigate to results screen.');
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final mobileSize = MediaQuery.of(context).size;
     return Scaffold(
-      body: Obx(() {
-        if (countryQuizController.isLoadingQuestions.value) {
-          return Center(child: CircularProgressIndicator());
-        }
-
-        return PageView.builder(
-          controller: countryQuizController.questionsPageController,
-          physics: NeverScrollableScrollPhysics(), // Disable manual scrolling
+      backgroundColor: kWhite,
+      appBar: CustomAppBar(subtitle: '$topic - Level $categoryIndex'),
+      body: Obx(
+        () => CountryQuizContent(
+          isLoading: countryQuizController.isLoadingQuestions.value,
+          questions: countryQuizController.questionsList,
+          pageController: countryQuizController.questionsPageController,
+          currentIndex: countryQuizController.currentQuestionIndex.value,
           onPageChanged: countryQuizController.onPageChanged,
-          itemCount: countryQuizController.questionsList.length,
-          itemBuilder: (context, pageIndex) {
-            final question = countryQuizController.questionsList[pageIndex];
-            return CountryQuizPage(
-              question: question,
-              currentIndex: pageIndex,
-              totalQuestions: countryQuizController.questionsList.length,
-              controller: countryQuizController,
-              mobileSize: mobileSize,
-              onAnswerSelected: _handleAnswerSelection,
-              topicIndex: topicIndex,
-              topic: topic,
-            );
-          },
-        );
-      }),
+          selectedAnswers: countryQuizController.selectedAnswers,
+          showAnswers: countryQuizController.shouldShowAnswerResults,
+          onAnswerSelected: _handleAnswerSelection,
+          controller: countryQuizController,
+          topic: topic,
+          topicIndex: topicIndex,
+          categoryIndex: categoryIndex,
+        ),
+      ),
       bottomNavigationBar:
           interstitialAd.isAdReady
               ? SizedBox()
@@ -131,5 +79,13 @@ class _CountryQuizScreenState extends State<CountryQuizScreen> {
                 return bannerAdController.getBannerAdWidget('ad6');
               }),
     );
+  }
+
+  void _handleAnswerSelection(int questionIndex, String selectedOption) {
+    if (countryQuizController.shouldShowAnswerResults[questionIndex] == true) {
+      return;
+    }
+
+    countryQuizController.handleAnswerSelection(questionIndex, selectedOption);
   }
 }
